@@ -2,3 +2,117 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+
+.input-type-hidden {
+    display: none;
+}
+
+.minicomposer-sortable-rows {
+    position: relative;
+    margin: 1em 0;
+}
+
+.minicomposer-column {
+    display: inline-block;
+    position: relative;
+    min-height: 100px;
+    min-width: calc(100% / 12);
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -o-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.minicomposer-column:after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border: 1px solid #000;
+}
+
+.minicomposer-column .content {
+    display: inline-block;
+    position: relative;
+
+    top: 5px;
+    left: 5px;
+    width: calc(100% - 10px);
+    min-height: 90px;
+
+    vertical-align: top;
+    margin-bottom: 10px;
+
+    padding: 5px;
+    background-color: #fff;
+
+    overflow: hidden;
+
+    font-size: 12px;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -o-sizing: border-box;
+    box-sizing: border-box;
+}
+.minicomposer-column .content p {
+    margin-top: 0;
+}
+
+.minicomposer-column .ui-resizable-e {
+    right: 2px;
+}
+
+.minicomposer-row {
+    min-height: 100px;
+    background-color: #ddd;
+    margin-bottom: 15px;
+    padding: 20px 15px 10px;
+    font-size: 0;
+}
+
+.hidden-wp-editor {
+    display: none;
+}
+
+.hidden-wp-editor.visible {
+    display: block;
+}
+
+.ui-state-highlight {
+    display: inline-block;
+    width: 5px;
+    height: 100px;
+    background-color: #0073aa;
+    border: 0 none;
+}
+
+/** column options */
+.minicomposer-sortable-rows .options {
+    position: absolute;
+    right: 5px;
+    bottom: 100%;
+    margin-bottom: -5px;
+
+    text-align: right;
+
+    line-height: 8px;
+
+    background-color: #eee;
+    padding: 2px 3px 1px;
+}
+.minicomposer-sortable-rows .options span {
+    display: inline-block;
+    padding: 0 3px;
+    font-size: 10px;
+
+    cursor: pointer;
+}
+
+.minicomposer-row > .options {
+    margin-bottom: 0;
+    right: 0;
+}

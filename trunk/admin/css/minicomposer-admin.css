@@ -67,9 +67,10 @@
 }
 
 .minicomposer-row {
+    position: relative;
     min-height: 100px;
     background-color: #ddd;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     padding: 20px 15px 10px;
     font-size: 0;
 }
@@ -86,6 +87,18 @@
     display: inline-block;
     width: 5px;
     height: 100px;
+    background-color: #0073aa;
+    border: 0 none;
+
+    outline: none;
+
+    vertical-align: top;
+}
+
+.ui-state-highlight-row {
+    display: inline-block;
+    width: 100%;
+    height: 5px;
     background-color: #0073aa;
     border: 0 none;
 }

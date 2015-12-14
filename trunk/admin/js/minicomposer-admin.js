@@ -52,16 +52,27 @@
 				resize: updateComposer
 			};
 
+			initEvents();
+		}
+
+
+		function initEvents() {
 			// make resizable
 			$('.minicomposer-column').resizable(resizeArgs);
 
-			// make rows sortable
+			// make cols sortable
 			jQuery('.minicomposer-row').sortable({
 				connectWith: '.minicomposer-row',
 				placeholder: "ui-state-highlight",
+				update: updateComposer,
 			});
 
-			$('.minicomposer-row').on("sortupdate", updateComposer);
+			// make rows sortable
+			$('.minicomposer-sortable-rows').sortable({
+				items: '.minicomposer-row',
+				placeholder: "ui-state-highlight-row",
+				update: updateComposer,
+			});
 
 			// set startSize of columns
 			$('.minicomposer-column').each(function(index, element) {
@@ -70,7 +81,6 @@
 				});
 			});
 		}
-
 
 		/**
 		 * Add new column
@@ -99,6 +109,9 @@
 
 		// Save&Close WP-Editor
 		$('.minicomposer-save-wpeditor').on('click', saveWpEditor);
+
+		// Event for delete-button
+		$(document).on('click', '.minicomposer-delete', deleteColumnRow);
 	});
 
 
@@ -128,11 +141,25 @@
 			rowCount += 1;
 		});
 
-		//$('.minicomposer-row').sortable('refresh');
+		$('.minicomposer-row').sortable('refresh');
 
 		input.val(JSON.stringify(rowConfig));
 	}
 
+
+	function deleteColumnRow(e) {
+		var target = $(e.target);
+
+		if (target.closest('.minicomposer-column').length) {
+			// delete column
+			target.closest('.minicomposer-column').remove();
+		} else {
+			// delete row
+			target.closest('.minicomposer-row').remove();
+		}
+
+		updateComposer();
+	}
 
 	/**
 	 * Make Wp-Editor visible and fills with content from column

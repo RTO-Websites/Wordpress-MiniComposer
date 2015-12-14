@@ -23,7 +23,7 @@
                     <span class="options">
                         <span class="minicomposer-style-settings">Style</span>
                         <span class="minicomposer-responsive-settings">Responsive</span>
-                        <span class="minicomposer-delete-column">Delete</span>
+                        <span class="minicomposer-delete">Delete</span>
                     </span>
                 </li>
             <?php endforeach; ?>
@@ -31,7 +31,7 @@
             <span class="options">
                 <span class="minicomposer-style-settings">Style</span>
                 <span class="minicomposer-responsive-settings">Responsive</span>
-                <span class="minicomposer-delete-column">Delete</span>
+                <span class="minicomposer-delete">Delete</span>
             </span>
         </ul>
     <?php endforeach; ?>

@@ -58,6 +58,7 @@
     -o-sizing: border-box;
     box-sizing: border-box;
 }
+
 .minicomposer-column .content p {
     margin-top: 0;
 }
@@ -73,14 +74,6 @@
     margin-bottom: 20px;
     padding: 20px 15px 10px;
     font-size: 0;
-}
-
-.hidden-wp-editor {
-    display: none;
-}
-
-.hidden-wp-editor.visible {
-    display: block;
 }
 
 .ui-state-highlight {
@@ -117,6 +110,7 @@
     background-color: #eee;
     padding: 2px 3px 1px;
 }
+
 .minicomposer-sortable-rows .options span {
     display: inline-block;
     padding: 0 3px;
@@ -128,4 +122,36 @@
 .minicomposer-row > .options {
     margin-bottom: 0;
     right: 0;
+}
+
+.sublabel {
+    display: inline-block;
+    width: 80px;
+}
+
+
+/** upload image **/
+.upload-preview-image {
+    display: block;
+    max-height: 60px;
+    width: auto !important;
+    vertical-align: top;
+}
+
+.upload-preview-image:hover {
+    max-height: 300px;
+    max-width: 100%;
+}
+
+/** overlays **/
+.hidden-responsive-settings,
+.hidden-style-settings,
+.hidden-wp-editor {
+    display: none;
+}
+
+.hidden-responsive-settings.visible,
+.hidden-style-settings.visible,
+.hidden-wp-editor.visible {
+    display: block;
 }

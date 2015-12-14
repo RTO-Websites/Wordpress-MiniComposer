@@ -77,9 +77,44 @@
 			// set startSize of columns
 			$('.minicomposer-column').each(function(index, element) {
 				$(element).css({
-					width: (window.columnWidth * $(element).data('cols')) + 'px'
+					width: (window.columnWidth * $(element).data('medium')) + 'px'
 				});
 			});
+
+			// add upload
+			addUpload() ;
+
+
+		}
+
+		function addUpload() {
+			/**
+			 * Upload.
+			 */
+			$('.upload-button').click(function(e) {
+				window.uploadButton = $(e.target);
+				tb_show('', 'media-upload.php?type=image&TB_iframe=true');
+
+				return false;
+			});
+
+			/**
+			 * Insert URL to input
+			 */
+			window.send_to_editor = function(html) {
+				var imgurl = $('img', html).attr('src'),
+					imgElement = window.uploadButton.parent().find('.upload-preview-image'),
+					uploadField = window.uploadButton.parent().find('.upload-field');
+
+				if (imgElement.length) {
+					imgElement.prop('src', imgurl);
+				}
+
+				if (uploadField.length) {
+					imgElement.val(imgurl);
+				}
+				tb_remove();
+			}
 		}
 
 		/**
@@ -101,17 +136,26 @@
 		});
 
 
-		// Open WP-Editor
-		$(document).on('dblclick', '.minicomposer-column', openWpEditor);
-
-		// Cancel&Close WP-Editor
-		$('.minicomposer-cancel-wpeditor').on('click', cancelWpEditor);
-
-		// Save&Close WP-Editor
-		$('.minicomposer-save-wpeditor').on('click', saveWpEditor);
 
 		// Event for delete-button
 		$(document).on('click', '.minicomposer-delete', deleteColumnRow);
+
+
+		// Open WP-Editor
+		$(document).on('dblclick', '.minicomposer-column', openWpEditor);
+		// Cancel&Close WP-Editor
+		$('.minicomposer-cancel-wpeditor').on('click', cancelWpEditor);
+		// Save&Close WP-Editor
+		$('.minicomposer-save-wpeditor').on('click', saveWpEditor);
+
+
+		// Event for responsive button
+		$(document).on('click', '.minicomposer-responsive-settings', openResponsiveFields);
+		// Save and close responsive-settings
+		$('.minicomposer-save-responsive').on('click', saveResponsiveFields);
+		// Cancel&Close responsive-settings
+		$('.minicomposer-cancel-responsive').on('click', closeResponsiveFields);
+
 	});
 
 
@@ -131,9 +175,14 @@
 
 			$(row).find('> li').each(function(index, element) {
 				rowConfig[rowCount][colCount] = {
-					'cols': Math.floor($(element).outerWidth() / window.columnWidth),
-					'content': $(element).find('.content').html() //.replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0'),
+					small: $(element).data('small'),
+					medium: Math.floor($(element).outerWidth() / window.columnWidth),
+					large: $(element).data('large'),
+					cssclass: $(element).data('cssclass'),
+					padding: $(element).data('padding'),
+					content: $(element).find('.content').html()
 				};
+
 				colCount += 1;
 			});
 
@@ -147,6 +196,11 @@
 	}
 
 
+	/**
+	 * Deletes a column or row
+	 *
+	 * @param e
+     */
 	function deleteColumnRow(e) {
 		var target = $(e.target);
 
@@ -200,7 +254,6 @@
 
 		composerEditor = tinyMCE.get('composer-global-editor');
 		currentColumn.find('.content').html(composerEditor.getContent());
-		currentColumn = null;
 
 		closeWpEditor();
 
@@ -211,7 +264,55 @@
 	 * Make WP-Editor hidden
 	 */
 	function closeWpEditor() {
+		currentColumn = null;
 		$('.hidden-wp-editor').removeClass('visible');
+	}
+
+
+	/**
+	 * Display responsive-fields and fill with values from data-attribute
+	 *
+	 * @param e
+     */
+	function openResponsiveFields(e) {
+		$('.hidden-responsive-settings').addClass('visible');
+		currentColumn = $(e.target).closest('.minicomposer-column');
+		$('#responsiveClass').val(currentColumn.data('cssclass'));
+		$('#responsiveSmall').val(currentColumn.data('small'));
+		$('#responsiveMedium').val(currentColumn.data('medium'));
+		$('#responsiveLarge').val(currentColumn.data('large'));
+		//$('#columnPadding').val(currentColumn.data('padding'));
+	}
+
+	/**
+	 * Fill data-attribute with values from fields
+	 * and hide fields
+	 */
+	function saveResponsiveFields() {
+		if (!currentColumn) {
+			closeResponsiveFields();
+			return;
+		}
+
+		// set data-attributes
+		//currentColumn.data('padding', $('#columnPadding').val());
+		currentColumn.data('small', $('#responsiveSmall').val());
+		currentColumn.data('medium', $('#responsiveMedium').val());
+		currentColumn.data('large', $('#responsiveLarge').val());
+		currentColumn.data('cssclass', $('#responsiveClass').val());
+
+		currentColumn.css({width: window.columnWidth * $('#responsiveMedium').val() + 'px'});
+
+		closeResponsiveFields();
+		updateComposer();
+	}
+
+	/**
+	 * Cancel responsive fields
+	 */
+	function closeResponsiveFields() {
+		currentColumn = null;
+		$('.hidden-responsive-settings').removeClass('visible');
 	}
 
 })( jQuery );

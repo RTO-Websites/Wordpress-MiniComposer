@@ -1,14 +1,15 @@
 <?php namespace Admin;
 
-    /**
-     * The admin-specific functionality of the plugin.
-     *
-     * @link       MiniComposer
-     * @since      1.0.0
-     *
-     * @package    Minicomposer
-     * @subpackage Minicomposer/admin
-     */
+/**
+ * The admin-specific functionality of the plugin.
+ *
+ * @link       MiniComposer
+ * @since      1.0.0
+ *
+ * @package    Minicomposer
+ * @subpackage Minicomposer/admin
+ */
+use MagicAdminPage\MagicAdminPage;
 
 /**
  * The admin-specific functionality of the plugin.
@@ -47,7 +48,7 @@ class MinicomposerAdmin
         'minicomposerColumns' => array(
             'type'    => 'textarea',
             'label'   => '',
-            'trClass' => 'not-hidden',
+            'trClass' => 'hidden',
             'isJson'  => true,
         ),
     );
@@ -70,11 +71,13 @@ class MinicomposerAdmin
         $this->textdomain = $pluginName;
         $this->version = $version;
 
+        load_plugin_textdomain( $this->textdomain, false, '/' . $this->pluginName . '/languages' );
+
         // set fields for responsive
         $this->responsiveFields = array(
-            'responsiveClass' => array(
-                'type' => 'text',
-                'label' => __('CSS-Class', $this->textdomain),
+            'responsiveClass'  => array(
+                'type'  => 'text',
+                'label' => __( 'CSS-Class', $this->textdomain ),
             ),
             'responsiveSmall'  => array(
                 'type'    => 'select',
@@ -94,20 +97,57 @@ class MinicomposerAdmin
         );
 
         // set fields for styles
-        $this->styleFields =  array(
-            'columnPadding' => array(
-                'type'    => 'text',
-                'label'   => 'Padding',
+        $this->styleFields = array(
+            'columnPadding'    => array(
+                'type'  => 'text',
+                'label' => __( 'Padding', $this->textdomain ),
+            ),
+            'columnGutter'     => array(
+                'type'  => 'text',
+                'label' => __( 'Gutter', $this->textdomain ),
             ),
             'columnBackground' => array(
-                'type'    => 'background',
-                'label'   => __('Background', $this->textdomain),
+                'type'  => 'background',
+                'label' => __( 'Background', $this->textdomain ),
+            ),
+            'minHeight'        => array(
+                'type'  => 'input',
+                'label' => __( 'min-height', $this->textdomain ),
             ),
         );
 
+
+        $composerPage = new MagicAdminPage(
+            'minicomposer',
+            'MiniComposer',
+            'MiniComposer'
+        );
+
+        $composerPage->addFields( array(
+            'globalPadding'      => array(
+                'type'  => 'text',
+                'title' => __( 'Column-Padding', $this->textdomain ),
+            ),
+            'globalMinHeight'    => array(
+                'type'  => 'text',
+                'title' => __( 'Column-Min-Height', $this->textdomain ),
+            ),
+            'globalColumnMargin' => array(
+                'type'  => 'text',
+                'title' => __( 'Column-Margin-Bottom', $this->textdomain ),
+            ),
+            'globalRowMargin'    => array(
+                'type'  => 'text',
+                'title' => __( 'Row-Margin-Bottom', $this->textdomain ),
+            ),
+            'useBootstrap'       => array(
+                'type'  => 'checkbox',
+                'title' => __( 'Use bootstrap instead of foundation', $this->textdomain ),
+            ),
+        ) );
+
         add_action( 'add_meta_boxes', array( $this, 'registerPostSettings' ) );
         add_action( 'save_post', array( $this, 'savePostMeta' ), 10, 2 );
-
     }
 
     /**
@@ -250,16 +290,16 @@ class MinicomposerAdmin
                         break;
 
                     case 'background':
-                        echo '<span class="sublabel">Image</span>
+                        echo '<span class="sublabel">'.__('Image', $this->textdomain) .'</span>
                                 <input class="field-input ' . $inputClass . ' upload-field" type="hidden" name="' . $key . '-image" id="'
                             . $key . '-image" value=\''
                             . $value . '\' />
                             <input class="field-button ' . $inputClass . ' upload-button" type="button" name="' . $key . '-image-button" id="'
                             . $key . '-image-button" value=\''
-                            . __('Select image', $this->textdomain) . '\' />
-                            <img src="" alt="" id="'.$key.'-image-img" class=" upload-preview-image" />
+                            . __( 'Select image', $this->textdomain ) . '\' />
+                            <img src="" alt="" id="' . $key . '-image-img" class=" upload-preview-image" />
                             <br />';
-                        echo '<span class="sublabel">Color</span>
+                        echo '<span class="sublabel">'.__('Color', $this->textdomain). '</span>
                                 <input class="field-input ' . $inputClass . '" type="text" name="' . $key . '-color" id="'
                             . $key . '-color" value=\''
                             . $value . '\' /><br />';

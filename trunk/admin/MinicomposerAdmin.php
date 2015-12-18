@@ -218,6 +218,9 @@ class MinicomposerAdmin {
         $this->createFields( $post, $this->optionFields );
 
         $composerRows = get_post_meta( $post->ID, 'minicomposerColumns', true );
+        if ( empty( $composerRows ) ) {
+            $composerRows = array();
+        }
 
         include( 'partials/minicomposer-admin-display.php' );
     }

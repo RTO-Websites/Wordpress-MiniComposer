@@ -21,8 +21,7 @@ use MagicAdminPage\MagicAdminPage;
  * @subpackage Minicomposer/public
  * @author     Sascha Hennemann <s.hennemann@rto.de>
  */
-class MinicomposerPublic
-{
+class MinicomposerPublic {
 
     /**
      * The ID of this plugin.
@@ -52,8 +51,7 @@ class MinicomposerPublic
      * @param      string $pluginName The name of the plugin.
      * @param      string $version The version of this plugin.
      */
-    public function __construct( $pluginName, $version )
-    {
+    public function __construct( $pluginName, $version ) {
 
         $this->pluginName = $pluginName;
         $this->version = $version;
@@ -63,8 +61,7 @@ class MinicomposerPublic
         add_action( 'wp_head', array( $this, 'addHeaderStyle' ) );
     }
 
-    public function appendColumns( $content )
-    {
+    public function appendColumns( $content ) {
         global $post;
         $gridOutput = '';
 
@@ -93,16 +90,15 @@ class MinicomposerPublic
     /**
      * Adds style for grid on header
      */
-    public function addHeaderStyle()
-    {
+    public function addHeaderStyle() {
         echo '<style class="minicomposer-style">';
         echo '.mc-row .inner-column {';
-        echo !empty( $this->options[ 'globalPadding' ] ) ? 'padding:' . $this->options[ 'globalPadding' ] . ';' : '';
-        echo !empty( $this->options[ 'globalMinHeight' ] ) ? 'min-height:' . $this->options[ 'globalMinHeight' ] . ';' : '';
-        echo !empty( $this->options[ 'globalColumnMargin' ] ) ? 'margin-bottom:' . $this->options[ 'globalColumnMargin' ] . ';' : '';
+        echo !empty( $this->options['globalPadding'] ) ? 'padding:' . $this->options['globalPadding'] . ';' : '';
+        echo !empty( $this->options['globalMinHeight'] ) ? 'min-height:' . $this->options['globalMinHeight'] . ';' : '';
+        echo !empty( $this->options['globalColumnMargin'] ) ? 'margin-bottom:' . $this->options['globalColumnMargin'] . ';' : '';
         echo '}';
-        if ( !empty( $this->options[ 'globalRowMargin' ] ) ) {
-            echo '.mc-row { margin-bottom: ' . $this->options[ 'globalRowMargin' ] . '; }';
+        if ( !empty( $this->options['globalRowMargin'] ) ) {
+            echo '.mc-row { margin-bottom: ' . $this->options['globalRowMargin'] . '; }';
         }
         echo '</style>';
     }
@@ -113,8 +109,7 @@ class MinicomposerPublic
      * @param $column
      * @return string
      */
-    public function createColumnClasses( $column )
-    {
+    public function createColumnClasses( $column ) {
         $columnClasses = '';
         if ( empty( $this->options['useBootstrap'] ) ) {
             $columnClasses .= !empty( $column->small ) ? ' small-' . $column->small : '';
@@ -133,8 +128,7 @@ class MinicomposerPublic
     /**
      * Create style for column (background, padding)
      */
-    public function createColumnStyle( $column )
-    {
+    public function createColumnStyle( $column ) {
         $columnStyle = '';
         $columnStyle .= !empty( $column->backgroundimage ) ? 'background-image:url(' . $column->backgroundimage . ');' : '';
         $columnStyle .= !empty( $column->backgroundcolor ) ? 'background-color:' . $column->backgroundcolor . ';' : '';
@@ -152,8 +146,7 @@ class MinicomposerPublic
      *
      * @since    1.0.0
      */
-    public function enqueueStyles()
-    {
+    public function enqueueStyles() {
 
         /**
          * This function is provided for demonstration purposes only.
@@ -177,8 +170,7 @@ class MinicomposerPublic
      *
      * @since    1.0.0
      */
-    public function enqueueScripts()
-    {
+    public function enqueueScripts() {
 
         /**
          * This function is provided for demonstration purposes only.

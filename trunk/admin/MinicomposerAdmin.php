@@ -21,8 +21,7 @@ use MagicAdminPage\MagicAdminPage;
  * @subpackage Minicomposer/admin
  * @author     Sascha Hennemann <s.hennemann@rto.de>
  */
-class MinicomposerAdmin
-{
+class MinicomposerAdmin {
 
     /**
      * The ID of this plugin.
@@ -46,10 +45,10 @@ class MinicomposerAdmin
 
     private $optionFields = array(
         'minicomposerColumns' => array(
-            'type'    => 'textarea',
-            'label'   => '',
+            'type' => 'textarea',
+            'label' => '',
             'trClass' => 'hidden',
-            'isJson'  => true,
+            'isJson' => true,
         ),
     );
 
@@ -65,8 +64,7 @@ class MinicomposerAdmin
      * @param      string $pluginName The name of this plugin.
      * @param      string $version The version of this plugin.
      */
-    public function __construct( $pluginName, $version )
-    {
+    public function __construct( $pluginName, $version ) {
         $this->pluginName = $pluginName;
         $this->textdomain = $pluginName;
         $this->version = $version;
@@ -75,43 +73,43 @@ class MinicomposerAdmin
 
         // set fields for responsive
         $this->responsiveFields = array(
-            'responsiveClass'  => array(
-                'type'  => 'text',
+            'responsiveClass' => array(
+                'type' => 'text',
                 'label' => __( 'CSS-Class', $this->textdomain ),
             ),
-            'responsiveSmall'  => array(
-                'type'    => 'select',
-                'label'   => 'Small',
+            'responsiveSmall' => array(
+                'type' => 'select',
+                'label' => 'Small',
                 'options' => $this->oneToTwelve,
             ),
             'responsiveMedium' => array(
-                'type'    => 'select',
-                'label'   => 'Medium',
+                'type' => 'select',
+                'label' => 'Medium',
                 'options' => $this->oneToTwelve,
             ),
-            'responsiveLarge'  => array(
-                'type'    => 'select',
-                'label'   => 'Large',
+            'responsiveLarge' => array(
+                'type' => 'select',
+                'label' => 'Large',
                 'options' => $this->oneToTwelve,
             ),
         );
 
         // set fields for styles
         $this->styleFields = array(
-            'columnPadding'    => array(
-                'type'  => 'text',
+            'columnPadding' => array(
+                'type' => 'text',
                 'label' => __( 'Padding', $this->textdomain ),
             ),
-            'columnGutter'     => array(
-                'type'  => 'text',
+            'columnGutter' => array(
+                'type' => 'text',
                 'label' => __( 'Gutter', $this->textdomain ),
             ),
             'columnBackground' => array(
-                'type'  => 'background',
+                'type' => 'background',
                 'label' => __( 'Background', $this->textdomain ),
             ),
-            'minHeight'        => array(
-                'type'  => 'input',
+            'minHeight' => array(
+                'type' => 'input',
                 'label' => __( 'min-height', $this->textdomain ),
             ),
         );
@@ -124,24 +122,24 @@ class MinicomposerAdmin
         );
 
         $composerPage->addFields( array(
-            'globalPadding'      => array(
-                'type'  => 'text',
+            'globalPadding' => array(
+                'type' => 'text',
                 'title' => __( 'Column-Padding', $this->textdomain ),
             ),
-            'globalMinHeight'    => array(
-                'type'  => 'text',
+            'globalMinHeight' => array(
+                'type' => 'text',
                 'title' => __( 'Column-Min-Height', $this->textdomain ),
             ),
             'globalColumnMargin' => array(
-                'type'  => 'text',
+                'type' => 'text',
                 'title' => __( 'Column-Margin-Bottom', $this->textdomain ),
             ),
-            'globalRowMargin'    => array(
-                'type'  => 'text',
+            'globalRowMargin' => array(
+                'type' => 'text',
                 'title' => __( 'Row-Margin-Bottom', $this->textdomain ),
             ),
-            'useBootstrap'       => array(
-                'type'  => 'checkbox',
+            'useBootstrap' => array(
+                'type' => 'checkbox',
                 'title' => __( 'Use bootstrap instead of foundation', $this->textdomain ),
             ),
         ) );
@@ -155,8 +153,7 @@ class MinicomposerAdmin
      *
      * @since    1.0.0
      */
-    public function enqueueStyles()
-    {
+    public function enqueueStyles() {
 
         /**
          * This function is provided for demonstration purposes only.
@@ -180,8 +177,7 @@ class MinicomposerAdmin
      *
      * @since    1.0.0
      */
-    public function enqueueScripts()
-    {
+    public function enqueueScripts() {
 
         /**
          * This function is provided for demonstration purposes only.
@@ -205,8 +201,7 @@ class MinicomposerAdmin
      *
      * @return boolean
      */
-    public function registerPostSettings()
-    {
+    public function registerPostSettings() {
         $postTypes = get_post_types();
         foreach ( $postTypes as $postType ) {
             add_meta_box( 'minicomposer', __( 'MiniComposer', $this->textdomain ), array( $this, 'addComposer' ), $postType );
@@ -219,8 +214,7 @@ class MinicomposerAdmin
      *
      * @param type $post
      */
-    public function addComposer( $post )
-    {
+    public function addComposer( $post ) {
         $this->createFields( $post, $this->optionFields );
 
         $composerRows = get_post_meta( $post->ID, 'minicomposerColumns', true );
@@ -231,32 +225,31 @@ class MinicomposerAdmin
     /**
      * Creates fields from property optionFields
      */
-    private function createFields( $post, $fields )
-    {
+    private function createFields( $post, $fields ) {
         echo '<table class="form-table">';
 
         if ( !empty( $fields ) ) {
             // Loop Post-Options and generate inputs
             foreach ( $fields as $key => $option ) {
-                $trClass = !empty( $option[ 'trClass' ] ) ? $option[ 'trClass' ] : '';
-                $inputClass = !empty( $option[ 'inputClass' ] ) ? $option[ 'inputClass' ] : '';
+                $trClass = !empty( $option['trClass'] ) ? $option['trClass'] : '';
+                $inputClass = !empty( $option['inputClass'] ) ? $option['inputClass'] : '';
 
                 $value = get_post_meta( $post->ID, $key, true );
 
-                if ( !empty( $option[ 'isJson' ] ) ) {
+                if ( !empty( $option['isJson'] ) ) {
                     $value = json_encode( $value );
                 }
 
-                echo '<tr valign="top" class="input-type-' . $option[ 'type' ] . ' ' . $trClass . '">';
+                echo '<tr valign="top" class="input-type-' . $option['type'] . ' ' . $trClass . '">';
                 // Generate Label
-                echo '<th scope="row"><label class="field-label" for="' . $key . '">' . $option[ 'label' ] . '</label></th>';
+                echo '<th scope="row"><label class="field-label" for="' . $key . '">' . $option['label'] . '</label></th>';
                 echo '<td>';
-                switch ( $option[ 'type' ] ) {
+                switch ( $option['type'] ) {
                     case 'select':
                         // Generate select
                         echo '<select class="field-input" name="' . $key . ' ' . $inputClass . '" id="' . $key . '">';
-                        if ( !empty( $option[ 'options' ] ) && is_array( $option[ 'options' ] ) ) {
-                            foreach ( $option[ 'options' ] as $optionKey => $optionTitle ) {
+                        if ( !empty( $option['options'] ) && is_array( $option['options'] ) ) {
+                            foreach ( $option['options'] as $optionKey => $optionTitle ) {
                                 $selected = '';
                                 //echo '<br/>Key'.$option_key.'-'.get_post_meta($post->ID, $key, true);
                                 if ( $optionKey == $value ) {
@@ -290,7 +283,7 @@ class MinicomposerAdmin
                         break;
 
                     case 'background':
-                        echo '<span class="sublabel">'.__('Image', $this->textdomain) .'</span>
+                        echo '<span class="sublabel">' . __( 'Image', $this->textdomain ) . '</span>
                                 <input class="field-input ' . $inputClass . ' upload-field" type="hidden" name="' . $key . '-image" id="'
                             . $key . '-image" value=\''
                             . $value . '\' />
@@ -299,7 +292,7 @@ class MinicomposerAdmin
                             . __( 'Select image', $this->textdomain ) . '\' />
                             <img src="" alt="" id="' . $key . '-image-img" class=" upload-preview-image" />
                             <br />';
-                        echo '<span class="sublabel">'.__('Color', $this->textdomain). '</span>
+                        echo '<span class="sublabel">' . __( 'Color', $this->textdomain ) . '</span>
                                 <input class="field-input ' . $inputClass . '" type="text" name="' . $key . '-color" id="'
                             . $key . '-color" value=\''
                             . $value . '\' /><br />';
@@ -321,7 +314,7 @@ class MinicomposerAdmin
                     case 'number':
                     case 'text':
                         // Generate text-input
-                        echo '<input class="field-input ' . $inputClass . '" type="' . $option[ 'type' ] . '" name="' . $key . '" id="' . $key . '" value=\''
+                        echo '<input class="field-input ' . $inputClass . '" type="' . $option['type'] . '" name="' . $key . '" id="' . $key . '" value=\''
                             . $value . '\' />';
                         break;
                 }
@@ -340,17 +333,16 @@ class MinicomposerAdmin
      * @param type $post
      * @return type
      */
-    public function savePostMeta( $postId, $post )
-    {
+    public function savePostMeta( $postId, $post ) {
         if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
             return;
         }
 
-        if ( !isset( $_POST[ 'post_type' ] ) ) {
+        if ( !isset( $_POST['post_type'] ) ) {
             return;
         }
 
-        if ( $_POST[ 'post_type' ] == 'page' ) {
+        if ( $_POST['post_type'] == 'page' ) {
             if ( !current_user_can( 'edit_page', $postId ) ) {
                 return;
             }
@@ -364,7 +356,7 @@ class MinicomposerAdmin
             foreach ( $this->optionFields as $key => $postOption ) {
                 $value = filter_input( INPUT_POST, $key );
 
-                if ( !empty( $postOption[ 'isJson' ] ) ) {
+                if ( !empty( $postOption['isJson'] ) ) {
                     $value = json_decode( $value );
                 }
                 update_post_meta( $postId, $key, $value );

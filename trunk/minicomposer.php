@@ -20,7 +20,7 @@ use Inc\MinicomposerDeactivator;
  * Plugin Name:       MiniComposer
  * Plugin URI:        MiniComposer
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            Sascha Hennemann
  * Author URI:        MiniComposer
  * License:           GPL-2.0+

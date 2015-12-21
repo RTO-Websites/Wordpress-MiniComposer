@@ -12,10 +12,17 @@ Build layouts with drag&drop for every page/post
 
 == Description ==
 
-MiniComposer is a wordpress-plugin which add a layout-grid to every page/post.
-So you can build any layout with a drag&drop editor.
+MiniComposer ist a layout page builder plugin.
+You can build any layout in a 12 column grid in an intuitive and easy to use drag and drop editor.
+
+No programming knowledge required.
+
 
 Works with every theme which uses bootstrap or foundation.
+
+
+You can help to develop on
+https://github.com/crazypsycho/Wordpress-MiniComposer
 
 == Installation ==
 
@@ -23,12 +30,16 @@ Just install and activate the plugin. Then you can see MiniComposer under every 
 
 == Screenshots ==
 
-1. Show composer in a post
-2. Show style-settings
-3. Show responsive-settings
-4. Show global-settings
+1. Composer in a post with multiple columns with backgrounds and text.
+2. Style-settings
+3. Responsive-settings
+4. Global-settings
 
 == Changelog ==
+
+= 1.0.1 =
+* Some little fixes and optimizations
+* Resizable min-height
 
 = 1.0 =
 * Release

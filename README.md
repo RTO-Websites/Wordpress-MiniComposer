@@ -1,7 +1,10 @@
 # MiniComposer
 
-MiniComposer is a wordpress-plugin which add a full responsive layout-grid to every page/post.
-So you can build any layout with a drag&drop editor.
+MiniComposer ist a layout page builder plugin for wordpress.
+You can build any layout in a 12 column grid in an intuitive and easy to use drag and drop editor.
+
+No programming knowledge required.
+
 
 Works with every theme which uses bootstrap or foundation.
 

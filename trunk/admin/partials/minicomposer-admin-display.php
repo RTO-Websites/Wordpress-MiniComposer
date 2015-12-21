@@ -66,3 +66,13 @@
     <div class="button button-cancel minicomposer-cancel-style"><?php _e( 'Cancel' ); ?></div>
     <div class="button button-save button-primary minicomposer-save-style"><?php _e( 'Save' ); ?></div>
 </div>
+
+
+<script>
+    window.columnMinHeight = '<?php echo intval($this->options['globalMinHeight']); ?>';
+</script>
+<style>
+    .minicomposer-column .content {
+        min-height: <?php echo  intval($this->options['globalMinHeight']) - 10 . 'px'; ?>;
+    }
+</style>

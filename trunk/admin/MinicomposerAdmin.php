@@ -52,6 +52,8 @@ class MinicomposerAdmin {
         ),
     );
 
+    private $options;
+
     private $oneToTwelve = array( '', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 );
 
     private $responsiveFields = null;
@@ -68,6 +70,7 @@ class MinicomposerAdmin {
         $this->pluginName = $pluginName;
         $this->textdomain = $pluginName;
         $this->version = $version;
+        $this->options = MagicAdminPage::getOption( 'minicomposer' );
 
         load_plugin_textdomain( $this->textdomain, false, '/' . $this->pluginName . '/languages' );
 

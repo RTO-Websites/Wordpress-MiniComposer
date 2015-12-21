@@ -121,7 +121,7 @@
     $('.minicomposer-column').resizable(resizeArgs);
 
     // make cols sortable
-    jQuery('.minicomposer-row').sortable(sortableColArgs);
+    $('.minicomposer-row').sortable(sortableColArgs);
 
     // make rows sortable
     $('.minicomposer-sortable-rows').sortable(sortableRowArgs);
@@ -144,11 +144,11 @@
     window.columnWidth = Math.floor(container.width() / 12);
 
     resizeArgs = {
-      grid: window.columnWidth,
+      grid: [window.columnWidth, 1],
       minWidth: window.columnWidth,
       maxWidth: maxWidth,
-      handles: 'e',
-      resize: updateComposer
+      handles: 'e, s',
+      stop: resizeColumn,
     };
 
     sortableRowArgs = {
@@ -168,33 +168,64 @@
    * Add upload for background-image
    */
   function addUpload() {
+    // backup original-function to work with wp-editor
+    window.oldSendToEditor = window.send_to_editor;
+
     /**
      * Upload.
      */
     $('.upload-button').click(function (e) {
-      window.uploadButton = $(e.target);
+      /**
+       * Insert URL to input
+       */
+      window.send_to_editor = function (html) {
+        var imgurl = $('img', html).attr('src'),
+          imgElement = window.composerUploadButton.parent().find('.upload-preview-image'),
+          uploadField = window.composerUploadButton.parent().find('.upload-field');
+
+        // fill preview image
+        if (imgElement.length) {
+          imgElement.prop('src', imgurl);
+        }
+
+        // fill upload-fields
+        if (uploadField.length) {
+          uploadField.val(imgurl);
+        }
+        tb_remove();
+
+        window.composerUploadButton = null;
+
+
+        // write back original-function
+        window.send_to_editor = window.oldSendToEditor;
+      };
+
+      window.composerUploadButton = $(e.target);
       tb_show('', 'media-upload.php?type=image&TB_iframe=true');
 
       return false;
     });
+  }
 
-    /**
-     * Insert URL to input
-     */
-    window.send_to_editor = function (html) {
-      var imgurl = $('img', html).attr('src'),
-        imgElement = window.uploadButton.parent().find('.upload-preview-image'),
-        uploadField = window.uploadButton.parent().find('.upload-field');
+  /**
+   * Trigger at end of resize
+   *
+   * @param e
+   */
+  function resizeColumn(e) {
+    // set new min-height
+    var newMinHeight = $(e.target).height() - 10;
 
-      if (imgElement.length) {
-        imgElement.prop('src', imgurl);
-      }
-
-      if (uploadField.length) {
-        uploadField.val(imgurl);
-      }
-      tb_remove();
+    // set only if a minheight exists and newMinheight is not default
+    if (newMinHeight !== window.columnMinHeight || $(e.target).data('minheight')) {
+      console.info('set');
+      $(e.target).data('minheight', newMinHeight + 'px');
+      $(e.target).css({'height': ''});
+      $(e.target).find('> .content').css({'min-height': newMinHeight + 'px'});
     }
+
+    updateComposer();
   }
 
   /**

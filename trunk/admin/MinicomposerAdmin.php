@@ -204,6 +204,9 @@ class MinicomposerAdmin {
     public function registerPostSettings() {
         $postTypes = get_post_types();
         foreach ( $postTypes as $postType ) {
+            if ( !post_type_supports( $postType, 'editor' ) ) {
+                continue;
+            }
             add_meta_box( 'minicomposer', __( 'MiniComposer', $this->textdomain ), array( $this, 'addComposer' ), $postType );
         }
         return false;
@@ -247,15 +250,23 @@ class MinicomposerAdmin {
                 // Generate Label
                 echo '<th scope="row"><label class="field-label" for="' . $key . '">' . $option['label'] . '</label></th>';
                 echo '<td>';
+
+                if ( !empty( $option['descTop'] ) ) {
+                    echo $option['descTop'] . '<br />';
+                }
+
                 switch ( $option['type'] ) {
                     case 'select':
                         // Generate select
-                        echo '<select class="field-input" name="' . $key . ' ' . $inputClass . '" id="' . $key . '">';
+                        $multiple = !empty( $option['multiple'] ) ? ' multiple ' : '';
+                        $selectKey = !empty( $option['multiple'] ) ? $key . '[]' : $key;
+                        echo '<select class="field-input" name="' . $selectKey . '" ' . $inputClass . ' id="' . $key . '" ' . $multiple . '>';
                         if ( !empty( $option['options'] ) && is_array( $option['options'] ) ) {
                             foreach ( $option['options'] as $optionKey => $optionTitle ) {
                                 $selected = '';
-                                //echo '<br/>Key'.$option_key.'-'.get_post_meta($post->ID, $key, true);
-                                if ( $optionKey == $value ) {
+                                if ( $optionKey == $value ||
+                                    is_array( $value ) && in_array( $optionKey, $value )
+                                ) {
                                     $selected = ' selected="selected"';
                                 }
                                 echo '<option value="' . $optionKey . '"' . $selected . '>' . $optionTitle . '</option>';
@@ -272,15 +283,9 @@ class MinicomposerAdmin {
 
                     case 'textarea':
                         // Generate textarea
-                        echo '<textarea class="field-input ' . $inputClass . '" name="' . $key . '" id="' . $key . '">'
-                            . $value .
-                            '</textarea>';
-                        break;
-
-
-                    case 'textarea':
-                        // Generate textarea
-                        echo '<textarea class="field-input ' . $inputClass . '" name="' . $key . '" id="' . $key . '">'
+                        $cols = !empty( $option['cols'] ) ? ' cols="' . $option['cols'] . '"' : '';
+                        $rows = !empty( $option['rows'] ) ? ' rows="' . $option['rows'] . '"' : '';
+                        echo '<textarea class="field-input ' . $inputClass . '" name="' . $key . '" id="' . $key . '" ' . $rows . $cols . '>'
                             . $value .
                             '</textarea>';
                         break;
@@ -321,6 +326,10 @@ class MinicomposerAdmin {
                             . $value . '\' />';
                         break;
                 }
+                if ( !empty( $option['desc'] ) ) {
+                    echo '<br />' . $option['desc'];
+                }
+
                 echo '</td></tr>';
             }
         }
@@ -357,7 +366,16 @@ class MinicomposerAdmin {
         // Save form-fields
         if ( !empty( $this->optionFields ) ) {
             foreach ( $this->optionFields as $key => $postOption ) {
-                $value = filter_input( INPUT_POST, $key );
+                if ( isset( $_POST[$key] ) && is_array( $_POST[$key] ) ) {
+                    // multiselect
+                    $value = array();
+                    foreach ( $_POST[$key] as $aKey => $aValue ) {
+                        $value[] = filter_var( $aValue );
+                    }
+                } else {
+                    // single field
+                    $value = filter_input( INPUT_POST, $key );
+                }
 
                 if ( !empty( $postOption['isJson'] ) ) {
                     $value = json_decode( $value );

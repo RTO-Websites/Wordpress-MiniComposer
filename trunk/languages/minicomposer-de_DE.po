@@ -21,7 +21,7 @@ msgid "Column-Margin-Bottom"
 msgstr "Spalten-Abstand-Unten"
 
 msgid "Row-Margin-Bottom"
-msgstr "Zeilen-Abtand-Unten"
+msgstr "Zeilen-Abstand-Unten"
 
 msgid "Use bootstrap instead of foundation"
 msgstr "Verwende Bootstrap anstatt Foundation"

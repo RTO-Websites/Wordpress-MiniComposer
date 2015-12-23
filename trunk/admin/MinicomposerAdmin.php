@@ -121,7 +121,9 @@ class MinicomposerAdmin {
         $composerPage = new MagicAdminPage(
             'minicomposer',
             'MiniComposer',
-            'MiniComposer'
+            'MiniComposer',
+            null,
+            'dashicons-editor-table'
         );
 
         $composerPage->addFields( array(

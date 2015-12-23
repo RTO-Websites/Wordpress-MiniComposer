@@ -67,6 +67,10 @@ class MinicomposerPublic {
 
         $grid = get_post_meta( $post->ID, 'minicomposerColumns', true );
 
+        if ( empty( $grid ) ) {
+            return $content;
+        }
+
         foreach ( $grid as $rowIndex => $row ) {
             $gridOutput .= '<div class="row  mc-row">';
             foreach ( $row as $columnIndex => $column ) {

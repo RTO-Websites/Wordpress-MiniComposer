@@ -307,6 +307,10 @@
     closeResponsiveFields();
     closeStyleFields();
 
+    if (!$(e.target).is('.minicomposer-column')) {
+      return;
+    }
+
     var content = $(e.target).find('.content').html();
 
     composerEditor = tinyMCE.get('composer-global-editor');

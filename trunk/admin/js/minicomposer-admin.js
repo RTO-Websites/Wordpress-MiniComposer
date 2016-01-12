@@ -310,10 +310,9 @@
     if (!$(e.target).is('.minicomposer-column')) {
       return;
     }
-
     var content = $(e.target).find('.content').html();
 
-    composerEditor = tinyMCE.get('composer-global-editor');
+    composerEditor = tinyMCE.get('composer_global_editor');
 
     if (!composerEditor) {
       return;
@@ -331,7 +330,7 @@
    * @param e
    */
   function cancelWpEditor(e) {
-    composerEditor = tinyMCE.get('composer-global-editor');
+    composerEditor = tinyMCE.get('composer_global_editor');
     currentColumn = null;
     composerEditor.setContent('');
     closeWpEditor();
@@ -348,7 +347,7 @@
       return;
     }
 
-    composerEditor = tinyMCE.get('composer-global-editor');
+    composerEditor = tinyMCE.get('composer_global_editor');
     currentColumn.find('.content').html(composerEditor.getContent());
 
     closeWpEditor();

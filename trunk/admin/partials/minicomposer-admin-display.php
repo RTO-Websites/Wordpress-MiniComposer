@@ -46,7 +46,7 @@
 
 <div class="global-wp-editor composer-overlay">
     <?php
-    wp_editor( '', 'composer-global-editor' );
+    wp_editor( '', 'composer_global_editor' );
     ?>
     <div class="button button-cancel button-secondary minicomposer-cancel-wpeditor"><?php _e( 'Cancel' ); ?></div>
     <div class="button button-save button-primary minicomposer-save-wpeditor"><?php _e( 'Save' ); ?></div>

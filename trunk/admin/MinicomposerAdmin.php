@@ -70,7 +70,12 @@ class MinicomposerAdmin {
         $this->pluginName = $pluginName;
         $this->textdomain = $pluginName;
         $this->version = $version;
+
+        $defaultMinHeight = '40';
         $this->options = MagicAdminPage::getOption( 'minicomposer' );
+        if (empty($this->options['globalMinHeight'])) {
+            $this->options['globalMinHeight'] = $defaultMinHeight;
+        }
 
         load_plugin_textdomain( $this->textdomain, false, '/' . $this->pluginName . '/languages' );
 

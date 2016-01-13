@@ -312,9 +312,11 @@
     }
     var content = $(e.target).find('.content').html();
 
-    composerEditor = tinyMCE.get('composer_global_editor');
+    switchEditors.go('composer_global_editor', 'tinymce')
 
+    composerEditor = tinyMCE.get('composer_global_editor');
     if (!composerEditor) {
+      console.info('WP-Editor not found');
       return;
     }
 
@@ -362,7 +364,6 @@
     currentColumn = null;
     $('.global-wp-editor').removeClass('visible');
   }
-
 
   /**
    * Display responsive-fields and fill with values from data-attribute

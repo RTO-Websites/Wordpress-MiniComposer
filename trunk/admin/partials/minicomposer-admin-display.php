@@ -80,3 +80,23 @@
         min-height: <?php echo intval($this->options['globalMinHeight']) - 10 . 'px'; ?>;
     }
 </style>
+
+<datalist id="datalist-bg-size">
+    <option>cover</option>
+    <option>contain</option>
+</datalist>
+<datalist id="datalist-bg-position">
+    <option>top center</option>
+    <option>top left</option>
+    <option>top right</option>
+    <option>center</option>
+    <option>bottom center</option>
+    <option>bottom left</option>
+    <option>bottom right</option>
+</datalist>
+<datalist id="datalist-bg-repeat">
+    <option>repeat</option>
+    <option>repeat-x</option>
+    <option>repeat-y</option>
+    <option>no-repeat</option>
+</datalist>

@@ -316,15 +316,15 @@ class MinicomposerAdmin {
                             . $key . '-color" value=\''
                             . $value . '\' /><br />';
                         echo '<span class="sublabel">Repeat</span>
-                                <input class="field-input ' . $inputClass . '" type="text" name="' . $key . '-repeat" id="'
+                                <input list="datalist-bg-repeat" class="field-input ' . $inputClass . '" type="text" name="' . $key . '-repeat" id="'
                             . $key . '-repeat" value=\''
                             . $value . '\' /><br />';
                         echo '<span class="sublabel">Position</span>
-                                <input class="field-input ' . $inputClass . '" type="text" name="' . $key . '-position" id="'
+                                <input list="datalist-bg-position" class="field-input ' . $inputClass . '" type="text" name="' . $key . '-position" id="'
                             . $key . '-position" value=\''
                             . $value . '\' /><br />';
                         echo '<span class="sublabel">Size</span>
-                                <input class="field-input ' . $inputClass . '" type="text" name="' . $key . '-size" id="'
+                                <input list="datalist-bg-size" class="field-input ' . $inputClass . '" type="text" name="' . $key . '-size" id="'
                             . $key . '-size" value=\''
                             . $value . '\' /><br />';
                         break;

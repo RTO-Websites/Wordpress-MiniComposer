@@ -58,3 +58,9 @@ msgstr "Zeile"
 
 msgid "Column"
 msgstr "Spalte"
+
+msgid "2 Columns"
+msgstr "2 Spalten"
+
+msgid "3 Columns"
+msgstr "3 Spalten"

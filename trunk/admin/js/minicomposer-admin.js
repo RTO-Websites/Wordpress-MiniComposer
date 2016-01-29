@@ -75,7 +75,9 @@
 
 
     // Event for delete-button
-    $(document).on('click', '.minicomposer-delete', deleteColumnRow);
+    $(document).on('click', '.options .minicomposer-delete', deleteColumnRow);
+    // Event for delete-button
+    $(document).on('click', '.global-style-settings .minicomposer-delete', removeBackgroundImage);
 
 
     // Open WP-Editor
@@ -599,6 +601,17 @@
     }
 
     return filteredData;
+  }
+
+  function removeBackgroundImage(e) {
+    var target = $(e.target),
+      image = target.parent().find('.upload-preview-image'),
+      input = target.parent().find('.upload-field');
+
+    input.val('');
+    image.attr('src', '');
+    console.info('remove', target);
+
   }
 
 })(jQuery);

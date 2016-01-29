@@ -204,6 +204,7 @@
   position: relative;
   font-family: dashicons;
   font-size: 12px;
+  cursor: pointer;
 }
 
 .minicomposer-style-settings:before {

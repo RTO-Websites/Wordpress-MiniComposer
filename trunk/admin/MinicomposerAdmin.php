@@ -73,7 +73,7 @@ class MinicomposerAdmin {
 
         $defaultMinHeight = '40';
         $this->options = MagicAdminPage::getOption( 'minicomposer' );
-        if (empty($this->options['globalMinHeight'])) {
+        if ( empty( $this->options['globalMinHeight'] ) ) {
             $this->options['globalMinHeight'] = $defaultMinHeight;
         }
 
@@ -307,9 +307,10 @@ class MinicomposerAdmin {
                             . $value . '\' />
                             <input class="field-button ' . $inputClass . ' upload-button" type="button" name="' . $key . '-image-button" id="'
                             . $key . '-image-button" value=\''
-                            . __( 'Select image', $this->textdomain ) . '\' />
+                            . __( 'Select image', $this->textdomain ) . '\' /> <span class="minicomposer-delete delete-image"></span>
                             <img src="" alt="" id="' . $key . '-image-img" class=" upload-preview-image" />
                             <br />';
+
                         echo '<span class="sublabel">' . __( 'Color', $this->textdomain ) . '</span>
                                 <input class="field-input ' . $inputClass . '" type="text" name="' . $key . '-color" id="'
                             . $key . '-color" value=\''

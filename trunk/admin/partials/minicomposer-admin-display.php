@@ -73,10 +73,10 @@
 
 
 <script>
-    window.columnMinHeight = '<?php echo intval($this->options['globalMinHeight']); ?>';
+    window.columnMinHeight = '<?php echo intval( $this->options['globalMinHeight'] ); ?>';
 </script>
 <style>
     .minicomposer-column .content {
-        min-height: <?php echo  intval($this->options['globalMinHeight']) - 10 . 'px'; ?>;
+        min-height: <?php echo intval($this->options['globalMinHeight']) - 10 . 'px'; ?>;
     }
 </style>

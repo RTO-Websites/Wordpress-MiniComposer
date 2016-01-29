@@ -525,6 +525,17 @@
       return;
     }
 
+    // set px to every size-value if not empty
+    if (!isNaN($('#columnPadding').val()) && $('#columnPadding').val() > 0) {
+      $('#columnPadding').val($('#columnPadding').val() + 'px');
+    }
+    if (!isNaN($('#columnGutter').val()) && $('#columnGutter').val() > 0) {
+      $('#columnGutter').val($('#columnGutter').val() + 'px');
+    }
+    if (!isNaN($('#minheight').val()) && $('#minheight').val() > 0) {
+      $('#minheight').val($('#minheight').val() + 'px');
+    }
+
     // set data-attributes
     currentColumn.data('backgroundimage', $('#columnBackground-image').val());
     currentColumn.data('backgroundcolor', $('#columnBackground-color').val());

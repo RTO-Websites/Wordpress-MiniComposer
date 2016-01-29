@@ -45,6 +45,11 @@
 
       initEvents();
 
+      // set container width
+      $('.minicomposer-sortable-rows').css({
+        width: ($('.minicomposer-sortable-rows').width() + 'px')
+      });
+
       updateComposer();
     }
 
@@ -52,38 +57,21 @@
      * Add new column
      */
     $('.minicomposer-add-column').on('click', function () {
-      var column = $('<li class="minicomposer-column">' +
-        '<span class="content"></span>' +
-        '<span class="options">' +
-        '<span class="minicomposer-style-settings">Style</span>' +
-        '<span class="minicomposer-responsive-settings">Responsive</span>' +
-        '<span class="minicomposer-delete">Delete</span>' +
-        '</span>' +
-        '</li>');
-      $('.minicomposer-row').last().append(column);
+      addColumn(1);
+    });
 
-      column.resizable(resizeArgs);
-      updateComposer();
+    $('.minicomposer-add-column-2').on('click', function () {
+      addColumn(2);
+    });
+
+    $('.minicomposer-add-column-3').on('click', function () {
+      addColumn(3);
     });
 
     /**
      * Add new row
      */
-    $('.minicomposer-add-row').on('click', function () {
-      var newRow = $('<ul class="minicomposer-row">' +
-        '<span class="options">' +
-        '<span class="minicomposer-delete">Delete</span>' +
-        '</span>' +
-        '</ul>');
-
-      $('.minicomposer-sortable-rows').last().append(newRow);
-
-      //$('.minicomposer-row').sortable('destroy');
-      //$('.minicomposer-row').sortable(sortableColArgs);
-      newRow.sortable(sortableColArgs);
-
-      updateComposer();
-    });
+    $('.minicomposer-add-row').on('click', addRow);
 
 
     // Event for delete-button
@@ -137,18 +125,23 @@
     addUpload();
   }
 
+  /**
+   * Init sortable rows and columns
+   */
   function initSortable() {
-    var container = $('.minicomposer-sortable-rows .minicomposer-row'),
-      maxWidth = container.width();
+    var container = $('.minicomposer-sortable-rows'),
+      containerWidth = container.width() - 30,
+      maxWidth = containerWidth;
 
-    window.columnWidth = Math.floor(container.width() / 12);
+    window.columnWidth = Math.floor(containerWidth / 12);
 
     resizeArgs = {
       grid: [window.columnWidth, 1],
       minWidth: window.columnWidth,
       maxWidth: maxWidth,
       handles: 'e, s',
-      stop: resizeColumn,
+      stop: resizeColumnEnd,
+      resize: resizeColumn,
     };
 
     sortableRowArgs = {
@@ -162,6 +155,61 @@
       placeholder: "ui-state-highlight",
       update: updateComposer,
     };
+  }
+
+  /**
+   * Adds a row
+   */
+  function addRow() {
+    var newRow = $('<ul class="minicomposer-row">' +
+      '<span class="options">' +
+      '<span class="minicomposer-delete">⌫</span>' +
+      '</span>' +
+      '</ul>');
+
+    $('.minicomposer-sortable-rows').last().append(newRow);
+
+    //$('.minicomposer-row').sortable('destroy');
+    //$('.minicomposer-row').sortable(sortableColArgs);
+    newRow.sortable(sortableColArgs);
+
+    updateComposer();
+  }
+
+
+  /**
+   * Adds a column
+   */
+  function addColumn(amount) {
+    if (typeof(amount) === 'undefined') {
+      amount = 1;
+    }
+
+    // create row if no row exists
+    if (!$('.minicomposer-row').length) {
+      addRow();
+    }
+
+    var size = Math.round(12 / amount);
+
+    for (var index = 0; index < amount; index += 1) {
+      var column = $('<li class="minicomposer-column" data-medium="' + size + '">' +
+        '<span class="content"></span>' +
+        '<span class="options">' +
+        '<span class="minicomposer-style-settings"></span>' +
+        '<span class="minicomposer-responsive-settings"></span>' +
+        '<span class="minicomposer-delete"></span>' +
+        '</span>' +
+        '<span class="column-count">' + size + '</span>' +
+        '</li>');
+
+      column.css({width: (size * window.columnWidth) + 'px'});
+
+      $('.minicomposer-row').last().append(column);
+
+      column.resizable(resizeArgs);
+      updateComposer();
+    }
   }
 
   /**
@@ -213,19 +261,33 @@
    *
    * @param e
    */
-  function resizeColumn(e) {
+  function resizeColumnEnd(e) {
     // set new min-height
     var newMinHeight = $(e.target).height() - 10;
 
     // set only if a minheight exists and newMinheight is not default
     if (newMinHeight !== window.columnMinHeight || $(e.target).data('minheight')) {
-      console.info('set');
       $(e.target).data('minheight', newMinHeight + 'px');
       $(e.target).css({'height': ''});
       $(e.target).find('> .content').css({'min-height': newMinHeight + 'px'});
     }
 
     updateComposer();
+  }
+
+  /**
+   * Trigger on resize
+   * Sets column-count
+   *
+   * @param e
+   */
+  function resizeColumn(e) {
+    $('.minicomposer-row').each(function (rowIndex, row) {
+      $(row).find('> li').each(function (index, element) {
+        var size = Math.floor($(element).outerWidth() / window.columnWidth);
+        $(element).find('.column-count').html(size);
+      });
+    });
   }
 
   /**
@@ -247,6 +309,8 @@
         rowConfig[rowCount][colCount].content = $(element).find('.content').html();
 
         rowConfig[rowCount][colCount].medium = Math.floor($(element).outerWidth() / window.columnWidth);
+
+        $(element).find('.column-count').html(rowConfig[rowCount][colCount].medium);
 
         setStyle(element);
         colCount += 1;

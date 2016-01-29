@@ -14,6 +14,9 @@
 <div class="minicomposer-add-column button">+ <?php _e( 'Column', $this->textdomain ); ?></div>
 <div class="minicomposer-add-row button">+ <?php _e( 'Row', $this->textdomain ); ?></div>
 
+<div class="minicomposer-add-column-2 button">+ <?php _e( '2 Columns', $this->textdomain ); ?></div>
+<div class="minicomposer-add-column-3 button">+ <?php _e( '3 Columns', $this->textdomain ); ?></div>
+
 <div class="minicomposer-sortable-rows">
     <?php foreach ( $composerRows as $row ): ?>
         <ul class="minicomposer-row">
@@ -29,15 +32,16 @@
                 >
                     <span class="content"><?php echo( !empty( $col->content ) ? $col->content : '' ); ?></span>
                     <span class="options">
-                        <span class="minicomposer-style-settings">Style</span>
-                        <span class="minicomposer-responsive-settings">Responsive</span>
-                        <span class="minicomposer-delete"><?php _e( 'Delete', $this->textdomain ); ?></span>
+                        <span class="minicomposer-style-settings"></span>
+                        <span class="minicomposer-responsive-settings"></span>
+                        <span class="minicomposer-delete"></span>
                     </span>
+                    <span class="column-count"><?php echo $col->medium; ?></span>
                 </li>
             <?php endforeach; ?>
 
             <span class="options">
-                <span class="minicomposer-delete">Delete</span>
+                <span class="minicomposer-delete"></span>
             </span>
         </ul>
     <?php endforeach; ?>

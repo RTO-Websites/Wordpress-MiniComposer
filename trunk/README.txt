@@ -36,6 +36,13 @@ Just install and activate the plugin. Then you can see MiniComposer under every 
 4. Global-settings
 
 == Changelog ==
+= 1.0.5 =
+* Background-image is removeable
+* Padding/Gutter set px if now unit
+* Add datalist for background-position/size/repeat
+
+= 1.0.4 =
+* Add buttons to add multiple columns
 
 = 1.0.1 =
 * Some little fixes and optimizations

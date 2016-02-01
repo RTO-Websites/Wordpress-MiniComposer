@@ -148,14 +148,14 @@
 
     sortableRowArgs = {
       items: '.minicomposer-row',
-      placeholder: "ui-state-highlight-row",
       update: updateComposer,
+      cursorAt: { top:1, left: 1 },
     };
 
     sortableColArgs = {
       connectWith: '.minicomposer-row',
-      placeholder: "ui-state-highlight",
       update: updateComposer,
+      cursorAt: { top:1, left: 1 },
     };
   }
 

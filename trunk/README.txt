@@ -36,6 +36,11 @@ Just install and activate the plugin. Then you can see MiniComposer under every 
 4. Global-settings
 
 == Changelog ==
+= 1.0.6 ==
+* Fix sortable-placeholder position
+* Improve admin-view
+* Bigger wp-editor
+
 = 1.0.5 =
 * Background-image is removeable
 * Padding/Gutter set px if now unit

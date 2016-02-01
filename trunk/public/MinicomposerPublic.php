@@ -125,6 +125,10 @@ class MinicomposerPublic {
             $columnClasses .= !empty( $column->large ) ? ' col-lg-' . $column->large : '';
         }
 
+        if ( !empty( $column->cssclass ) ) {
+            $columnClasses .= ' ' . $column->cssclass;
+        }
+
         return $columnClasses;
     }
 

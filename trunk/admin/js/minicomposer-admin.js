@@ -31,27 +31,23 @@
 
   var composerEditor = null,
     currentColumn = null,
-    resizeArgs = null,
-    sortableRowArgs = null,
-    sortableColArgs = null;
+    resizeArgs = null;
 
   /**
    * DOM-Ready
    */
   $(function () {
-    // make columns sortable
-    if (jQuery.fn.sortable) {
-      initSortable();
+    // make columns resizeable
+    initResizeable();
 
-      initEvents();
+    initEvents();
 
-      // set container width
-      $('.minicomposer-sortable-rows').css({
-        width: ($('.minicomposer-sortable-rows').width() + 'px')
-      });
+    // set container width
+    $('.minicomposer-sortable-rows').css({
+      width: ($('.minicomposer-sortable-rows').width() + 'px')
+    });
 
-      updateComposer();
-    }
+    updateComposer();
 
     /**
      * Add new column
@@ -111,10 +107,12 @@
     $('.minicomposer-column').resizable(resizeArgs);
 
     // make cols sortable
-    $('.minicomposer-row').sortable(sortableColArgs);
+    //$('.minicomposer-row').sortable(sortableColArgs);
 
     // make rows sortable
-    $('.minicomposer-sortable-rows').sortable(sortableRowArgs);
+    //$('.minicomposer-sortable-rows').sortable(sortableRowArgs);
+
+    new McDragNDrop();
 
     // set startSize of columns
     $('.minicomposer-column').each(function (index, element) {
@@ -128,9 +126,9 @@
   }
 
   /**
-   * Init sortable rows and columns
+   * Init resizeable column
    */
-  function initSortable() {
+  function initResizeable() {
     var container = $('.minicomposer-sortable-rows'),
       containerWidth = container.width() - 30,
       maxWidth = containerWidth;
@@ -145,35 +143,19 @@
       stop: resizeColumnEnd,
       resize: resizeColumn,
     };
-
-    sortableRowArgs = {
-      items: '.minicomposer-row',
-      update: updateComposer,
-      cursorAt: { top:1, left: 1 },
-    };
-
-    sortableColArgs = {
-      connectWith: '.minicomposer-row',
-      update: updateComposer,
-      cursorAt: { top:1, left: 1 },
-    };
   }
 
   /**
    * Adds a row
    */
   function addRow() {
-    var newRow = $('<ul class="minicomposer-row">' +
+    var newRow = $('<div class="minicomposer-row" draggable="true">' +
       '<span class="options">' +
-      '<span class="minicomposer-delete">⌫</span>' +
+      '<span class="minicomposer-delete"></span>' +
       '</span>' +
-      '</ul>');
+      '</div>');
 
     $('.minicomposer-sortable-rows').last().append(newRow);
-
-    //$('.minicomposer-row').sortable('destroy');
-    //$('.minicomposer-row').sortable(sortableColArgs);
-    newRow.sortable(sortableColArgs);
 
     updateComposer();
   }
@@ -195,7 +177,7 @@
     var size = Math.round(12 / amount);
 
     for (var index = 0; index < amount; index += 1) {
-      var column = $('<li class="minicomposer-column" data-medium="' + size + '">' +
+      var column = $('<div class="minicomposer-column" data-medium="' + size + '" draggable="true">' +
         '<span class="content"></span>' +
         '<span class="options">' +
         '<span class="minicomposer-style-settings"></span>' +
@@ -203,7 +185,7 @@
         '<span class="minicomposer-delete"></span>' +
         '</span>' +
         '<span class="column-count">' + size + '</span>' +
-        '</li>');
+        '</div>');
 
       column.css({width: (size * window.columnWidth) + 'px'});
 
@@ -285,7 +267,7 @@
    */
   function resizeColumn(e) {
     $('.minicomposer-row').each(function (rowIndex, row) {
-      $(row).find('> li').each(function (index, element) {
+      $(row).find('> .minicomposer-column').each(function (index, element) {
         var size = Math.floor($(element).outerWidth() / window.columnWidth);
         $(element).find('.column-count').html(size);
       });
@@ -297,7 +279,7 @@
    *
    * Runs on sortable sortupdate and resize
    */
-  function updateComposer() {
+   window.updateComposer = function() {
     var input = jQuery("#minicomposerColumns"),
       rowConfig = [],
       colCount = 0,
@@ -306,7 +288,7 @@
     $('.minicomposer-row').each(function (rowIndex, row) {
       rowConfig[rowCount] = [];
 
-      $(row).find('> li').each(function (index, element) {
+      $(row).find('> .minicomposer-column').each(function (index, element) {
         rowConfig[rowCount][colCount] = getDataset(element);
         rowConfig[rowCount][colCount].content = $(element).find('.content').html();
 
@@ -322,10 +304,8 @@
       rowCount += 1;
     });
 
-    $('.minicomposer-sortable-rows').sortable('refresh');
-
     input.val(JSON.stringify(rowConfig));
-  }
+  };
 
 
   /**

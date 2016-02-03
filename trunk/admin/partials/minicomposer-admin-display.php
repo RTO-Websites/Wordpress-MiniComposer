@@ -19,9 +19,9 @@
 
 <div class="minicomposer-sortable-rows">
     <?php foreach ( $composerRows as $row ): ?>
-        <ul class="minicomposer-row">
+        <div class="minicomposer-row" draggable="true">
             <?php foreach ( $row as $col ): ?>
-                <li class="minicomposer-column"
+                <div class="minicomposer-column" draggable="true"
                     <?php
                     foreach ( $col as $key => $value ) {
                         if ( $key == 'content' )
@@ -37,13 +37,13 @@
                         <span class="minicomposer-delete"></span>
                     </span>
                     <span class="column-count"><?php echo $col->medium; ?></span>
-                </li>
+                </div>
             <?php endforeach; ?>
 
             <span class="options">
                 <span class="minicomposer-delete"></span>
             </span>
-        </ul>
+        </div>
     <?php endforeach; ?>
 </div>
 

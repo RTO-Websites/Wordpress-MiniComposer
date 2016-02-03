@@ -203,6 +203,7 @@ class MinicomposerAdmin {
 
         wp_enqueue_script( 'jquery-ui-resizable' );
         wp_enqueue_script( $this->pluginName, plugin_dir_url( __FILE__ ) . 'js/minicomposer-admin.js', array( 'jquery' ), $this->version, false );
+        wp_enqueue_script( $this->pluginName . '-dragndrop', plugin_dir_url( __FILE__ ) . 'js/mc-dragndrop.js', array( 'jquery' ), $this->version, false );
 
     }
 

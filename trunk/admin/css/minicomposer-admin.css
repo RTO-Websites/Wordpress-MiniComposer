@@ -280,3 +280,31 @@
 #composer_global_editor_ifr {
   min-height: 350px;
 }
+
+.minicomposer-column.dragging,
+.minicomposer-row.dragging {
+  opacity: 0.6;
+}
+
+
+.minicomposer-column.dragover-left:before,
+.minicomposer-column.dragover-right:before {
+  content: '';
+  position:absolute;
+  top: 5px;
+  bottom: 5px;
+  width: 5px;
+  background-color: green;
+}
+
+.minicomposer-column.dragover-left:before {
+  left: -2px;
+}
+
+.minicomposer-column.dragover-right:before {
+  right: -2px;
+}
+
+.minicomposer-column.dragover-insert {
+  outline: 1px solid green;
+}

@@ -77,11 +77,14 @@
 
 
     // Open WP-Editor
-    $(document).on('dblclick', '.minicomposer-column', openWpEditor);
+    $(document).on('dblclick', '.minicomposer-column, .minicomposer-column > .content', openWpEditor);
     // Cancel&Close WP-Editor
     $('.minicomposer-cancel-wpeditor').on('click', cancelWpEditor);
     // Save&Close WP-Editor
     $('.minicomposer-save-wpeditor').on('click', saveWpEditor);
+
+
+    $('#publish').on('click', saveWpEditor);
 
 
     // Event for responsive button
@@ -106,23 +109,19 @@
     // make resizable
     $('.minicomposer-column').resizable(resizeArgs);
 
-    // make cols sortable
-    //$('.minicomposer-row').sortable(sortableColArgs);
-
-    // make rows sortable
-    //$('.minicomposer-sortable-rows').sortable(sortableRowArgs);
-
     new McDragNDrop();
 
     // set startSize of columns
     $('.minicomposer-column').each(function (index, element) {
       $(element).css({
-        width: (window.columnWidth * $(element).data('medium')) + 'px'
+        width: (window.getColumnWidth(element) * $(element).data('medium')) + 'px'
       });
     });
 
     // add upload
     addUpload();
+
+    $(window).on('resize', recalcColumns);
   }
 
   /**
@@ -187,9 +186,9 @@
         '<span class="column-count">' + size + '</span>' +
         '</div>');
 
-      column.css({width: (size * window.columnWidth) + 'px'});
 
       $('.minicomposer-row').last().append(column);
+      column.css({width: (size * window.getColumnWidth(column)) + 'px'});
 
       column.resizable(resizeArgs);
       updateComposer();
@@ -252,8 +251,7 @@
     // set only if a minheight exists and newMinheight is not default
     if (newMinHeight !== window.columnMinHeight || $(e.target).data('minheight')) {
       $(e.target).data('minheight', newMinHeight + 'px');
-      $(e.target).css({'height': ''});
-      $(e.target).find('> .content').css({'min-height': newMinHeight + 'px'});
+      $(e.target).css({'height': '', 'min-height': newMinHeight + 'px'});
     }
 
     updateComposer();
@@ -266,12 +264,14 @@
    * @param e
    */
   function resizeColumn(e) {
-    $('.minicomposer-row').each(function (rowIndex, row) {
-      $(row).find('> .minicomposer-column').each(function (index, element) {
-        var size = Math.floor($(element).outerWidth() / window.columnWidth);
-        $(element).find('.column-count').html(size);
-      });
-    });
+    var element = $(e.target),
+      size = Math.floor($(element).outerWidth() / window.getColumnWidth(element));
+
+    $(element).css({'min-height': ''});
+
+    $(element).find('> .column-count').html(size);
+    $(element).data('medium', Math.floor($(element).outerWidth() / window.getColumnWidth(element)));
+    window.recalcColumns(element);
   }
 
   /**
@@ -279,22 +279,39 @@
    *
    * Runs on sortable sortupdate and resize
    */
-   window.updateComposer = function() {
+  window.updateComposer = function () {
     var input = jQuery("#minicomposerColumns"),
-      rowConfig = [],
+      rowConfig = [];
+
+    // create json
+    rowConfig = getRowArray('.minicomposer-sortable-rows');
+
+    input.val(JSON.stringify(rowConfig));
+  };
+
+  /**
+   * Get columns of a row recursive
+   *
+   * @param container
+   * @returns {Array}
+   */
+  function getRowArray(container) {
+    var rowConfig = [],
       colCount = 0,
       rowCount = 0;
 
-    $('.minicomposer-row').each(function (rowIndex, row) {
+    $(container).find('> .minicomposer-row').each(function (rowIndex, row) {
       rowConfig[rowCount] = [];
 
       $(row).find('> .minicomposer-column').each(function (index, element) {
         rowConfig[rowCount][colCount] = getDataset(element);
-        rowConfig[rowCount][colCount].content = $(element).find('.content').html();
+        rowConfig[rowCount][colCount].content = $(element).find('> .content').html();
 
-        rowConfig[rowCount][colCount].medium = Math.floor($(element).outerWidth() / window.columnWidth);
+        rowConfig[rowCount][colCount].medium = Math.floor($(element).outerWidth() / window.getColumnWidth(element));
 
-        $(element).find('.column-count').html(rowConfig[rowCount][colCount].medium);
+        rowConfig[rowCount][colCount].rows = getRowArray(element)
+
+        $(element).find('> .column-count').html(rowConfig[rowCount][colCount].medium);
 
         setStyle(element);
         colCount += 1;
@@ -304,7 +321,43 @@
       rowCount += 1;
     });
 
-    input.val(JSON.stringify(rowConfig));
+    return rowConfig;
+  }
+
+
+  /**
+   * Recalculate width of columns
+   */
+  window.recalcColumns = function (row) {
+    if (typeof(row) === 'undefined') {
+      row = '.minicomposer-sortable-rows';
+    }
+
+    $(row).find('.minicomposer-column').each(function (index, element) {
+      var columnWidth = window.getColumnWidth(element);
+      resizeArgs.grid = [columnWidth, 1];
+      resizeArgs.minWidth = columnWidth;
+      resizeArgs.maxWidth = columnWidth * 12;
+
+      $(element).resizable('destroy');
+      $(element).resizable(resizeArgs);
+
+      $(element).css({
+        width: (columnWidth * $(element).data('medium')) + 'px'
+      });
+    });
+  };
+
+  /**
+   * Get width of a single column in a row
+   *
+   * @param column
+   * @returns {number}
+   */
+  window.getColumnWidth = function (column) {
+    var row = $(column).closest('.minicomposer-row');
+
+    return Math.floor(row.width() / 12);
   };
 
 
@@ -356,7 +409,7 @@
     if (!$(e.target).is('.minicomposer-column')) {
       return;
     }
-    var content = $(e.target).find('.content').html();
+    var content = $(e.target).find('> .content').html();
 
     switchEditors.go('composer_global_editor', 'tinymce');
 
@@ -399,7 +452,7 @@
     switchEditors.go('composer_global_editor', 'tinymce');
 
     composerEditor = tinyMCE.get('composer_global_editor');
-    currentColumn.find('.content').html(composerEditor.getContent());
+    currentColumn.find('> .content').html(composerEditor.getContent());
 
     closeWpEditor();
 
@@ -451,7 +504,7 @@
     currentColumn.data('large', $('#responsiveLarge').val());
     currentColumn.data('cssclass', $('#responsiveClass').val());
 
-    currentColumn.css({width: window.columnWidth * $('#responsiveMedium').val() + 'px'});
+    currentColumn.css({width: window.getColumnWidth(currentColumn) * $('#responsiveMedium').val() + 'px'});
 
     closeResponsiveFields();
     updateComposer();
@@ -547,7 +600,7 @@
    */
   function setStyle(element) {
     element = $(element);
-    var contentElement = element.find('.content');
+    var contentElement = element.find('> .content');
     contentElement.css({
       backgroundColor: element.data('backgroundcolor'),
       backgroundRepeat: element.data('backgroundrepeat'),
@@ -574,12 +627,18 @@
     if (typeof(element.data('minheight')) !== 'undefined' &&
       element.data('minheight').length
     ) {
-      contentElement.css({minHeight: element.data('minheight')});
+      element.css({minHeight: element.data('minheight')});
     } else {
-      contentElement.css({minHeight: ''});
+      element.css({minHeight: ''});
     }
   }
 
+  /**
+   * Return an array of all data- attributes
+   *
+   * @param element
+   * @returns {{}}
+   */
   function getDataset(element) {
     var allowedTypes = ['string', 'number'],
       data = $(element).data(),
@@ -594,6 +653,11 @@
     return filteredData;
   }
 
+  /**
+   * Removes bg-image
+   *
+   * @param e
+   */
   function removeBackgroundImage(e) {
     var target = $(e.target),
       image = target.parent().find('.upload-preview-image'),
@@ -601,8 +665,6 @@
 
     input.val('');
     image.attr('src', '');
-    console.info('remove', target);
-
   }
 
 })(jQuery);

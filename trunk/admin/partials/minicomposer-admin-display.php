@@ -18,33 +18,7 @@
 <div class="minicomposer-add-column-3 button">+ <?php _e( '3 Columns', $this->textdomain ); ?></div>
 
 <div class="minicomposer-sortable-rows">
-    <?php foreach ( $composerRows as $row ): ?>
-        <div class="minicomposer-row" draggable="true">
-            <?php foreach ( $row as $col ): ?>
-                <div class="minicomposer-column" draggable="true"
-                    <?php
-                    foreach ( $col as $key => $value ) {
-                        if ( $key == 'content' )
-                            continue;
-                        echo ' data-' . $key . '="' . $value . '" ';
-                    }
-                    ?>
-                >
-                    <span class="content"><?php echo( !empty( $col->content ) ? $col->content : '' ); ?></span>
-                    <span class="options">
-                        <span class="minicomposer-style-settings"></span>
-                        <span class="minicomposer-responsive-settings"></span>
-                        <span class="minicomposer-delete"></span>
-                    </span>
-                    <span class="column-count"><?php echo $col->medium; ?></span>
-                </div>
-            <?php endforeach; ?>
-
-            <span class="options">
-                <span class="minicomposer-delete"></span>
-            </span>
-        </div>
-    <?php endforeach; ?>
+    <?php getRows($composerRows); ?>
 </div>
 
 
@@ -76,7 +50,7 @@
     window.columnMinHeight = '<?php echo intval( $this->options['globalMinHeight'] ); ?>';
 </script>
 <style>
-    .minicomposer-column .content {
+    .minicomposer-column {
         min-height: <?php echo intval($this->options['globalMinHeight']) - 10 . 'px'; ?>;
     }
 </style>
@@ -100,3 +74,44 @@
     <option>repeat-y</option>
     <option>no-repeat</option>
 </datalist>
+
+<?php
+function getRows($rows) {
+    foreach ( $rows as $row ): ?>
+        <div class="minicomposer-row" draggable="true">
+            <?php foreach ( $row as $col ): ?>
+                <div class="minicomposer-column" draggable="true"
+                    <?php
+                    foreach ( $col as $key => $value ) {
+                        if ( $key == 'content' )
+                            continue;
+
+                        if (is_array($value) || is_object($value)) {
+                            echo ' data-' . $key . '="' . json_encode($value) . '" ';
+                        } else {
+                            echo ' data-' . $key . '="' . $value . '" ';
+                        }
+                    }
+                    ?>
+                >
+                    <span class="content"><?php echo( !empty( $col->content ) ? $col->content : '' ); ?></span>
+                        <span class="options">
+                            <span class="minicomposer-style-settings"></span>
+                            <span class="minicomposer-responsive-settings"></span>
+                            <span class="minicomposer-delete"></span>
+                        </span>
+                    <span class="column-count"><?php echo $col->medium; ?></span>
+                    <?php
+                    if (!empty($col->rows)) {
+                        getRows($col->rows);
+                    }
+                    ?>
+                </div>
+            <?php endforeach; ?>
+
+            <span class="options">
+                    <span class="minicomposer-delete"></span>
+                </span>
+        </div>
+    <?php endforeach;
+}

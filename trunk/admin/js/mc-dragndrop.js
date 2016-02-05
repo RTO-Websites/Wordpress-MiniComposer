@@ -161,7 +161,7 @@ var McDragNDrop = function(args) {
         currentDrag.insertBefore(dropTarget);
       }
     } catch(e) {
-      console.info('Drop error');
+      console.info('Fatal drop error');
     }
   }
 

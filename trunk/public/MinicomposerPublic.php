@@ -71,7 +71,14 @@ class MinicomposerPublic {
             return $content;
         }
 
-        foreach ( $grid as $rowIndex => $row ) {
+        $gridOutput .= $this->createRows($grid);
+
+        return $content . $gridOutput;
+    }
+
+    private function createRows($rows) {
+        $gridOutput = '';
+        foreach ( $rows as $rowIndex => $row ) {
             $gridOutput .= '<div class="row  mc-row">';
             foreach ( $row as $columnIndex => $column ) {
                 // set classes for grid
@@ -82,14 +89,20 @@ class MinicomposerPublic {
                 $gridOutput .= '<div class="mc-column  columns ' . $columnClasses . '" ' . $columnStyle . '>';
                 $gridOutput .= '<div class="inner-column " style="' . $columnInnerStyle . '">';
                 $gridOutput .= $column->content;
+                if (!empty($column->rows)) {
+                    $gridOutput .= $this->createRows($column->rows);
+                }
+                //var_dump($column->rows);
                 $gridOutput .= '</div>';
                 $gridOutput .= '</div>';
             }
             $gridOutput .= '</div>';
         }
 
-        return $content . $gridOutput;
+        return $gridOutput;
     }
+
+
 
     /**
      * Adds style for grid on header

@@ -77,7 +77,7 @@
 
 
     // Open WP-Editor
-    $(document).on('dblclick', '.minicomposer-column, .minicomposer-column > .content', openWpEditor);
+    $(document).on('dblclick', '.minicomposer-column', openWpEditor);
     // Cancel&Close WP-Editor
     $('.minicomposer-cancel-wpeditor').on('click', cancelWpEditor);
     // Save&Close WP-Editor
@@ -183,6 +183,7 @@
         '<span class="minicomposer-responsive-settings"></span>' +
         '<span class="minicomposer-delete"></span>' +
         '</span>' +
+        '<span class="column-bg"></span>' +
         '<span class="column-count">' + size + '</span>' +
         '</div>');
 
@@ -406,10 +407,15 @@
     closeResponsiveFields();
     closeStyleFields();
 
-    if (!$(e.target).is('.minicomposer-column')) {
+    var target = $(e.target);
+    if (!target.is('.minicomposer-column')) {
+      target = target.closest('.minicomposer-column');
+    }
+
+    if (!target.is('.minicomposer-column')) {
       return;
     }
-    var content = $(e.target).find('> .content').html();
+    var content = target.find('> .content').html();
 
     switchEditors.go('composer_global_editor', 'tinymce');
 
@@ -419,11 +425,11 @@
       return;
     }
 
-    currentColumn = $(e.target);
+    currentColumn = target;
     $('.global-wp-editor').addClass('visible');
     composerEditor.setContent(content);
 
-    setOverlayPosition($(e.target), $('.global-wp-editor'));
+    setOverlayPosition(target, $('.global-wp-editor'));
   }
 
   /**
@@ -600,8 +606,8 @@
    */
   function setStyle(element) {
     element = $(element);
-    var contentElement = element.find('> .content');
-    contentElement.css({
+    var bgElement = element.find('> .column-bg');
+    bgElement.css({
       backgroundColor: element.data('backgroundcolor'),
       backgroundRepeat: element.data('backgroundrepeat'),
       backgroundPosition: element.data('backgroundposition'),
@@ -613,12 +619,12 @@
       element.data('backgroundimage').length
     ) {
       // set bg-image
-      contentElement.css({
+      bgElement.css({
         backgroundImage: 'url(' + element.data('backgroundimage') + ')'
       });
     } else {
       // remove bg-image
-      contentElement.css({
+      bgElement.css({
         backgroundImage: ''
       });
     }

@@ -35,6 +35,8 @@ var McDragNDrop = function(args) {
     lastDragOver = Date.now();
 
     var dropTarget = $(e.target);
+
+    // dropTarget musst be a column or row
     if (!dropTarget.hasClass('minicomposer-column') && !dropTarget.hasClass('minicomposer-row') ) {
       dropTarget = dropTarget.closest('.minicomposer-column, .minicomposer-row');
     }
@@ -46,9 +48,9 @@ var McDragNDrop = function(args) {
     }
 
     if (dropTarget.hasClass('minicomposer-row')) {
-      dragOverRow(e);
+      dragOverRow(e, dropTarget);
     } else {
-      dragOverColumn(e);
+      dragOverColumn(e, dropTarget);
     }
 
     return;
@@ -59,9 +61,8 @@ var McDragNDrop = function(args) {
    *
    * @param e
    */
-  function dragOverColumn(e) {
-    var dropTarget = $(e.target),
-      dragClass = 'dragover';
+  function dragOverColumn(e, dropTarget) {
+    var dragClass = 'dragover';
 
     if (currentDrag.is('.minicomposer-column')) {
       // column drag
@@ -83,16 +84,15 @@ var McDragNDrop = function(args) {
    *
    * @param e
    */
-  function dragOverRow(e) {
-    var dropTarget = $(e.target);
+  function dragOverRow(e, dropTarget) {
+    var dragClass = 'dragover';
+
     if (!dropTarget.hasClass('minicomposer-row')) {
       dropTarget = dropTarget.closest('.minicomposer-row');
     }
     if (!dropTarget.length) {
       return;
     }
-
-    var dragClass = 'dragover';
 
     if (currentDrag.is('.minicomposer-column')) {
       // is column
@@ -150,7 +150,8 @@ var McDragNDrop = function(args) {
    * @param e
    */
   function dropColumn(e) {
-    var dropTarget = $('#minicomposer').find('.dragover');
+    var dropTarget = $('#minicomposer').find('.dragover'),
+      currentParent = currentDrag.parent();
 
     try {
       if (dropTarget.hasClass('minicomposer-row')) {
@@ -162,6 +163,7 @@ var McDragNDrop = function(args) {
       }
     } catch(e) {
       console.info('Fatal drop error');
+      currentParent.append(currentDrag);
     }
   }
 

@@ -88,7 +88,7 @@ class MinicomposerPublic {
 
                 $gridOutput .= '<div class="mc-column  columns ' . $columnClasses . '" ' . $columnStyle . '>';
                 $gridOutput .= '<div class="inner-column " style="' . $columnInnerStyle . '">';
-                $gridOutput .= $column->content;
+                $gridOutput .= trim($column->content);
                 if (!empty($column->rows)) {
                     $gridOutput .= $this->createRows($column->rows);
                 }
@@ -117,6 +117,9 @@ class MinicomposerPublic {
         if ( !empty( $this->options['globalRowMargin'] ) ) {
             echo '.mc-row { margin-bottom: ' . $this->options['globalRowMargin'] . '; }';
         }
+        echo '.mc-column.clear-left {';
+        echo 'clear: left;';
+        echo '}';
         echo '</style>';
     }
 

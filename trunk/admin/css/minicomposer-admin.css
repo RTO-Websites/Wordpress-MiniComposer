@@ -30,7 +30,7 @@
   margin-bottom: 10px;
 }
 
-.minicomposer-column:after {
+.minicomposer-column .column-bg {
   content: '';
   position: absolute;
   top: 5px;
@@ -41,7 +41,7 @@
   background-color: #fff;
 }
 
-.minicomposer-column .minicomposer-row:before {
+.minicomposer-column .minicomposer-row > .row-bg {
   content: '';
   position: absolute;
   top: 5px;
@@ -50,11 +50,18 @@
   bottom: 10px;
   border: 1px dotted blue;
   background-color: #ddd;
+  z-index: -1;
 }
 
 .minicomposer-column .minicomposer-row > .options {
-  right: 10px;
+  right: 14px;
   top: -10px;
+  height: 16px;
+  width: 16px;
+}
+
+.minicomposer-column .minicomposer-row > .options span {
+  padding: 4px 2px;
 }
 
 .minicomposer-column .minicomposer-row {
@@ -126,13 +133,15 @@
   position: absolute;
   right: 5px;
   bottom: 100%;
-  margin-bottom: -6px;
+  margin-bottom: -4px;
 
   text-align: right;
 
   line-height: 8px;
 
   background-color: #eee;
+
+  white-space: nowrap;
 }
 
 .minicomposer-sortable-rows .column-count {
@@ -141,13 +150,13 @@
   right: auto;
   left: 6px;
   line-height: 8px;
-  margin-bottom: -3px;
+  margin-bottom: -5px;
 }
 
 .minicomposer-sortable-rows .options span {
   display: inline-block;
 
-  padding: 4px 4px 0;
+  padding: 4px 1px 0;
   font-size: 12px;
 
   cursor: pointer;
@@ -327,4 +336,10 @@
 
 .minicomposer-row.dragover-bottom:before {
   bottom: -10px;
+}
+
+.minicomposer-column img.aligncenter {
+  display: block;
+  position: relative;
+  margin: 0 auto;
 }

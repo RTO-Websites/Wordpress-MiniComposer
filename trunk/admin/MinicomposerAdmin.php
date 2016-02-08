@@ -152,6 +152,16 @@ class MinicomposerAdmin {
                 'type' => 'checkbox',
                 'title' => __( 'Use bootstrap instead of foundation', $this->textdomain ),
             ),
+            'columnAdminStyle' => array(
+                'type' => 'textarea',
+                'title' => __( 'Column-Style for admin', $this->textdomain ),
+                'description' => __('Only for admin-view', $this->textdomain),
+            ),
+            'columnAdminFont' => array(
+                'type' => 'textarea',
+                'title' => __( 'Column-Font for admin', $this->textdomain ),
+                'description' => __('Only for admin-view', $this->textdomain),
+            ),
         ) );
 
         add_action( 'add_meta_boxes', array( $this, 'registerPostSettings' ) );

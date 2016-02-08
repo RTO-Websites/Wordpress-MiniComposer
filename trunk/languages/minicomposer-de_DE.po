@@ -64,3 +64,12 @@ msgstr "2 Spalten"
 
 msgid "3 Columns"
 msgstr "3 Spalten"
+
+msgid "Only for admin-view"
+msgstr "Nur für Administration-Ansicht"
+
+msgid "Column-Style for admin"
+msgstr "Spalten-Style für Administration"
+
+msgid "Column-Font for admin"
+msgstr "Spalten-Schrift für Administration"

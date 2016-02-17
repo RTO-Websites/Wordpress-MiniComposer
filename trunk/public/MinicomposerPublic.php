@@ -41,6 +41,10 @@ class MinicomposerPublic {
      */
     private $version;
 
+    private $columnCount = 0;
+
+    private $columnStyle = '';
+
 
     private $options;
 
@@ -58,7 +62,7 @@ class MinicomposerPublic {
         $this->options = MagicAdminPage::getOption( 'minicomposer' );
 
         add_filter( 'the_content', array( $this, 'appendColumns' ) );
-        add_action( 'wp_head', array( $this, 'addHeaderStyle' ) );
+        add_action( 'wp_footer', array( $this, 'addFooterStyle' ) );
     }
 
     public function appendColumns( $content ) {
@@ -71,28 +75,32 @@ class MinicomposerPublic {
             return $content;
         }
 
-        $gridOutput .= $this->createRows($grid);
+        $gridOutput .= $this->createRows( $grid );
 
         return $content . $gridOutput;
     }
 
-    private function createRows($rows) {
+    private function createRows( $rows ) {
         $gridOutput = '';
         foreach ( $rows as $rowIndex => $row ) {
             $gridOutput .= '<div class="row  mc-row">';
             foreach ( $row as $columnIndex => $column ) {
+                $this->columnCount += 1;
                 // set classes for grid
                 $columnClasses = $this->createColumnClasses( $column );
                 $columnInnerStyle = $this->createColumnStyle( $column );
-                $columnStyle = !empty( $column->gutter ) ? ' style="padding:' . $column->gutter . ';" ' : '';
 
-                $gridOutput .= '<div class="mc-column  columns ' . $columnClasses . '" ' . $columnStyle . '>';
-                $gridOutput .= '<div class="inner-column " style="' . $columnInnerStyle . '">';
-                $gridOutput .= trim($column->content);
-                if (!empty($column->rows)) {
-                    $gridOutput .= $this->createRows($column->rows);
+                $columnStyle = !empty( $column->gutter ) ? '.mc-column-' . $this->columnCount . '{padding:' . $column->gutter . '}' : '';
+
+                $this->columnStyle .= $columnStyle. '.mc-column-' . $this->columnCount . ' > .inner-column{' . $columnInnerStyle . '}';
+
+                $gridOutput .= '<div class="mc-column-' . $this->columnCount . ' mc-column  columns ' . $columnClasses . '">';
+                $gridOutput .= '<div class="inner-column">';
+                $gridOutput .= trim( $column->content );
+                if ( !empty( $column->rows ) ) {
+                    $gridOutput .= $this->createRows( $column->rows );
                 }
-                //var_dump($column->rows);
+
                 $gridOutput .= '</div>';
                 $gridOutput .= '</div>';
             }
@@ -102,27 +110,29 @@ class MinicomposerPublic {
         return $gridOutput;
     }
 
-
-
     /**
-     * Adds style for grid on header
+     * Adds style for grid on footer
      */
-    public function addHeaderStyle() {
-        echo '<style class="minicomposer-style">';
-        echo '.mc-row .inner-column {';
+    public function addFooterStyle() {
+        echo '<style class="mc-style">';
+        // global style
+        echo '.row .inner-column{';
+        echo 'position: relative;';
         echo !empty( $this->options['globalPadding'] ) ? 'padding:' . $this->options['globalPadding'] . ';' : '';
         echo !empty( $this->options['globalMinHeight'] ) ? 'min-height:' . $this->options['globalMinHeight'] . ';' : '';
         echo !empty( $this->options['globalColumnMargin'] ) ? 'margin-bottom:' . $this->options['globalColumnMargin'] . ';' : '';
         echo '}';
         if ( !empty( $this->options['globalRowMargin'] ) ) {
-            echo '.mc-row { margin-bottom: ' . $this->options['globalRowMargin'] . '; }';
+            echo '.mc-row{margin-bottom:' . $this->options['globalRowMargin'] . ';}';
         }
         echo '.mc-column.clear-left {';
         echo 'clear: left;';
         echo '}';
+
+        // column style
+        echo $this->columnStyle;
         echo '</style>';
     }
-
     /**
      * Create classes like small-4 or large-5 for grid
      *

@@ -133,11 +133,11 @@
   position: absolute;
   right: 5px;
   bottom: 100%;
-  margin-bottom: -4px;
+  margin-bottom: -5px;
 
   text-align: right;
 
-  line-height: 8px;
+  line-height: 14px;
 
   background-color: #eee;
 
@@ -156,7 +156,7 @@
 .minicomposer-sortable-rows .options span {
   display: inline-block;
 
-  padding: 4px 1px 0;
+  padding: 0 1px;
   font-size: 12px;
 
   cursor: pointer;

@@ -117,7 +117,7 @@ class MinicomposerPublic {
         echo '<style class="mc-style">';
         // global style
         echo '.row .inner-column{';
-        echo 'position: relative;';
+        echo 'position:relative;';
         echo !empty( $this->options['globalPadding'] ) ? 'padding:' . $this->options['globalPadding'] . ';' : '';
         echo !empty( $this->options['globalMinHeight'] ) ? 'min-height:' . $this->options['globalMinHeight'] . ';' : '';
         echo !empty( $this->options['globalColumnMargin'] ) ? 'margin-bottom:' . $this->options['globalColumnMargin'] . ';' : '';

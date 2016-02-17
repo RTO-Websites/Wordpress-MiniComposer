@@ -61,10 +61,52 @@ class MinicomposerPublic {
         $this->version = $version;
         $this->options = MagicAdminPage::getOption( 'minicomposer' );
 
+        $this->addPxToGlobalOptions();
+
         add_filter( 'the_content', array( $this, 'appendColumns' ) );
         add_action( 'wp_footer', array( $this, 'addFooterStyle' ) );
     }
 
+    /**
+     * Add pixel to numeric values
+     */
+    public function addPxToGlobalOptions() {
+        if ( isset( $this->options['globalGutter'] ) && is_numeric( $this->options['globalGutter'] ) ) {
+            $this->options['globalGutter'] .= 'px';
+        }
+        if ( isset( $this->options['globalPadding'] ) && is_numeric( $this->options['globalPadding'] ) ) {
+            $this->options['globalPadding'] .= 'px';
+        }
+        if ( isset( $this->options['globalMinHeight'] ) && is_numeric( $this->options['globalMinHeight'] ) ) {
+            $this->options['globalMinHeight'] .= 'px';
+        }
+        if ( isset( $this->options['globalColumnMargin'] ) && is_numeric( $this->options['globalColumnMargin'] ) ) {
+            $this->options['globalColumnMargin'] .= 'px';
+        }
+        if ( isset( $this->options['globalRowMargin'] ) && is_numeric( $this->options['globalRowMargin'] ) ) {
+            $this->options['globalRowMargin'] .= 'px';
+        }
+    }
+
+    /**
+     * Add px to numeric value
+     *
+     * @param $value
+     * @return string
+     */
+    public function addPxToValue( $value ) {
+        if ( is_numeric( $value ) ) {
+            $value .= 'px';
+        }
+        return $value;
+    }
+
+    /**
+     * Append columns to the_content()
+     *
+     * @param $content
+     * @return string
+     */
     public function appendColumns( $content ) {
         global $post;
         $gridOutput = '';
@@ -80,6 +122,12 @@ class MinicomposerPublic {
         return $content . $gridOutput;
     }
 
+    /**
+     * Create HTML for rows and columns
+     *
+     * @param $rows
+     * @return string
+     */
     private function createRows( $rows ) {
         $gridOutput = '';
         foreach ( $rows as $rowIndex => $row ) {
@@ -90,9 +138,10 @@ class MinicomposerPublic {
                 $columnClasses = $this->createColumnClasses( $column );
                 $columnInnerStyle = $this->createColumnStyle( $column );
 
-                $columnStyle = !empty( $column->gutter ) ? '.mc-column-' . $this->columnCount . '{padding:' . $column->gutter . '}' : '';
+                $columnStyle = isset( $column->gutter ) && $column->gutter !== '' ? '.mc-column-' . $this->columnCount
+                    . '{padding:' . $this->addPxToValue( $column->gutter ) . '}' : '';
 
-                $this->columnStyle .= $columnStyle. '.mc-column-' . $this->columnCount . ' > .inner-column{' . $columnInnerStyle . '}';
+                $this->columnStyle .= $columnStyle . '.mc-column-' . $this->columnCount . ' > .inner-column{' . $columnInnerStyle . '}';
 
                 $gridOutput .= '<div class="mc-column-' . $this->columnCount . ' mc-column  columns ' . $columnClasses . '">';
                 $gridOutput .= '<div class="inner-column">';
@@ -118,13 +167,19 @@ class MinicomposerPublic {
         // global style
         echo '.row .inner-column{';
         echo 'position:relative;';
-        echo !empty( $this->options['globalPadding'] ) ? 'padding:' . $this->options['globalPadding'] . ';' : '';
-        echo !empty( $this->options['globalMinHeight'] ) ? 'min-height:' . $this->options['globalMinHeight'] . ';' : '';
-        echo !empty( $this->options['globalColumnMargin'] ) ? 'margin-bottom:' . $this->options['globalColumnMargin'] . ';' : '';
+        echo isset( $this->options['globalPadding'] ) ? 'padding:' . $this->options['globalPadding'] . ';' : '';
+        echo isset( $this->options['globalMinHeight'] ) ? 'min-height:' . $this->options['globalMinHeight'] . ';' : '';
+        echo isset( $this->options['globalColumnMargin'] ) ? 'margin-bottom:' . $this->options['globalColumnMargin'] . ';' : '';
         echo '}';
-        if ( !empty( $this->options['globalRowMargin'] ) ) {
+
+        if ( isset( $this->options['globalRowMargin'] ) && $this->options['globalRowMargin'] !== '' ) {
             echo '.mc-row{margin-bottom:' . $this->options['globalRowMargin'] . ';}';
         }
+
+        if ( isset( $this->options['globalGutter'] ) && $this->options['globalGutter'] !== '' ) {
+            echo '.mc-column{padding-left:' . $this->options['globalGutter'] . ';padding-right:' . $this->options['globalGutter'] . ';}';
+        }
+
         echo '.mc-column.clear-left {';
         echo 'clear: left;';
         echo '}';
@@ -133,6 +188,7 @@ class MinicomposerPublic {
         echo $this->columnStyle;
         echo '</style>';
     }
+
     /**
      * Create classes like small-4 or large-5 for grid
      *
@@ -169,8 +225,8 @@ class MinicomposerPublic {
         $columnStyle .= !empty( $column->backgroundposition ) ? 'background-position:' . $column->backgroundposition . ';' : '';
         $columnStyle .= !empty( $column->backgroundrepeat ) ? 'background-repeat:' . $column->backgroundrepeat . ';' : '';
         $columnStyle .= !empty( $column->backgroundsize ) ? 'background-size:' . $column->backgroundsize . ';' : '';
-        $columnStyle .= !empty( $column->padding ) ? 'padding:' . $column->padding . ';' : '';
-        $columnStyle .= !empty( $column->minheight ) ? 'min-height:' . $column->minheight . ';' : '';
+        $columnStyle .= isset( $column->padding ) && $column->padding !== '' ? 'padding:' . $this->addPxToValue( $column->padding ) . ';' : '';
+        $columnStyle .= isset( $column->minheight ) && $column->minheight !== '' ? 'min-height:' . $this->addPxToValue( $column->minheight ) . ';' : '';
 
         return $columnStyle;
     }

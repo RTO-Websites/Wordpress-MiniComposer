@@ -136,6 +136,10 @@ class MinicomposerAdmin {
                 'type' => 'text',
                 'title' => __( 'Column-Padding', $this->textdomain ),
             ),
+            'globalGutter' => array(
+                'type' => 'text',
+                'title' => __( 'Column-Gutter', $this->textdomain ),
+            ),
             'globalMinHeight' => array(
                 'type' => 'text',
                 'title' => __( 'Column-Min-Height', $this->textdomain ),

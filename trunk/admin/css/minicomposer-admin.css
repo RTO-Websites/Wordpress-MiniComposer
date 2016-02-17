@@ -61,7 +61,7 @@
 }
 
 .minicomposer-column .minicomposer-row > .options span {
-  padding: 4px 2px;
+  padding: 0px 2px;
 }
 
 .minicomposer-column .minicomposer-row {
@@ -163,6 +163,7 @@
 }
 
 .minicomposer-row > .options {
+  top: -15px;
   margin-bottom: 0;
   right: 0;
 }

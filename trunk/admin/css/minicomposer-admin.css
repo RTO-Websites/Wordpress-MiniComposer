@@ -21,6 +21,7 @@
   position: relative;
   float: left;
   min-width: calc(100% / 12);
+  max-width: 100%;
 
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -55,13 +56,13 @@
 
 .minicomposer-column .minicomposer-row > .options {
   right: 14px;
-  top: -10px;
-  height: 16px;
-  width: 16px;
+  top: -9px;
+  height: 14px;
+  width: 14px;
 }
 
 .minicomposer-column .minicomposer-row > .options span {
-  padding: 0px 2px;
+  padding: 0px 1px;
 }
 
 .minicomposer-column .minicomposer-row {
@@ -108,6 +109,10 @@
 
 .minicomposer-column .ui-resizable-s {
   bottom: 3px;
+}
+
+.minicomposer-column .ui-resizable-handle {
+  z-index: 9999 !important;
 }
 
 .minicomposer-row {
@@ -294,13 +299,17 @@
 }
 
 
-.minicomposer-column.dragover-left:before,
-.minicomposer-column.dragover-right:before {
+.minicomposer-column.dragover:before,
+.minicomposer-column.dragover:before {
   content: '';
   position:absolute;
   top: 5px;
   bottom: 5px;
   width: 5px;
+}
+
+.minicomposer-column.dragover-left:before,
+.minicomposer-column.dragover-right:before {
   background-color: green;
 }
 

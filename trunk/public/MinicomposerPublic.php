@@ -64,27 +64,28 @@ class MinicomposerPublic {
         $this->addPxToGlobalOptions();
 
         add_filter( 'the_content', array( $this, 'appendColumns' ) );
-        add_action( 'wp_footer', array( $this, 'addFooterStyle' ) );
+        add_action( 'wp_head', array( $this, 'addHeaderStyle' ) );
+
     }
 
     /**
      * Add pixel to numeric values
      */
     public function addPxToGlobalOptions() {
-        if ( isset( $this->options['globalGutter'] ) && is_numeric( $this->options['globalGutter'] ) ) {
-            $this->options['globalGutter'] .= 'px';
+        if ( isset( $this->options['globalGutter'] ) ) {
+            $this->options['globalGutter'] = $this->addPxToValue( $this->options['globalGutter'] );
         }
-        if ( isset( $this->options['globalPadding'] ) && is_numeric( $this->options['globalPadding'] ) ) {
-            $this->options['globalPadding'] .= 'px';
+        if ( isset( $this->options['globalPadding'] ) ) {
+            $this->options['globalPadding'] = $this->addPxToValue( $this->options['globalPadding'] );
         }
-        if ( isset( $this->options['globalMinHeight'] ) && is_numeric( $this->options['globalMinHeight'] ) ) {
-            $this->options['globalMinHeight'] .= 'px';
+        if ( isset( $this->options['globalMinHeight'] ) ) {
+            $this->options['globalMinHeight'] = $this->addPxToValue( $this->options['globalMinHeight'] );
         }
-        if ( isset( $this->options['globalColumnMargin'] ) && is_numeric( $this->options['globalColumnMargin'] ) ) {
-            $this->options['globalColumnMargin'] .= 'px';
+        if ( isset( $this->options['globalColumnMargin'] ) ) {
+            $this->options['globalColumnMargin'] = $this->addPxToValue( $this->options['globalColumnMargin'] );
         }
-        if ( isset( $this->options['globalRowMargin'] ) && is_numeric( $this->options['globalRowMargin'] ) ) {
-            $this->options['globalRowMargin'] .= 'px';
+        if ( isset( $this->options['globalRowMargin'] ) ) {
+            $this->options['globalRowMargin'] = $this->addPxToValue( $this->options['globalRowMargin'] );
         }
     }
 
@@ -97,6 +98,17 @@ class MinicomposerPublic {
     public function addPxToValue( $value ) {
         if ( is_numeric( $value ) ) {
             $value .= 'px';
+        } else {
+            $split = explode( ' ', $value );
+            if ( count( $split ) > 1 ) {
+                foreach ( $split as $key => $part ) {
+                    if ( is_numeric( $part ) ) {
+                        $split[$key] = $part . 'px';
+                    }
+                }
+
+                $value = implode( ' ', $split );
+            }
         }
         return $value;
     }
@@ -123,29 +135,41 @@ class MinicomposerPublic {
     }
 
     /**
-     * Create HTML for rows and columns
+     * Create HTML for rows and columns (recursive)
      *
      * @param $rows
      * @return string
      */
     private function createRows( $rows ) {
         $gridOutput = '';
+
+        // loop row
         foreach ( $rows as $rowIndex => $row ) {
             $gridOutput .= '<div class="row  mc-row">';
+
+            // loop columns
             foreach ( $row as $columnIndex => $column ) {
                 $this->columnCount += 1;
                 // set classes for grid
                 $columnClasses = $this->createColumnClasses( $column );
                 $columnInnerStyle = $this->createColumnStyle( $column );
 
-                $columnStyle = isset( $column->gutter ) && $column->gutter !== '' ? '.mc-column-' . $this->columnCount
-                    . '{padding:' . $this->addPxToValue( $column->gutter ) . '}' : '';
+                $columnStyle = '';
 
-                $this->columnStyle .= $columnStyle . '.mc-column-' . $this->columnCount . ' > .inner-column{' . $columnInnerStyle . '}';
+                // add column-specific gutter
+                if ( isset( $column->gutter ) && $column->gutter !== '' ) {
+                    $columnStyle .= 'padding-left:' . $this->addPxToValue( $column->gutter )
+                        . 'padding-right:' . $this->addPxToValue( $column->gutter )
+                        . ';';
+                }
 
-                $gridOutput .= '<div class="mc-column-' . $this->columnCount . ' mc-column  columns ' . $columnClasses . '">';
-                $gridOutput .= '<div class="inner-column">';
+
+                // generate html for column
+                $gridOutput .= '<div class="mc-column-' . $this->columnCount . ' mc-column  columns ' . $columnClasses . '" style="' . $columnStyle . '">';
+                $gridOutput .= '<div class="inner-column" style="' . $columnInnerStyle . '">';
                 $gridOutput .= trim( $column->content );
+
+                // column has inner-row -> call recursive createRows
                 if ( !empty( $column->rows ) ) {
                     $gridOutput .= $this->createRows( $column->rows );
                 }
@@ -160,14 +184,16 @@ class MinicomposerPublic {
     }
 
     /**
-     * Adds style for grid on footer
+     * Adds global style for grid on header
      */
-    public function addFooterStyle() {
+    public function addHeaderStyle() {
         echo '<style class="mc-style">';
         // global style
         echo '.row .inner-column{';
         echo 'position:relative;';
-        echo isset( $this->options['globalPadding'] ) ? 'padding:' . $this->options['globalPadding'] . ';' : '';
+        if ( isset( $this->options['globalPadding'] ) ) {
+            echo 'padding:' . $this->options['globalPadding'] . ';';
+        }
         echo isset( $this->options['globalMinHeight'] ) ? 'min-height:' . $this->options['globalMinHeight'] . ';' : '';
         echo isset( $this->options['globalColumnMargin'] ) ? 'margin-bottom:' . $this->options['globalColumnMargin'] . ';' : '';
         echo '}';
@@ -177,7 +203,7 @@ class MinicomposerPublic {
         }
 
         if ( isset( $this->options['globalGutter'] ) && $this->options['globalGutter'] !== '' ) {
-            echo '.mc-column{padding-left:' . $this->options['globalGutter'] . ';padding-right:' . $this->options['globalGutter'] . ';}';
+            echo '.mc-column{padding-left:' . $this->options['globalGutter'] . ';' . ';padding-right:' . $this->options['globalGutter'] . ';}';
         }
 
         echo '.mc-column.clear-left {';
@@ -225,7 +251,11 @@ class MinicomposerPublic {
         $columnStyle .= !empty( $column->backgroundposition ) ? 'background-position:' . $column->backgroundposition . ';' : '';
         $columnStyle .= !empty( $column->backgroundrepeat ) ? 'background-repeat:' . $column->backgroundrepeat . ';' : '';
         $columnStyle .= !empty( $column->backgroundsize ) ? 'background-size:' . $column->backgroundsize . ';' : '';
-        $columnStyle .= isset( $column->padding ) && $column->padding !== '' ? 'padding:' . $this->addPxToValue( $column->padding ) . ';' : '';
+
+        if ( isset( $column->padding ) && $column->padding !== '' ) {
+            $columnStyle .= 'padding:' . $this->addPxToValue( $column->padding ) . ';';
+        }
+
         $columnStyle .= isset( $column->minheight ) && $column->minheight !== '' ? 'min-height:' . $this->addPxToValue( $column->minheight ) . ';' : '';
 
         return $columnStyle;
@@ -250,9 +280,14 @@ class MinicomposerPublic {
          * class.
          */
 
-        //wp_enqueue_style( $this->pluginName, plugin_dir_url( __FILE__ ) . 'css/minicomposer-public.css', array(), $this->version, 'all' );
+        // load bootstrap or foundation from CDN if activated
+        if ( !empty( $this->options['embedFromCDN'] ) && empty( $this->options['useBootstrap'] ) ) {
+            wp_enqueue_style( 'foundation', 'https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.css', array(), $this->version, 'all' );
+        } else if ( !empty( $this->options['embedFromCDN'] ) ) {
+            wp_enqueue_style( 'bootstrap', 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css', array(), $this->version, 'all' );
+        }
 
-        wp_enqueue_style( $this->pluginName );
+        //wp_enqueue_style( $this->pluginName, plugin_dir_url( __FILE__ ) . 'css/minicomposer-public.css', array(), $this->version, 'all' );
     }
 
     /**

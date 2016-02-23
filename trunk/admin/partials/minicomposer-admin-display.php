@@ -14,8 +14,9 @@
     <div class="minicomposer-add-column button">+ <?php _e( 'Column', $this->textdomain ); ?></div>
     <div class="minicomposer-add-row button">+ <?php _e( 'Row', $this->textdomain ); ?></div>
 
-    <div class="minicomposer-add-column-2 button">+ <?php _e( '2 Columns', $this->textdomain ); ?></div>
-    <div class="minicomposer-add-column-3 button">+ <?php _e( '3 Columns', $this->textdomain ); ?></div>
+    <div class="minicomposer-add-column-2 button">+ 2 <?php _e( 'Columns', $this->textdomain ); ?></div>
+    <div class="minicomposer-add-column-3 button">+ 3 <?php _e( 'Columns', $this->textdomain ); ?></div>
+    <div class="minicomposer-add-column-4 button">+ 4 <?php _e( 'Columns', $this->textdomain ); ?></div>
 
     <div class="minicomposer-sortable-rows">
         <?php getRows( $composerRows ); ?>
@@ -24,7 +25,7 @@
 
     <div class="global-wp-editor composer-overlay">
         <?php
-        wp_editor( '', 'composer_global_editor' );
+        wp_editor( '', 'composer_global_editor', array('wpautop' => true, 'forced_root_block' => false) );
         ?>
         <div class="button button-cancel button-secondary minicomposer-cancel-wpeditor"><?php _e( 'Cancel' ); ?></div>
         <div class="button button-save button-primary minicomposer-save-wpeditor"><?php _e( 'Save' ); ?></div>

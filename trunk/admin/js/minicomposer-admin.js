@@ -64,6 +64,10 @@
       addColumn(3);
     });
 
+    $('.minicomposer-add-column-4').on('click', function () {
+      addColumn(4);
+    });
+
     /**
      * Add new row
      */
@@ -111,11 +115,16 @@
 
     new McDragNDrop();
 
+
     // set startSize of columns
     $('.minicomposer-column').each(function (index, element) {
+      var columnWidth = window.getColumnWidth(element);
       $(element).css({
-        width: (window.getColumnWidth(element) * $(element).data('medium')) + 'px'
+        width: (columnWidth * $(element).data('medium')) + 'px',
+        maxWidth: (columnWidth * 12) + 'px'
       });
+
+      window.recalcColumns(element);
     });
 
     // add upload
@@ -133,6 +142,7 @@
       maxWidth = containerWidth;
 
     window.columnWidth = Math.floor(containerWidth / 12);
+    maxWidth = window.columnWidth * 12;
 
     resizeArgs = {
       grid: [window.columnWidth, 1],
@@ -250,7 +260,7 @@
     var newMinHeight = $(e.target).height() - 10;
 
     // set only if a minheight exists and newMinheight is not default
-    if (newMinHeight !== window.columnMinHeight || $(e.target).data('minheight')) {
+    if (newMinHeight !== window.columnMinHeight || $(e.target).data('minheight') && e.type == 'resizestop') {
       $(e.target).data('minheight', newMinHeight + 'px');
       $(e.target).css({'height': '', 'min-height': newMinHeight + 'px'});
     }
@@ -308,7 +318,8 @@
         rowConfig[rowCount][colCount] = getDataset(element);
         rowConfig[rowCount][colCount].content = $(element).find('> .content').html();
 
-        rowConfig[rowCount][colCount].medium = Math.floor($(element).outerWidth() / window.getColumnWidth(element));
+        // must be Math.round for working calculation in zoom
+        rowConfig[rowCount][colCount].medium = Math.round($(element).outerWidth() / window.getColumnWidth(element));
 
         rowConfig[rowCount][colCount].rows = getRowArray(element)
 
@@ -344,7 +355,8 @@
       $(element).resizable(resizeArgs);
 
       $(element).css({
-        width: (columnWidth * $(element).data('medium')) + 'px'
+        width: (columnWidth * $(element).data('medium')) + 'px',
+        maxWidth: (columnWidth * 12) + 'px'
       });
     });
   };
@@ -417,6 +429,10 @@
     }
     var content = target.find('> .content').html();
 
+    // hotfix for fucking <p>
+    content = content.replace(/\<\/p\>/g, '<br /><br />');
+    content = content.replace(/\<p\>/g, '');
+
     switchEditors.go('composer_global_editor', 'tinymce');
 
     composerEditor = tinyMCE.get('composer_global_editor');
@@ -456,12 +472,11 @@
     }
 
     switchEditors.go('composer_global_editor', 'tinymce');
-
     composerEditor = tinyMCE.get('composer_global_editor');
+
     currentColumn.find('> .content').html(composerEditor.getContent());
 
     closeWpEditor();
-
     updateComposer();
   }
 

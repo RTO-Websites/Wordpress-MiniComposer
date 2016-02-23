@@ -31,7 +31,7 @@ var McDragNDrop = function(args) {
    * @param e
    */
   function dragOver(e) {
-    if (lastDragOver+50 > Date.now()) return;
+    if (lastDragOver+20 > Date.now()) return;
     lastDragOver = Date.now();
 
     var dropTarget = $(e.target);
@@ -41,9 +41,10 @@ var McDragNDrop = function(args) {
       dropTarget = dropTarget.closest('.minicomposer-column, .minicomposer-row');
     }
 
-    removeDragOverClasses();
+    //removeDragOverClasses();
 
-    if (currentDrag.find(dropTarget).length) {
+    if (currentDrag.find(dropTarget).length || currentDrag.is(dropTarget)) {
+      removeDragOverClasses();
       return;
     }
 
@@ -76,6 +77,11 @@ var McDragNDrop = function(args) {
       dragClass += ' dragover-insert';
     }
 
+    if (dropTarget.hasClass(dragClass)) {
+      return;
+    }
+
+    removeDragOverClasses();
     dropTarget.addClass(dragClass);
   }
 
@@ -105,6 +111,10 @@ var McDragNDrop = function(args) {
         dragClass += ' dragover-top';
       }
     }
+    if (dropTarget.hasClass(dragClass)) {
+      return;
+    }
+    removeDragOverClasses();
     dropTarget.addClass(dragClass);
   }
 
@@ -121,6 +131,7 @@ var McDragNDrop = function(args) {
       // drag is column
       dropColumn(e);
     }
+
     recalcColumns();
     updateComposer();
     finishDrag();

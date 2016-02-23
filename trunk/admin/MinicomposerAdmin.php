@@ -152,24 +152,40 @@ class MinicomposerAdmin {
                 'type' => 'text',
                 'title' => __( 'Row-Margin-Bottom', $this->textdomain ),
             ),
+
+            'headlineExpert' => array(
+                'type' => 'headline',
+                'title' => __( 'Expert-Settings', $this->textdomain ),
+            ),
             'useBootstrap' => array(
                 'type' => 'checkbox',
                 'title' => __( 'Use bootstrap instead of foundation', $this->textdomain ),
             ),
+            'embedFromCDN' => array(
+                'type' => 'checkbox',
+                'title' => __( 'Load Foundation/Bootstrap from CDN (only use if your theme doesn\'t already include it)', $this->textdomain ),
+            ),
+
+            'headlineAdmin' => array(
+                'type' => 'headline',
+                'title' => __( 'Admin-Style', $this->textdomain ),
+            ),
             'columnAdminStyle' => array(
                 'type' => 'textarea',
                 'title' => __( 'Column-Style for admin', $this->textdomain ),
-                'description' => __('Only for admin-view', $this->textdomain),
+                'description' => __( 'Only for admin-view', $this->textdomain ),
             ),
             'columnAdminFont' => array(
                 'type' => 'textarea',
                 'title' => __( 'Column-Font for admin', $this->textdomain ),
-                'description' => __('Only for admin-view', $this->textdomain),
+                'description' => __( 'Only for admin-view', $this->textdomain ),
             ),
         ) );
 
         add_action( 'add_meta_boxes', array( $this, 'registerPostSettings' ) );
         add_action( 'save_post', array( $this, 'savePostMeta' ), 10, 2 );
+
+        add_filter( 'tiny_mce_before_init', array( $this, 'switchTinymceEnterMode' ) );
     }
 
     /**
@@ -192,7 +208,7 @@ class MinicomposerAdmin {
          */
 
         wp_enqueue_style( 'jquery-ui-resizable', '//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css' );
-        wp_enqueue_style( $this->pluginName, plugin_dir_url( __FILE__ ) . 'css/minicomposer-admin.css', array(), $this->version, 'all' );
+        wp_enqueue_style( $this->pluginName, plugin_dir_url( __FILE__ ) . 'css/minicomposer-admin.css', array(), $this->version . time(), 'all' );
 
     }
 
@@ -216,10 +232,25 @@ class MinicomposerAdmin {
          */
 
         wp_enqueue_script( 'jquery-ui-resizable' );
-        wp_enqueue_script( $this->pluginName, plugin_dir_url( __FILE__ ) . 'js/minicomposer-admin.js', array( 'jquery' ), $this->version, false );
-        wp_enqueue_script( $this->pluginName . '-dragndrop', plugin_dir_url( __FILE__ ) . 'js/mc-dragndrop.js', array( 'jquery' ), $this->version, false );
-
+        wp_enqueue_script( $this->pluginName, plugin_dir_url( __FILE__ ) . 'js/minicomposer-admin.js', array( 'jquery' ), $this->version . time(), false );
+        wp_enqueue_script( $this->pluginName . '-dragndrop', plugin_dir_url( __FILE__ ) . 'js/mc-dragndrop.js', array( 'jquery' ), $this->version . time(), false );
     }
+
+
+    /**
+     * Switch enter mode in tinymce from p to br
+     *
+     * @param $settings
+     * @return mixed
+     */
+    public function switchTinymceEnterMode( $settings ) {
+        $settings['forced_root_block'] = false;
+        $settings["force_br_newlines"] = true;
+        $settings["force_p_newlines"] = false;
+        $settings["convert_newlines_to_brs"] = true;
+        return $settings;
+    }
+
 
     /**
      * Register the Metaboxes for Gallery-Settings and Images

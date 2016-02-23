@@ -36,6 +36,12 @@ Just install and activate the plugin. Then you can see MiniComposer under every 
 4. Global-settings
 
 == Changelog ==
+= 1.2.0 ==
+* Add nested columns
+* New drag&drop-system
+* WP Editor now uses <br> instead of <p>
+* A Lot bugfixes
+
 = 1.0.6 ==
 * Fix sortable-placeholder position
 * Improve admin-view

@@ -59,8 +59,20 @@ msgstr "Zeile"
 msgid "Column"
 msgstr "Spalte"
 
-msgid "2 Columns"
-msgstr "2 Spalten"
+msgid "Columns"
+msgstr "Spalten"
 
-msgid "3 Columns"
-msgstr "3 Spalten"
+msgid "Only for admin-view"
+msgstr "Nur für Administration-Ansicht"
+
+msgid "Column-Style for admin"
+msgstr "Spalten-Style für Administration"
+
+msgid "Column-Font for admin"
+msgstr "Spalten-Schrift für Administration"
+
+msgid "Expert-Settings"
+msgstr "Experten-Einstellungen"
+
+msgid "Load Foundation/Bootstrap from CDN (only use if your theme doesn't already include it)"
+msgstr "Lade Foundation/Bootstrap von CDN (nur verwenden falls dein Theme es nicht bereits einbindet)"

@@ -41,6 +41,10 @@ class MinicomposerPublic {
      */
     private $version;
 
+    private $columnCount = 0;
+
+    private $columnStyle = '';
+
 
     private $options;
 
@@ -57,10 +61,64 @@ class MinicomposerPublic {
         $this->version = $version;
         $this->options = MagicAdminPage::getOption( 'minicomposer' );
 
+        $this->addPxToGlobalOptions();
+
         add_filter( 'the_content', array( $this, 'appendColumns' ) );
         add_action( 'wp_head', array( $this, 'addHeaderStyle' ) );
+
     }
 
+    /**
+     * Add pixel to numeric values
+     */
+    public function addPxToGlobalOptions() {
+        if ( isset( $this->options['globalGutter'] ) ) {
+            $this->options['globalGutter'] = $this->addPxToValue( $this->options['globalGutter'] );
+        }
+        if ( isset( $this->options['globalPadding'] ) ) {
+            $this->options['globalPadding'] = $this->addPxToValue( $this->options['globalPadding'] );
+        }
+        if ( isset( $this->options['globalMinHeight'] ) ) {
+            $this->options['globalMinHeight'] = $this->addPxToValue( $this->options['globalMinHeight'] );
+        }
+        if ( isset( $this->options['globalColumnMargin'] ) ) {
+            $this->options['globalColumnMargin'] = $this->addPxToValue( $this->options['globalColumnMargin'] );
+        }
+        if ( isset( $this->options['globalRowMargin'] ) ) {
+            $this->options['globalRowMargin'] = $this->addPxToValue( $this->options['globalRowMargin'] );
+        }
+    }
+
+    /**
+     * Add px to numeric value
+     *
+     * @param $value
+     * @return string
+     */
+    public function addPxToValue( $value ) {
+        if ( is_numeric( $value ) ) {
+            $value .= 'px';
+        } else {
+            $split = explode( ' ', $value );
+            if ( count( $split ) > 1 ) {
+                foreach ( $split as $key => $part ) {
+                    if ( is_numeric( $part ) ) {
+                        $split[$key] = $part . 'px';
+                    }
+                }
+
+                $value = implode( ' ', $split );
+            }
+        }
+        return $value;
+    }
+
+    /**
+     * Append columns to the_content()
+     *
+     * @param $content
+     * @return string
+     */
     public function appendColumns( $content ) {
         global $post;
         $gridOutput = '';
@@ -71,39 +129,92 @@ class MinicomposerPublic {
             return $content;
         }
 
-        foreach ( $grid as $rowIndex => $row ) {
+        $gridOutput .= $this->createRows( $grid );
+
+        return $content . $gridOutput;
+    }
+
+    /**
+     * Create HTML for rows and columns (recursive)
+     *
+     * @param $rows
+     * @return string
+     */
+    private function createRows( $rows ) {
+        $gridOutput = '';
+
+        // loop row
+        foreach ( $rows as $rowIndex => $row ) {
             $gridOutput .= '<div class="row  mc-row">';
+
+            // loop columns
             foreach ( $row as $columnIndex => $column ) {
+                $this->columnCount += 1;
                 // set classes for grid
                 $columnClasses = $this->createColumnClasses( $column );
                 $columnInnerStyle = $this->createColumnStyle( $column );
-                $columnStyle = !empty( $column->gutter ) ? ' style="padding:' . $column->gutter . ';" ' : '';
 
-                $gridOutput .= '<div class="mc-column  columns ' . $columnClasses . '" ' . $columnStyle . '>';
-                $gridOutput .= '<div class="inner-column " style="' . $columnInnerStyle . '">';
-                $gridOutput .= $column->content;
+                $columnStyle = '';
+
+                // add column-specific gutter
+                if ( isset( $column->gutter ) && $column->gutter !== '' ) {
+                    $columnStyle .= 'padding-left:' . $this->addPxToValue( $column->gutter )
+                        . 'padding-right:' . $this->addPxToValue( $column->gutter )
+                        . ';';
+                }
+
+
+                // generate html for column
+                $gridOutput .= '<div class="mc-column-' . $this->columnCount . ' mc-column  columns ' . $columnClasses . '" style="' . $columnStyle . '">';
+                $gridOutput .= '<div class="inner-column" style="' . $columnInnerStyle . '">';
+                // remove <p>
+                $column->content = str_replace( '</p>', '<br /><br />', $column->content );
+                $column->content = str_replace( '<p>', '', $column->content );
+                $gridOutput .= trim( $column->content );
+
+                // column has inner-row -> call recursive createRows
+                if ( !empty( $column->rows ) ) {
+                    $gridOutput .= $this->createRows( $column->rows );
+                }
+
                 $gridOutput .= '</div>';
                 $gridOutput .= '</div>';
             }
             $gridOutput .= '</div>';
         }
 
-        return $content . $gridOutput;
+        return $gridOutput;
     }
 
     /**
-     * Adds style for grid on header
+     * Adds global style for grid on header
      */
     public function addHeaderStyle() {
-        echo '<style class="minicomposer-style">';
-        echo '.mc-row .inner-column {';
-        echo !empty( $this->options['globalPadding'] ) ? 'padding:' . $this->options['globalPadding'] . ';' : '';
-        echo !empty( $this->options['globalMinHeight'] ) ? 'min-height:' . $this->options['globalMinHeight'] . ';' : '';
-        echo !empty( $this->options['globalColumnMargin'] ) ? 'margin-bottom:' . $this->options['globalColumnMargin'] . ';' : '';
-        echo '}';
-        if ( !empty( $this->options['globalRowMargin'] ) ) {
-            echo '.mc-row { margin-bottom: ' . $this->options['globalRowMargin'] . '; }';
+        echo '<style class="mc-style">';
+        // global style
+        echo '.row .inner-column{';
+        echo 'position:relative;';
+        if ( isset( $this->options['globalPadding'] ) ) {
+            echo 'padding:' . $this->options['globalPadding'] . ';';
         }
+        echo isset( $this->options['globalMinHeight'] ) ? 'min-height:' . $this->options['globalMinHeight'] . ';' : '';
+        echo isset( $this->options['globalColumnMargin'] ) ? 'margin-bottom:' . $this->options['globalColumnMargin'] . ';' : '';
+        echo '}';
+
+        if ( isset( $this->options['globalRowMargin'] ) && $this->options['globalRowMargin'] !== '' ) {
+            echo '.mc-row{margin-bottom:' . $this->options['globalRowMargin'] . ';}';
+        }
+
+        if ( isset( $this->options['globalGutter'] ) && $this->options['globalGutter'] !== '' ) {
+            echo '.mc-column{padding-left:' . $this->options['globalGutter'] . ';' . ';padding-right:' . $this->options['globalGutter'] . ';}';
+        }
+
+        echo '.mc-column.clear-left{';
+        echo 'clear: left;';
+        echo '}';
+
+        // column style
+        echo $this->columnStyle;
         echo '</style>';
     }
 
@@ -143,8 +254,12 @@ class MinicomposerPublic {
         $columnStyle .= !empty( $column->backgroundposition ) ? 'background-position:' . $column->backgroundposition . ';' : '';
         $columnStyle .= !empty( $column->backgroundrepeat ) ? 'background-repeat:' . $column->backgroundrepeat . ';' : '';
         $columnStyle .= !empty( $column->backgroundsize ) ? 'background-size:' . $column->backgroundsize . ';' : '';
-        $columnStyle .= !empty( $column->padding ) ? 'padding:' . $column->padding . ';' : '';
-        $columnStyle .= !empty( $column->minheight ) ? 'min-height:' . $column->minheight . ';' : '';
+
+        if ( isset( $column->padding ) && $column->padding !== '' ) {
+            $columnStyle .= 'padding:' . $this->addPxToValue( $column->padding ) . ';';
+        }
+
+        $columnStyle .= isset( $column->minheight ) && $column->minheight !== '' ? 'min-height:' . $this->addPxToValue( $column->minheight ) . ';' : '';
 
         return $columnStyle;
     }
@@ -168,9 +283,14 @@ class MinicomposerPublic {
          * class.
          */
 
-        //wp_enqueue_style( $this->pluginName, plugin_dir_url( __FILE__ ) . 'css/minicomposer-public.css', array(), $this->version, 'all' );
+        // load bootstrap or foundation from CDN if activated
+        if ( !empty( $this->options['embedFromCDN'] ) && empty( $this->options['useBootstrap'] ) ) {
+            wp_enqueue_style( 'foundation', 'https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.css', array(), $this->version, 'all' );
+        } else if ( !empty( $this->options['embedFromCDN'] ) ) {
+            wp_enqueue_style( 'bootstrap', 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css', array(), $this->version, 'all' );
+        }
 
-        wp_enqueue_style( $this->pluginName );
+        //wp_enqueue_style( $this->pluginName, plugin_dir_url( __FILE__ ) . 'css/minicomposer-public.css', array(), $this->version, 'all' );
     }
 
     /**

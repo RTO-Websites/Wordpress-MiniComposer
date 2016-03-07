@@ -36,6 +36,12 @@ Just install and activate the plugin. Then you can see MiniComposer under every 
 4. Global-settings
 
 == Changelog ==
+= 1.2.5 ==
+* Add image-list for faster selection
+* Now you can interact with right click
+* Rows and Columns are cloneable
+* Some bugfixes
+
 = 1.2.0 ==
 * Add nested columns
 * New drag&drop-system

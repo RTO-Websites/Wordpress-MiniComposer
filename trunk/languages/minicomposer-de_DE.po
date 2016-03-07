@@ -53,6 +53,9 @@ msgstr "Bild"
 msgid "Delete"
 msgstr "Löschen"
 
+msgid "Clone"
+msgstr "Klonen"
+
 msgid "Row"
 msgstr "Zeile"
 

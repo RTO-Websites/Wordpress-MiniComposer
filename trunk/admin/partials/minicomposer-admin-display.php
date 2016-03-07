@@ -47,6 +47,13 @@
     </div>
 
 
+    <div class="global-contextmenu">
+        <span class="minicomposer-style-settings"><?php _e('Style', $this->textdomain); ?></span>
+        <span class="minicomposer-responsive-settings"><?php _e('Responsive', $this->textdomain); ?></span>
+        <span class="minicomposer-clone"><?php _e('Clone', $this->textdomain); ?></span><br />
+        <span class="minicomposer-delete"><?php _e('Delete', $this->textdomain); ?></span>
+    </div>
+
     <script>
         window.columnMinHeight = '<?php echo intval( $this->options['globalMinHeight'] ); ?>';
     </script>
@@ -110,11 +117,6 @@ function getRows( $rows ) {
                     ?>
                 >
                     <span class="content"><?php echo( !empty( $col->content ) ? $col->content : '' ); ?></span>
-                    <span class="options">
-                        <span class="minicomposer-style-settings"></span>
-                        <span class="minicomposer-responsive-settings"></span>
-                        <span class="minicomposer-delete"></span>
-                    </span>
                     <span class="column-bg"></span>
                     <span class="column-count"><?php echo $col->medium; ?></span>
                     <?php
@@ -125,9 +127,7 @@ function getRows( $rows ) {
                 </div>
             <?php endforeach; ?>
 
-            <span class="options">
-                <span class="minicomposer-delete"></span>
-            </span>
+            <span class="minicomposer-delete"></span>
             <span class="row-bg"></span>
         </div>
     <?php endforeach;

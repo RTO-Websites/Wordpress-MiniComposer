@@ -31,6 +31,7 @@
 
   var composerEditor = null,
     currentColumn = null,
+    lastContextMenuTarget = null,
     resizeArgs = null;
 
   /**
@@ -75,7 +76,7 @@
 
 
     // Event for delete-button
-    $(document).on('click', '.options .minicomposer-delete', deleteColumnRow);
+    $(document).on('click', '.global-contextmenu .minicomposer-delete', deleteColumnRow);
     // Event for delete-button
     $(document).on('click', '.global-style-settings .minicomposer-delete', removeBackgroundImage);
 
@@ -98,6 +99,7 @@
     // Cancel&Close responsive-settings
     $('.minicomposer-cancel-responsive').on('click', closeResponsiveFields);
 
+    $(document).on('click', '.minicomposer-clone', cloneColumnRow);
 
     // Event for style button
     $(document).on('click', '.minicomposer-style-settings', openStyleFields);
@@ -106,8 +108,15 @@
     // Cancel&Close style-settings
     $('.minicomposer-cancel-style').on('click', closeStyleFields);
 
-  });
+    // event for selectable image-list (list of media)
+    $(document).on('click', '.selectable-image', selectImage);
 
+    $(document).on('click', closeContextMenu);
+
+
+    // contextmenu
+    $(document).on('contextmenu', '.minicomposer-column, .minicomposer-row', openContextMenu);
+  });
 
   function initEvents() {
     // make resizable
@@ -159,9 +168,7 @@
    */
   function addRow() {
     var newRow = $('<div class="minicomposer-row" draggable="true">' +
-      '<span class="options">' +
       '<span class="minicomposer-delete"></span>' +
-      '</span>' +
       '</div>');
 
     $('.minicomposer-sortable-rows').last().append(newRow);
@@ -188,11 +195,6 @@
     for (var index = 0; index < amount; index += 1) {
       var column = $('<div class="minicomposer-column" data-medium="' + size + '" draggable="true">' +
         '<span class="content"></span>' +
-        '<span class="options">' +
-        '<span class="minicomposer-style-settings"></span>' +
-        '<span class="minicomposer-responsive-settings"></span>' +
-        '<span class="minicomposer-delete"></span>' +
-        '</span>' +
         '<span class="column-bg"></span>' +
         '<span class="column-count">' + size + '</span>' +
         '</div>');
@@ -202,8 +204,43 @@
       column.css({width: (size * window.getColumnWidth(column)) + 'px'});
 
       column.resizable(resizeArgs);
-      updateComposer();
     }
+
+    window.recalcColumns($('.minicomposer-row').last());
+    updateComposer();
+  }
+
+
+  /**
+   * Clone column or row
+   * @param e
+   */
+  function cloneColumnRow(e) {
+    var element = $(e.target).closest('.minicomposer-column, .minicomposer-row');
+
+    if (!element.length) {
+      return;
+    }
+
+    // move contextmenu-element
+    $('#minicomposer .inside').append($('.global-contextmenu'));
+
+    var clonedElement = element.clone();
+
+    clonedElement.insertAfter(element);
+  }
+
+  /**
+   * Select an image from a list
+   *
+   * @param e
+   */
+  function selectImage(e) {
+    var element = $(e.target),
+      imageUrl = element.data('url');
+
+    $('.upload-preview-image').prop('src', imageUrl);
+    $('.upload-field').val(imageUrl);
   }
 
   /**
@@ -257,7 +294,7 @@
    */
   function resizeColumnEnd(e) {
     // set new min-height
-    var newMinHeight = $(e.target).height() - 10;
+    var newMinHeight = $(e.target).height();
 
     // set only if a minheight exists and newMinheight is not default
     if (newMinHeight !== window.columnMinHeight || $(e.target).data('minheight') && e.type == 'resizestop') {
@@ -276,10 +313,20 @@
    */
   function resizeColumn(e) {
     var element = $(e.target),
-      size = Math.floor($(element).outerWidth() / window.getColumnWidth(element));
+      size = Math.floor($(element).outerWidth() / window.getColumnWidth(element)),
+      elementMinHeight = parseInt($(element).css('min-height'));
 
-    $(element).css({'min-height': ''});
+    // set height from min-height or element-current-height
+    if (elementMinHeight > 0) {
+      var newHeight = elementMinHeight > $(element).height()
+        ? elementMinHeight
+        : $(element).height();
 
+      $(element).css({'height': newHeight + 'px'});
+      $(element).css({'min-height': ''});
+    }
+
+    // set column-size
     $(element).find('> .column-count').html(size);
     $(element).data('medium', Math.floor($(element).outerWidth() / window.getColumnWidth(element)));
     window.recalcColumns(element);
@@ -380,14 +427,19 @@
    * @param e
    */
   function deleteColumnRow(e) {
-    var target = $(e.target);
+    var target = $(e.target),
+      column = target.closest('.minicomposer-column'),
+      row = target.closest('.minicomposer-row')
 
-    if (target.closest('.minicomposer-column').length) {
+    // move contextmenu-element
+    $('#minicomposer .inside').append($('.global-contextmenu'));
+
+    if (column.length) {
       // delete column
-      target.closest('.minicomposer-column').remove();
+      column.remove();
     } else {
       // delete row
-      target.closest('.minicomposer-row').remove();
+      row.remove();
     }
 
     updateComposer();
@@ -419,6 +471,8 @@
     closeResponsiveFields();
     closeStyleFields();
 
+    $('.has-editor-open').removeClass('has-editor-open');
+
     var target = $(e.target);
     if (!target.is('.minicomposer-column')) {
       target = target.closest('.minicomposer-column');
@@ -428,6 +482,8 @@
       return;
     }
     var content = target.find('> .content').html();
+
+    target.addClass('has-editor-open');
 
     // hotfix for fucking <p>
     content = content.replace(/\<\/p\>/g, '<br /><br />');
@@ -484,6 +540,7 @@
    * Make WP-Editor hidden
    */
   function closeWpEditor() {
+    $('.has-editor-open').removeClass('has-editor-open');
     currentColumn = null;
     $('.global-wp-editor').removeClass('visible');
   }
@@ -497,10 +554,13 @@
     closeStyleFields();
     closeWpEditor();
 
+    $('.has-responsive-open').removeClass('has-responsive-open');
+
     $('.global-responsive-settings').addClass('visible');
     setOverlayPosition($(e.target), $('.global-responsive-settings'));
 
     currentColumn = $(e.target).closest('.minicomposer-column');
+    currentColumn.addClass('has-responsive-open');
 
     $('#responsiveClass').val(currentColumn.data('cssclass'));
     $('#responsiveSmall').val(currentColumn.data('small'));
@@ -535,6 +595,7 @@
    * Cancel responsive fields
    */
   function closeResponsiveFields() {
+    $('.has-responsive-open').removeClass('has-responsive-open');
     currentColumn = null;
     $('.global-responsive-settings').removeClass('visible');
   }
@@ -545,18 +606,25 @@
    * @param e
    */
   function openStyleFields(e) {
+    $('.has-style-open').removeClass('has-style-open');
     closeResponsiveFields();
     closeWpEditor();
     $('.global-style-settings').addClass('visible');
     setOverlayPosition($(e.target), $('.global-style-settings'));
 
     currentColumn = $(e.target).closest('.minicomposer-column');
+    currentColumn.addClass('has-style-open');
+
+    var bgRepeat = typeof(currentColumn.data('backgroundrepeat')) !== 'undefined' ? currentColumn.data('backgroundrepeat') : 'no-repeat',
+      bgPosition = typeof(currentColumn.data('backgroundposition')) !== 'undefined' ? currentColumn.data('backgroundposition') : 'center',
+      bgSize = typeof(currentColumn.data('backgroundsize')) !== 'undefined' ? currentColumn.data('backgroundsize') : 'contain';
+
 
     $('#columnBackground-image').val(currentColumn.data('backgroundimage'));
     $('#columnBackground-color').val(currentColumn.data('backgroundcolor'));
-    $('#columnBackground-repeat').val(currentColumn.data('backgroundrepeat'));
-    $('#columnBackground-position').val(currentColumn.data('backgroundposition'));
-    $('#columnBackground-size').val(currentColumn.data('backgroundsize'));
+    $('#columnBackground-repeat').val(bgRepeat);
+    $('#columnBackground-position').val(bgPosition);
+    $('#columnBackground-size').val(bgSize);
     $('#columnPadding').val(currentColumn.data('padding'));
     $('#columnGutter').val(currentColumn.data('gutter'));
     $('#minHeight').val(currentColumn.data('minheight'));
@@ -610,6 +678,7 @@
    * Cancel style fields
    */
   function closeStyleFields() {
+    $('.has-style-open').removeClass('has-style-open');
     currentColumn = null;
     $('.global-style-settings').removeClass('visible');
   }
@@ -686,6 +755,32 @@
 
     input.val('');
     image.attr('src', '');
+  }
+
+  function openContextMenu(e) {
+    e.preventDefault();
+    $('.has-contextmenu').removeClass('has-contextmenu');
+
+    var cMenu = $('.global-contextmenu');
+
+    lastContextMenuTarget = $(e.currentTarget);
+
+    lastContextMenuTarget.append(cMenu);
+    lastContextMenuTarget.addClass('has-contextmenu');
+
+    cMenu.addClass('open');
+    cMenu.css({
+      top: (e.offsetY + 10) + 'px',
+      left: (e.offsetX + 10) + 'px'
+    });
+
+    return false;
+  }
+
+  function closeContextMenu() {
+    var cMenu = $('.global-contextmenu');
+    $('.has-contextmenu').removeClass('has-contextmenu');
+    cMenu.removeClass('open');
   }
 
 })(jQuery);

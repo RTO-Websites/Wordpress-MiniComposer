@@ -347,6 +347,25 @@ class MinicomposerAdmin {
                         break;
 
                     case 'background':
+                        $allImages = get_posts( array(
+                            'post_type' => 'attachment',
+                            'post_mime_type' => 'image',
+                            'post_status' => 'inherit',
+                            'posts_per_page' => -1,
+                        ) );
+
+                        echo '<div class="input-background-container">';
+                        echo '<div class="img-list">';
+
+                        foreach ( $allImages as $image ) {
+                            $thumbUrl = wp_get_attachment_thumb_url( $image->ID );
+                            $url = wp_get_attachment_url( $image->ID );
+                            echo '<div class="selectable-image" data-url="' . $url
+                                . '" style="background-image:url(' . $thumbUrl . ');" title="' . $image->post_title . '"></div>';
+                        }
+
+                        echo '</div>';
+
                         echo '<span class="sublabel">' . __( 'Image', $this->textdomain ) . '</span>
                                 <input class="field-input ' . $inputClass . ' upload-field" type="hidden" name="' . $key . '-image" id="'
                             . $key . '-image" value=\''
@@ -355,7 +374,9 @@ class MinicomposerAdmin {
                             . $key . '-image-button" value=\''
                             . __( 'Select image', $this->textdomain ) . '\' /> <span class="minicomposer-delete delete-image"></span>
                             <img src="" alt="" id="' . $key . '-image-img" class=" upload-preview-image" />
-                            <br />';
+                            ';
+
+                        echo '</div>';
 
                         echo '<span class="sublabel">' . __( 'Color', $this->textdomain ) . '</span>
                                 <input class="field-input ' . $inputClass . '" type="text" name="' . $key . '-color" id="'

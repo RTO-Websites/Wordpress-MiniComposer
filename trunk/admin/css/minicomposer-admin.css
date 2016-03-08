@@ -178,7 +178,7 @@
   border: 1px solid #aaa;
   min-width: 400px;
 
-  z-index: 1000;
+  z-index: 10000;
 }
 
 .composer-overlay .headline {

@@ -40,6 +40,9 @@ Just install and activate the plugin. Then you can see MiniComposer under every 
 * Add image-list for faster selection
 * Now you can interact with right click
 * Rows and Columns are cloneable
+* Add compatibility with yoast for seo
+* Hide post-content now
+* Improve sort of meta boxes
 * Some bugfixes
 
 = 1.2.0 ==

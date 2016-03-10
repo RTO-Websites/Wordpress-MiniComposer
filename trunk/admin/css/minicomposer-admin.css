@@ -3,6 +3,11 @@
  * included in this file.
  */
 
+/* hide post-content-editor */
+#postdivrich {
+  display: none;
+}
+
 .input-type-hidden {
   display: none;
 }

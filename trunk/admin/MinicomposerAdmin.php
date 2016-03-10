@@ -182,7 +182,7 @@ class MinicomposerAdmin {
             ),
         ) );
 
-        add_action( 'add_meta_boxes', array( $this, 'registerPostSettings' ) );
+        add_action( 'add_meta_boxes', array( $this, 'registerPostSettings' ), 1 );
         add_action( 'save_post', array( $this, 'savePostMeta' ), 10, 2 );
 
         add_filter( 'tiny_mce_before_init', array( $this, 'switchTinymceEnterMode' ) );
@@ -263,7 +263,7 @@ class MinicomposerAdmin {
             if ( !post_type_supports( $postType, 'editor' ) ) {
                 continue;
             }
-            add_meta_box( 'minicomposer', __( 'MiniComposer', $this->textdomain ), array( $this, 'addComposer' ), $postType );
+            add_meta_box( 'minicomposer', __( 'MiniComposer', $this->textdomain ), array( $this, 'addComposer' ), $postType, 'normal', 'high' );
         }
         return false;
     }
@@ -278,7 +278,15 @@ class MinicomposerAdmin {
 
         $composerRows = get_post_meta( $post->ID, 'minicomposerColumns', true );
         if ( empty( $composerRows ) ) {
-            $composerRows = array();
+            $composerRows = array(
+                array(
+                    array(
+                        'medium' => 12,
+                        'content' => !empty( $post->post_content ) ? nl2br($post->post_content) : '',
+                    ),
+                ),
+            );
+            $composerRows = json_decode( json_encode( $composerRows ) );
         }
 
         include( 'partials/minicomposer-admin-display.php' );
@@ -415,6 +423,34 @@ class MinicomposerAdmin {
         echo '</table>';
     }
 
+
+    /**
+     * Returns content of columns (recursive)
+     */
+    public function getColumnContent( $rows ) {
+        $output = '';
+        // loop row
+        foreach ( $rows as $rowIndex => $row ) {
+            // loop columns
+            foreach ( $row as $columnIndex => $column ) {
+                $column->content = str_replace( '</p>', '<br /><br />', $column->content );
+                $column->content = str_replace( '<p>', '', $column->content );
+
+                // remove shortcodes
+                $column->content = preg_replace( "/\[[^\]]*\]/", "", $column->content );
+
+                $output .= trim( $column->content );
+
+                // column has inner-row -> call recursive getColumnContent
+                if ( !empty( $column->rows ) ) {
+                    $output .= $this->getColumnContent( $column->rows );
+                }
+            }
+        }
+
+        return $output;
+    }
+
     /**
      * Method to save Post-Meta
      *
@@ -455,10 +491,24 @@ class MinicomposerAdmin {
                     $value = filter_input( INPUT_POST, $key );
                 }
 
+                if ( $key == 'minicomposerColumns' ) {
+                    remove_action( 'save_post', array( $this, 'savePostMeta' ) );
+
+                    $postContent = $this->getColumnContent( json_decode( $value ) );
+
+                    wp_update_post( array(
+                        'ID' => $postId,
+                        'post_content' => $postContent,
+                    ) );
+
+                    add_action( 'save_post', array( $this, 'savePostMeta' ), 10, 2 );
+                }
+
                 if ( !empty( $postOption['isJson'] ) ) {
                     $value = json_decode( $value );
                 }
                 update_post_meta( $postId, $key, $value );
+
             }
         }
     }

@@ -54,6 +54,11 @@
         <span class="minicomposer-delete"><?php _e('Delete', $this->textdomain); ?></span>
     </div>
 
+    <?php
+    $publishText = $post->post_status == 'publish' ? __('Update') : __('Publish');
+    ?>
+    <input name="save" type="submit" class="button button-primary button-large" id="publish-2" value="<?php echo $publishText; ?>">
+
     <script>
         window.columnMinHeight = '<?php echo intval( $this->options['globalMinHeight'] ); ?>';
     </script>

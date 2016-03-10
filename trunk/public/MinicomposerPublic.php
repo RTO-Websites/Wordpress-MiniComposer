@@ -65,7 +65,6 @@ class MinicomposerPublic {
 
         add_filter( 'the_content', array( $this, 'appendColumns' ) );
         add_action( 'wp_head', array( $this, 'addHeaderStyle' ) );
-
     }
 
     /**
@@ -131,7 +130,7 @@ class MinicomposerPublic {
 
         $gridOutput .= $this->createRows( $grid );
 
-        return $content . $gridOutput;
+        return $gridOutput;
     }
 
     /**

@@ -157,7 +157,7 @@ class MinicomposerPublic {
 
                 // add column-specific gutter
                 if ( isset( $column->gutter ) && $column->gutter !== '' ) {
-                    $columnStyle .= 'padding-left:' . $this->addPxToValue( $column->gutter )
+                    $columnStyle .= 'padding-left:' . $this->addPxToValue( $column->gutter ) . ';'
                         . 'padding-right:' . $this->addPxToValue( $column->gutter )
                         . ';';
                 }

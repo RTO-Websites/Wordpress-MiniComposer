@@ -11,6 +11,8 @@
  */
 use MagicAdminPage\MagicAdminPage;
 
+include_once( 'MinicomposerAdminBase.php' );
+
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -21,7 +23,7 @@ use MagicAdminPage\MagicAdminPage;
  * @subpackage Minicomposer/admin
  * @author     Sascha Hennemann <s.hennemann@rto.de>
  */
-class MinicomposerAdmin {
+class MinicomposerAdmin extends \MinicomposerAdminBase {
 
     /**
      * The ID of this plugin.
@@ -32,6 +34,8 @@ class MinicomposerAdmin {
      */
     private $pluginName;
 
+    private $textdomain;
+
     /**
      * The version of this plugin.
      *
@@ -41,24 +45,6 @@ class MinicomposerAdmin {
      */
     private $version;
 
-    private $textdomain;
-
-    private $optionFields = array(
-        'minicomposerColumns' => array(
-            'type' => 'textarea',
-            'label' => '',
-            'trClass' => 'hidden',
-            'isJson' => true,
-        ),
-    );
-
-    private $options;
-
-    private $oneToTwelve = array( '', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 );
-
-    private $responsiveFields = null;
-    private $styleFields = null;
-
     /**
      * Initialize the class and set its properties.
      *
@@ -67,6 +53,8 @@ class MinicomposerAdmin {
      * @param      string $version The version of this plugin.
      */
     public function __construct( $pluginName, $version ) {
+        parent::__construct();
+
         $this->pluginName = $pluginName;
         $this->textdomain = $pluginName;
         $this->version = $version;
@@ -79,49 +67,8 @@ class MinicomposerAdmin {
 
         load_plugin_textdomain( $this->textdomain, false, '/' . $this->pluginName . '/languages' );
 
-        // set fields for responsive
-        $this->responsiveFields = array(
-            'responsiveClass' => array(
-                'type' => 'text',
-                'label' => __( 'CSS-Class', $this->textdomain ),
-            ),
-            'responsiveSmall' => array(
-                'type' => 'select',
-                'label' => 'Small',
-                'options' => $this->oneToTwelve,
-            ),
-            'responsiveMedium' => array(
-                'type' => 'select',
-                'label' => 'Medium',
-                'options' => $this->oneToTwelve,
-            ),
-            'responsiveLarge' => array(
-                'type' => 'select',
-                'label' => 'Large',
-                'options' => $this->oneToTwelve,
-            ),
-        );
 
-        // set fields for styles
-        $this->styleFields = array(
-            'columnPadding' => array(
-                'type' => 'text',
-                'label' => __( 'Padding', $this->textdomain ),
-            ),
-            'columnGutter' => array(
-                'type' => 'text',
-                'label' => __( 'Gutter', $this->textdomain ),
-            ),
-            'columnBackground' => array(
-                'type' => 'background',
-                'label' => __( 'Background', $this->textdomain ),
-            ),
-            'minHeight' => array(
-                'type' => 'input',
-                'label' => __( 'min-height', $this->textdomain ),
-            ),
-        );
-
+        $this->translateFields();
 
         $composerPage = new MagicAdminPage(
             'minicomposer',
@@ -186,6 +133,9 @@ class MinicomposerAdmin {
         add_action( 'save_post', array( $this, 'savePostMeta' ), 10, 2 );
 
         add_filter( 'tiny_mce_before_init', array( $this, 'switchTinymceEnterMode' ) );
+
+        add_action( 'wp_ajax_save_minicomposer', array( $this, 'saveColumnsAjax' ) );
+        add_action( 'wp_ajax_nopriv_save_minicomposer', array( $this, 'saveColumnsAjax' ) );
     }
 
     /**
@@ -234,6 +184,8 @@ class MinicomposerAdmin {
         wp_enqueue_script( 'jquery-ui-resizable' );
         wp_enqueue_script( $this->pluginName, plugin_dir_url( __FILE__ ) . 'js/minicomposer-admin.js', array( 'jquery' ), $this->version . time(), false );
         wp_enqueue_script( $this->pluginName . '-dragndrop', plugin_dir_url( __FILE__ ) . 'js/mc-dragndrop.js', array( 'jquery' ), $this->version . time(), false );
+        wp_enqueue_script( $this->pluginName . '-editor', plugin_dir_url( __FILE__ ) . 'js/mc-editor.js', array( 'jquery' ), $this->version . time(), false );
+        wp_enqueue_script( $this->pluginName . '-ajax', plugin_dir_url( __FILE__ ) . 'js/mc-ajax.js', array( 'jquery' ), $this->version . time(), false );
     }
 
 
@@ -263,7 +215,7 @@ class MinicomposerAdmin {
             if ( !post_type_supports( $postType, 'editor' ) ) {
                 continue;
             }
-            add_meta_box( 'minicomposer', __( 'MiniComposer', $this->textdomain ), array( $this, 'addComposer' ), $postType, 'normal', 'high' );
+            add_meta_box( 'minicomposer', __( 'MiniComposer', $this->textdomain ), array( $this, 'addComposerWp' ), $postType, 'normal', 'high' );
         }
         return false;
     }
@@ -273,21 +225,12 @@ class MinicomposerAdmin {
      *
      * @param type $post
      */
-    public function addComposer( $post ) {
+    public function addComposerWp( $post ) {
         $this->createFields( $post, $this->optionFields );
-
         $composerRows = get_post_meta( $post->ID, 'minicomposerColumns', true );
-        if ( empty( $composerRows ) ) {
-            $composerRows = array(
-                array(
-                    array(
-                        'medium' => 12,
-                        'content' => !empty( $post->post_content ) ? nl2br($post->post_content) : '',
-                    ),
-                ),
-            );
-            $composerRows = json_decode( json_encode( $composerRows ) );
-        }
+        $emptyContent = !empty( $post->post_content ) ? nl2br( $post->post_content ) : '';
+
+        $composerRows = $this->extractRows( $composerRows, $emptyContent );
 
         include( 'partials/minicomposer-admin-display.php' );
     }
@@ -423,33 +366,14 @@ class MinicomposerAdmin {
         echo '</table>';
     }
 
-
-    /**
-     * Returns content of columns (recursive)
-     */
-    public function getColumnContent( $rows ) {
-        $output = '';
-        // loop row
-        foreach ( $rows as $rowIndex => $row ) {
-            // loop columns
-            foreach ( $row as $columnIndex => $column ) {
-                $column->content = str_replace( '</p>', '<br /><br />', $column->content );
-                $column->content = str_replace( '<p>', '', $column->content );
-
-                // remove shortcodes
-                $column->content = preg_replace( "/\[[^\]]*\]/", "", $column->content );
-
-                $output .= trim( $column->content );
-
-                // column has inner-row -> call recursive getColumnContent
-                if ( !empty( $column->rows ) ) {
-                    $output .= $this->getColumnContent( $column->rows );
-                }
+    public function translateFields() {
+        foreach ( $this->styleFields as $key => $value ) {
+            if ( !empty( $value['label'] ) ) {
+                $this->styleFields[$key]['label'] = __( $this->styleFields[$key]['label'], $this->textdomain );
             }
         }
-
-        return $output;
     }
+
 
     /**
      * Method to save Post-Meta
@@ -511,5 +435,24 @@ class MinicomposerAdmin {
 
             }
         }
+    }
+
+    public function saveColumnsAjax() {
+        $value = filter_input( INPUT_POST, 'minicomposerColumns' );
+
+        if ( empty( $value ) ) {
+            return;
+        }
+
+        $postId = filter_input( INPUT_POST, 'postId' );
+        $postContent = $this->getColumnContent( json_decode( $value ) );
+
+        wp_update_post( array(
+            'ID' => $postId,
+            'post_content' => $postContent,
+        ) );
+
+        update_post_meta( $postId, 'minicomposerColumns', json_decode( $value ) );
+
     }
 }

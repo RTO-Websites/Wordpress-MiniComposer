@@ -16,6 +16,10 @@
   margin-right: 25px !important;
 }
 
+.minicomposer-autopublish {
+  margin-left: 25px !important;
+}
+
 .minicomposer-sortable-rows {
   position: relative;
   margin: 1em 0;

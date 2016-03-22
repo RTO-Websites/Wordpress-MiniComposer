@@ -32,7 +32,8 @@
   var composerEditor = null,
     currentColumn = null,
     lastContextMenuTarget = null,
-    resizeArgs = null;
+    resizeArgs = null,
+    editor = null;
 
   /**
    * DOM-Ready
@@ -40,8 +41,9 @@
   $(function () {
     // make columns resizeable
     initResizeable();
-
     initEvents();
+
+    editor = new McEditor();
 
     // set container width
     $('.minicomposer-sortable-rows').css({
@@ -69,6 +71,10 @@
       addColumn(4);
     });
 
+    $('.minicomposer-autopublish').on('click', function () {
+      $('.minicomposer-autopublish').toggleClass('active');
+    });
+
     /**
      * Add new row
      */
@@ -81,15 +87,15 @@
     $(document).on('click', '.global-style-settings .minicomposer-delete', removeBackgroundImage);
 
 
-    // Open WP-Editor
-    $(document).on('dblclick', '.minicomposer-column', openWpEditor);
-    // Cancel&Close WP-Editor
-    $('.minicomposer-cancel-wpeditor').on('click', cancelWpEditor);
-    // Save&Close WP-Editor
-    $('.minicomposer-save-wpeditor').on('click', saveWpEditor);
+    // Open Editor
+    $(document).on('dblclick', '.minicomposer-column', openEditor);
+    // Cancel&Close Editor
+    $('.minicomposer-cancel-editor').on('click', cancelEditor);
+    // Save&Close Editor
+    $('.minicomposer-save-editor').on('click', saveEditor);
 
 
-    $('#publish').on('click', saveWpEditor);
+    $('#publish').on('click',  saveEditor);
 
 
     // Event for responsive button
@@ -135,9 +141,6 @@
 
       window.recalcColumns(element);
     });
-
-    // add upload
-    addUpload();
 
     $(window).on('resize', recalcColumns);
   }
@@ -243,49 +246,6 @@
     $('.upload-field').val(imageUrl);
   }
 
-  /**
-   * Add upload for background-image
-   */
-  function addUpload() {
-    // backup original-function to work with wp-editor
-    window.oldSendToEditor = window.send_to_editor;
-
-    /**
-     * Upload.
-     */
-    $('.upload-button').click(function (e) {
-      /**
-       * Insert URL to input
-       */
-      window.send_to_editor = function (html) {
-        var imgurl = $('img', html).attr('src'),
-          imgElement = window.composerUploadButton.parent().find('.upload-preview-image'),
-          uploadField = window.composerUploadButton.parent().find('.upload-field');
-
-        // fill preview image
-        if (imgElement.length) {
-          imgElement.prop('src', imgurl);
-        }
-
-        // fill upload-fields
-        if (uploadField.length) {
-          uploadField.val(imgurl);
-        }
-        tb_remove();
-
-        window.composerUploadButton = null;
-
-
-        // write back original-function
-        window.send_to_editor = window.oldSendToEditor;
-      };
-
-      window.composerUploadButton = $(e.target);
-      tb_show('', 'media-upload.php?type=image&TB_iframe=true');
-
-      return false;
-    });
-  }
 
   /**
    * Trigger at end of resize
@@ -345,6 +305,10 @@
     rowConfig = getRowArray('.minicomposer-sortable-rows');
 
     input.val(JSON.stringify(rowConfig));
+
+    if (typeof(updateComposerCallback) == 'function') {
+      updateComposerCallback();
+    }
   };
 
   /**
@@ -463,11 +427,11 @@
   }
 
   /**
-   * Make Wp-Editor visible and fills with content from column
+   * Make Editor visible and fills with content from column
    *
    * @param e
    */
-  function openWpEditor(e) {
+  function openEditor(e) {
     closeResponsiveFields();
     closeStyleFields();
 
@@ -484,65 +448,55 @@
     var content = target.find('> .content').html();
 
     target.addClass('has-editor-open');
-
-    // hotfix for fucking <p>
-    content = content.replace(/\<\/p\>/g, '<br /><br />');
-    content = content.replace(/\<p\>/g, '');
-
-    switchEditors.go('composer_global_editor', 'tinymce');
-
-    composerEditor = tinyMCE.get('composer_global_editor');
-    if (!composerEditor) {
-      console.info('WP-Editor not found');
-      return;
-    }
-
     currentColumn = target;
-    $('.global-wp-editor').addClass('visible');
-    composerEditor.setContent(content);
 
-    setOverlayPosition(target, $('.global-wp-editor'));
+    editor.open(content);
+
+
+    setOverlayPosition(target, $('.global-mc-editor'));
   }
 
   /**
-   * Cancel and close WP-Editor
+   * Cancel and close Editor
    * @param e
    */
-  function cancelWpEditor(e) {
-    switchEditors.go('composer_global_editor', 'tinymce');
-    composerEditor = tinyMCE.get('composer_global_editor');
+  function cancelEditor(e) {
+    editor.cancel();
     currentColumn = null;
-    composerEditor.setContent('');
-    closeWpEditor();
+    closeEditor();
   }
 
   /**
-   * Save WP-Editor and copy content to column
+   * Save Editor and copy content to column
    *
    * @param e
    */
-  function saveWpEditor(e) {
+  function  saveEditor(e) {
     if (!currentColumn) {
-      cancelWpEditor(e);
+      cancelEditor(e);
       return;
     }
 
-    switchEditors.go('composer_global_editor', 'tinymce');
-    composerEditor = tinyMCE.get('composer_global_editor');
+    var content = editor.save();
 
-    currentColumn.find('> .content').html(composerEditor.getContent());
+    currentColumn.find('> .content').html(content);
 
-    closeWpEditor();
+    closeEditor();
     updateComposer();
+
+
+    if (typeof(saveEditorCallback) == 'function') {
+      saveEditorCallback();
+    }
   }
 
   /**
-   * Make WP-Editor hidden
+   * Make Editor hidden
    */
-  function closeWpEditor() {
+  function closeEditor() {
     $('.has-editor-open').removeClass('has-editor-open');
     currentColumn = null;
-    $('.global-wp-editor').removeClass('visible');
+    $('.global-mc-editor').removeClass('visible');
   }
 
   /**
@@ -552,7 +506,7 @@
    */
   function openResponsiveFields(e) {
     closeStyleFields();
-    closeWpEditor();
+    closeEditor();
 
     $('.has-responsive-open').removeClass('has-responsive-open');
 
@@ -608,7 +562,8 @@
   function openStyleFields(e) {
     $('.has-style-open').removeClass('has-style-open');
     closeResponsiveFields();
-    closeWpEditor();
+    closeEditor();
+
     $('.global-style-settings').addClass('visible');
     setOverlayPosition($(e.target), $('.global-style-settings'));
 

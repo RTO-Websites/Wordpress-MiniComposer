@@ -11,129 +11,57 @@
  * @subpackage Minicomposer/admin/partials
  */
 ?>
-    <div class="minicomposer-add-column button">+ <?php _e( 'Column', $this->textdomain ); ?></div>
-    <div class="minicomposer-add-row button">+ <?php _e( 'Row', $this->textdomain ); ?></div>
+<div class="minicomposer-add-column button">+ <?php _e( 'Column', $this->textdomain ); ?></div>
+<div class="minicomposer-add-row button">+ <?php _e( 'Row', $this->textdomain ); ?></div>
 
-    <div class="minicomposer-add-column-2 button">+ 2 <?php _e( 'Columns', $this->textdomain ); ?></div>
-    <div class="minicomposer-add-column-3 button">+ 3 <?php _e( 'Columns', $this->textdomain ); ?></div>
-    <div class="minicomposer-add-column-4 button">+ 4 <?php _e( 'Columns', $this->textdomain ); ?></div>
+<div class="minicomposer-add-column-2 button">+ 2 <?php _e( 'Columns', $this->textdomain ); ?></div>
+<div class="minicomposer-add-column-3 button">+ 3 <?php _e( 'Columns', $this->textdomain ); ?></div>
+<div class="minicomposer-add-column-4 button">+ 4 <?php _e( 'Columns', $this->textdomain ); ?></div>
+<div class="minicomposer-autopublish button">Auto <?php _e( 'Publish' ); ?></div>
 
-    <div class="minicomposer-sortable-rows">
-        <?php getRows( $composerRows ); ?>
-    </div>
-
-
-    <div class="global-wp-editor composer-overlay">
-        <?php
-        wp_editor( '', 'composer_global_editor', array('wpautop' => true, 'forced_root_block' => false) );
-        ?>
-        <div class="button button-cancel button-secondary minicomposer-cancel-wpeditor"><?php _e( 'Cancel' ); ?></div>
-        <div class="button button-save button-primary minicomposer-save-wpeditor"><?php _e( 'Save' ); ?></div>
-    </div>
-
-    <div class="global-responsive-settings composer-overlay">
-        <div class="headline">Responsive</div>
-        <?php $this->createFields( $post, $this->responsiveFields ); ?>
-        <div class="button button-cancel minicomposer-cancel-responsive"><?php _e( 'Cancel' ); ?></div>
-        <div class="button button-save button-primary minicomposer-save-responsive"><?php _e( 'Save' ); ?></div>
-    </div>
+<div class="minicomposer-sortable-rows">
+    <?php $this->getRows( $composerRows ); ?>
+</div>
 
 
-    <div class="global-style-settings composer-overlay">
-        <div class="headline">Style</div>
-        <?php $this->createFields( $post, $this->styleFields ); ?>
-        <div class="button button-cancel minicomposer-cancel-style"><?php _e( 'Cancel' ); ?></div>
-        <div class="button button-save button-primary minicomposer-save-style"><?php _e( 'Save' ); ?></div>
-    </div>
-
-
-    <div class="global-contextmenu">
-        <span class="minicomposer-style-settings"><?php _e('Style', $this->textdomain); ?></span>
-        <span class="minicomposer-responsive-settings"><?php _e('Responsive', $this->textdomain); ?></span>
-        <span class="minicomposer-clone"><?php _e('Clone', $this->textdomain); ?></span><br />
-        <span class="minicomposer-delete"><?php _e('Delete', $this->textdomain); ?></span>
-    </div>
-
+<div class="global-mc-editor composer-overlay">
     <?php
-    $publishText = $post->post_status == 'publish' ? __('Update') : __('Publish');
+    wp_editor( '', 'composer_global_editor', array( 'wpautop' => true, 'forced_root_block' => false ) );
     ?>
-    <input name="save" type="submit" class="button button-primary button-large" id="publish-2" value="<?php echo $publishText; ?>">
+    <div class="button button-cancel button-secondary minicomposer-cancel-editor"><?php _e( 'Cancel' ); ?></div>
+    <div class="button button-save button-primary minicomposer-save-editor"><?php _e( 'Save' ); ?></div>
+</div>
 
-    <script>
-        window.columnMinHeight = '<?php echo intval( $this->options['globalMinHeight'] ); ?>';
-    </script>
-    <style>
-        .minicomposer-column {
-            min-height: <?php echo intval($this->options['globalMinHeight']) - 10 . 'px'; ?>;
-        }
-        .minicomposer-column,
-        .minicomposer-column .content,
-        .minicomposer-column .content * {
-            <?php
-            if (!empty($this->options['columnAdminStyle'])) {
-                echo $this->options['columnAdminStyle'];
-            }
-            ?>
-        }
-    </style>
+<div class="global-responsive-settings composer-overlay">
+    <div class="headline">Responsive</div>
+    <?php $this->createFields( $post, $this->responsiveFields ); ?>
+    <div class="button button-cancel minicomposer-cancel-responsive"><?php _e( 'Cancel' ); ?></div>
+    <div class="button button-save button-primary minicomposer-save-responsive"><?php _e( 'Save' ); ?></div>
+</div>
 
-    <?php
-    if (!empty($this->options['columnAdminFont'])) {
-        echo $this->options['columnAdminFont'];
-    }
-    ?>
-    <datalist id="datalist-bg-size">
-        <option>cover</option>
-        <option>contain</option>
-    </datalist>
-    <datalist id="datalist-bg-position">
-        <option>top center</option>
-        <option>top left</option>
-        <option>top right</option>
-        <option>center</option>
-        <option>bottom center</option>
-        <option>bottom left</option>
-        <option>bottom right</option>
-    </datalist>
-    <datalist id="datalist-bg-repeat">
-        <option>repeat</option>
-        <option>repeat-x</option>
-        <option>repeat-y</option>
-        <option>no-repeat</option>
-    </datalist>
+
+<div class="global-style-settings composer-overlay">
+    <div class="headline">Style</div>
+    <?php $this->createFields( $post, $this->styleFields ); ?>
+    <div class="button button-cancel minicomposer-cancel-style"><?php _e( 'Cancel' ); ?></div>
+    <div class="button button-save button-primary minicomposer-save-style"><?php _e( 'Save' ); ?></div>
+</div>
+
+<div class="global-contextmenu">
+    <span class="minicomposer-style-settings"><?php _e( 'Style', $this->textdomain ); ?></span>
+    <span class="minicomposer-responsive-settings"><?php _e( 'Responsive', $this->textdomain ); ?></span>
+    <span class="minicomposer-clone"><?php _e( 'Clone', $this->textdomain ); ?></span><br/>
+    <span class="minicomposer-delete"><?php _e( 'Delete', $this->textdomain ); ?></span>
+</div>
 
 <?php
-function getRows( $rows ) {
-    foreach ( $rows as $row ): ?>
-        <div class="minicomposer-row" draggable="true">
-            <?php foreach ( $row as $col ): ?>
-                <div class="minicomposer-column" draggable="true"
-                    <?php
-                    foreach ( $col as $key => $value ) {
-                        if ( $key == 'content' )
-                            continue;
+$publishText = $post->post_status == 'publish' ? __( 'Update' ) : __( 'Publish' );
+?>
+<input name="save"
+    type="submit"
+    class="button button-primary button-large"
+    id="publish-2"
+    value="<?php echo $publishText; ?>" />
 
-                        if ( is_array( $value ) || is_object( $value ) ) {
-                            //echo ' data-' . $key . '="' . json_encode($value) . '" ';
-                        } else {
-                            echo ' data-' . $key . '="' . $value . '" ';
-                        }
-                    }
-                    ?>
-                >
-                    <span class="content"><?php echo( !empty( $col->content ) ? $col->content : '' ); ?></span>
-                    <span class="column-bg"></span>
-                    <span class="column-count"><?php echo $col->medium; ?></span>
-                    <?php
-                    if ( !empty( $col->rows ) ) {
-                        getRows( $col->rows );
-                    }
-                    ?>
-                </div>
-            <?php endforeach; ?>
 
-            <span class="minicomposer-delete"></span>
-            <span class="row-bg"></span>
-        </div>
-    <?php endforeach;
-}
+<?php include('minicomposer-admin-display-base.php');

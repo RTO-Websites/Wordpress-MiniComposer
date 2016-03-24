@@ -1,7 +1,7 @@
 === Plugin Name ===
 Contributors: crazypsycho
 Donate link: MiniComposer
-Tags: grid, responsive, composer
+Tags: grid, responsive, composer, page builder, visual
 Requires at least: 3.4.0
 Tested up to: 4.5
 Stable tag: 4.3

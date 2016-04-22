@@ -20,7 +20,7 @@ var McDragNDrop = function(args) {
     $(document).on('dragover', '.minicomposer-column:not(.minicomposer-column .minicomposer-column), .minicomposer-row', dragOver);
     //$(document).on('dragover', '.minicomposer-row', dragOverRow);
 
-    $('body').on('drop', dropElement);
+    $(document).on('drop', dropElement);
 
     $(document).on('dragend', '.minicomposer-column, .minicomposer-row', function(e) {
       endDrag();

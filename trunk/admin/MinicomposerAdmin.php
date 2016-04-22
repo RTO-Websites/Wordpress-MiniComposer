@@ -61,8 +61,8 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
 
         $defaultMinHeight = '40';
         $this->options = MagicAdminPage::getOption( 'minicomposer' );
-        if ( empty( $this->options['globalMinHeight'] ) ) {
-            $this->options['globalMinHeight'] = $defaultMinHeight;
+        if ( empty( $this->options[ 'globalMinHeight' ] ) ) {
+            $this->options[ 'globalMinHeight' ] = $defaultMinHeight;
         }
 
         load_plugin_textdomain( $this->textdomain, false, '/' . $this->pluginName . '/languages' );
@@ -79,52 +79,52 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
         );
 
         $composerPage->addFields( array(
-            'globalPadding' => array(
-                'type' => 'text',
+            'globalPadding'      => array(
+                'type'  => 'text',
                 'title' => __( 'Column-Padding', $this->textdomain ),
             ),
-            'globalGutter' => array(
-                'type' => 'text',
+            'globalGutter'       => array(
+                'type'  => 'text',
                 'title' => __( 'Column-Gutter', $this->textdomain ),
             ),
-            'globalMinHeight' => array(
-                'type' => 'text',
+            'globalMinHeight'    => array(
+                'type'  => 'text',
                 'title' => __( 'Column-Min-Height', $this->textdomain ),
             ),
             'globalColumnMargin' => array(
-                'type' => 'text',
+                'type'  => 'text',
                 'title' => __( 'Column-Margin-Bottom', $this->textdomain ),
             ),
-            'globalRowMargin' => array(
-                'type' => 'text',
+            'globalRowMargin'    => array(
+                'type'  => 'text',
                 'title' => __( 'Row-Margin-Bottom', $this->textdomain ),
             ),
 
             'headlineExpert' => array(
-                'type' => 'headline',
+                'type'  => 'headline',
                 'title' => __( 'Expert-Settings', $this->textdomain ),
             ),
-            'useBootstrap' => array(
-                'type' => 'checkbox',
+            'useBootstrap'   => array(
+                'type'  => 'checkbox',
                 'title' => __( 'Use bootstrap instead of foundation', $this->textdomain ),
             ),
-            'embedFromCDN' => array(
-                'type' => 'checkbox',
+            'embedFromCDN'   => array(
+                'type'  => 'checkbox',
                 'title' => __( 'Load Foundation/Bootstrap from CDN (only use if your theme doesn\'t already include it)', $this->textdomain ),
             ),
 
-            'headlineAdmin' => array(
-                'type' => 'headline',
+            'headlineAdmin'    => array(
+                'type'  => 'headline',
                 'title' => __( 'Admin-Style', $this->textdomain ),
             ),
             'columnAdminStyle' => array(
-                'type' => 'textarea',
-                'title' => __( 'Column-Style for admin', $this->textdomain ),
+                'type'        => 'textarea',
+                'title'       => __( 'Column-Style for admin', $this->textdomain ),
                 'description' => __( 'Only for admin-view', $this->textdomain ),
             ),
-            'columnAdminFont' => array(
-                'type' => 'textarea',
-                'title' => __( 'Column-Font for admin', $this->textdomain ),
+            'columnAdminFont'  => array(
+                'type'        => 'textarea',
+                'title'       => __( 'Column-Font for admin', $this->textdomain ),
                 'description' => __( 'Only for admin-view', $this->textdomain ),
             ),
         ) );
@@ -196,10 +196,10 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
      * @return mixed
      */
     public function switchTinymceEnterMode( $settings ) {
-        $settings['forced_root_block'] = false;
-        $settings["force_br_newlines"] = true;
-        $settings["force_p_newlines"] = false;
-        $settings["convert_newlines_to_brs"] = true;
+        $settings[ 'forced_root_block' ] = false;
+        $settings[ "force_br_newlines" ] = true;
+        $settings[ "force_p_newlines" ] = false;
+        $settings[ "convert_newlines_to_brs" ] = true;
         return $settings;
     }
 
@@ -221,7 +221,7 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
     }
 
     /**
-     * Add a metabox for gallery-settings (position, template)
+     * Add minicomposer-rows
      *
      * @param type $post
      */
@@ -244,32 +244,32 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
         if ( !empty( $fields ) ) {
             // Loop Post-Options and generate inputs
             foreach ( $fields as $key => $option ) {
-                $trClass = !empty( $option['trClass'] ) ? $option['trClass'] : '';
-                $inputClass = !empty( $option['inputClass'] ) ? $option['inputClass'] : '';
+                $trClass = !empty( $option[ 'trClass' ] ) ? $option[ 'trClass' ] : '';
+                $inputClass = !empty( $option[ 'inputClass' ] ) ? $option[ 'inputClass' ] : '';
 
                 $value = get_post_meta( $post->ID, $key, true );
 
-                if ( !empty( $option['isJson'] ) ) {
+                if ( !empty( $option[ 'isJson' ] ) ) {
                     $value = json_encode( $value );
                 }
 
-                echo '<tr valign="top" class="input-type-' . $option['type'] . ' ' . $trClass . '">';
+                echo '<tr valign="top" class="input-type-' . $option[ 'type' ] . ' ' . $trClass . '">';
                 // Generate Label
-                echo '<th scope="row"><label class="field-label" for="' . $key . '">' . $option['label'] . '</label></th>';
+                echo '<th scope="row"><label class="field-label" for="' . $key . '">' . $option[ 'label' ] . '</label></th>';
                 echo '<td>';
 
-                if ( !empty( $option['descTop'] ) ) {
-                    echo $option['descTop'] . '<br />';
+                if ( !empty( $option[ 'descTop' ] ) ) {
+                    echo $option[ 'descTop' ] . '<br />';
                 }
 
-                switch ( $option['type'] ) {
+                switch ( $option[ 'type' ] ) {
                     case 'select':
                         // Generate select
-                        $multiple = !empty( $option['multiple'] ) ? ' multiple ' : '';
-                        $selectKey = !empty( $option['multiple'] ) ? $key . '[]' : $key;
+                        $multiple = !empty( $option[ 'multiple' ] ) ? ' multiple ' : '';
+                        $selectKey = !empty( $option[ 'multiple' ] ) ? $key . '[]' : $key;
                         echo '<select class="field-input" name="' . $selectKey . '" ' . $inputClass . ' id="' . $key . '" ' . $multiple . '>';
-                        if ( !empty( $option['options'] ) && is_array( $option['options'] ) ) {
-                            foreach ( $option['options'] as $optionKey => $optionTitle ) {
+                        if ( !empty( $option[ 'options' ] ) && is_array( $option[ 'options' ] ) ) {
+                            foreach ( $option[ 'options' ] as $optionKey => $optionTitle ) {
                                 $selected = '';
                                 if ( $optionKey == $value ||
                                     is_array( $value ) && in_array( $optionKey, $value )
@@ -290,8 +290,8 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
 
                     case 'textarea':
                         // Generate textarea
-                        $cols = !empty( $option['cols'] ) ? ' cols="' . $option['cols'] . '"' : '';
-                        $rows = !empty( $option['rows'] ) ? ' rows="' . $option['rows'] . '"' : '';
+                        $cols = !empty( $option[ 'cols' ] ) ? ' cols="' . $option[ 'cols' ] . '"' : '';
+                        $rows = !empty( $option[ 'rows' ] ) ? ' rows="' . $option[ 'rows' ] . '"' : '';
                         echo '<textarea class="field-input ' . $inputClass . '" name="' . $key . '" id="' . $key . '" ' . $rows . $cols . '>'
                             . $value .
                             '</textarea>';
@@ -299,9 +299,9 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
 
                     case 'background':
                         $allImages = get_posts( array(
-                            'post_type' => 'attachment',
+                            'post_type'      => 'attachment',
                             'post_mime_type' => 'image',
-                            'post_status' => 'inherit',
+                            'post_status'    => 'inherit',
                             'posts_per_page' => -1,
                         ) );
 
@@ -351,12 +351,12 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
                     case 'number':
                     case 'text':
                         // Generate text-input
-                        echo '<input class="field-input ' . $inputClass . '" type="' . $option['type'] . '" name="' . $key . '" id="' . $key . '" value=\''
+                        echo '<input class="field-input ' . $inputClass . '" type="' . $option[ 'type' ] . '" name="' . $key . '" id="' . $key . '" value=\''
                             . $value . '\' />';
                         break;
                 }
-                if ( !empty( $option['desc'] ) ) {
-                    echo '<br />' . $option['desc'];
+                if ( !empty( $option[ 'desc' ] ) ) {
+                    echo '<br />' . $option[ 'desc' ];
                 }
 
                 echo '</td></tr>';
@@ -368,8 +368,8 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
 
     public function translateFields() {
         foreach ( $this->styleFields as $key => $value ) {
-            if ( !empty( $value['label'] ) ) {
-                $this->styleFields[$key]['label'] = __( $this->styleFields[$key]['label'], $this->textdomain );
+            if ( !empty( $value[ 'label' ] ) ) {
+                $this->styleFields[ $key ][ 'label' ] = __( $this->styleFields[ $key ][ 'label' ], $this->textdomain );
             }
         }
     }
@@ -388,11 +388,11 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
             return;
         }
 
-        if ( !isset( $_POST['post_type'] ) ) {
+        if ( !isset( $_POST[ 'post_type' ] ) ) {
             return;
         }
 
-        if ( $_POST['post_type'] == 'page' ) {
+        if ( $_POST[ 'post_type' ] == 'page' ) {
             if ( !current_user_can( 'edit_page', $postId ) ) {
                 return;
             }
@@ -404,10 +404,10 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
         // Save form-fields
         if ( !empty( $this->optionFields ) ) {
             foreach ( $this->optionFields as $key => $postOption ) {
-                if ( isset( $_POST[$key] ) && is_array( $_POST[$key] ) ) {
+                if ( isset( $_POST[ $key ] ) && is_array( $_POST[ $key ] ) ) {
                     // multiselect
                     $value = array();
-                    foreach ( $_POST[$key] as $aKey => $aValue ) {
+                    foreach ( $_POST[ $key ] as $aKey => $aValue ) {
                         $value[] = filter_var( $aValue );
                     }
                 } else {
@@ -421,14 +421,14 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
                     $postContent = $this->getColumnContent( json_decode( $value ) );
 
                     wp_update_post( array(
-                        'ID' => $postId,
+                        'ID'           => $postId,
                         'post_content' => $postContent,
                     ) );
 
                     add_action( 'save_post', array( $this, 'savePostMeta' ), 10, 2 );
                 }
 
-                if ( !empty( $postOption['isJson'] ) ) {
+                if ( !empty( $postOption[ 'isJson' ] ) ) {
                     $value = json_decode( $value );
                 }
                 update_post_meta( $postId, $key, $value );
@@ -448,7 +448,7 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
         $postContent = $this->getColumnContent( json_decode( $value ) );
 
         wp_update_post( array(
-            'ID' => $postId,
+            'ID'           => $postId,
             'post_content' => $postContent,
         ) );
 

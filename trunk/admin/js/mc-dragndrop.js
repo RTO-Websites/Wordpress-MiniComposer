@@ -11,16 +11,19 @@ var McDragNDrop = function(args) {
     $(document).on('dragstart', '.minicomposer-column, .minicomposer-row', function (e) {
       $(e.target).addClass('dragging');
       currentDrag = $(e.target);
+      if (!currentDrag.is('.minicomposer-column, .minicomposer-row')) {
+        currentDrag = currentDrag.closest('.minicomposer-column, .minicomposer-row');
+      }
     });
 
 
     $(document).on('dragover', '.minicomposer-column:not(.minicomposer-column .minicomposer-column), .minicomposer-row', dragOver);
     //$(document).on('dragover', '.minicomposer-row', dragOverRow);
 
-    $(document).on('drop', dropElement);
+    $('body').on('drop', dropElement);
 
     $(document).on('dragend', '.minicomposer-column, .minicomposer-row', function(e) {
-      finishDrag();
+      endDrag();
     });
   }
 
@@ -31,7 +34,7 @@ var McDragNDrop = function(args) {
    * @param e
    */
   function dragOver(e) {
-    if (lastDragOver+20 > Date.now()) return;
+    if (lastDragOver+10 > Date.now()) return;
     lastDragOver = Date.now();
 
     var dropTarget = $(e.target);
@@ -190,10 +193,17 @@ var McDragNDrop = function(args) {
    * Finish dragging
    */
   function finishDrag() {
-    currentDrag = null;
     $('.dragging').removeClass('dragging');
 
     removeDragOverClasses();
+    currentDrag = null;
+  }
+
+  function endDrag() {
+    setTimeout(function() {
+      $('.dragging').removeClass('dragging');
+      removeDragOverClasses();
+    }, 20);
   }
 
   initEvents();

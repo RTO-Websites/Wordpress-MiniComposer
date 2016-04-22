@@ -174,7 +174,7 @@
       '<span class="minicomposer-delete"></span>' +
       '</div>');
 
-    $('.minicomposer-sortable-rows').last().append(newRow);
+    $('.minicomposer-sortable-rows.active-composer').append(newRow);
 
     updateComposer();
   }
@@ -189,7 +189,7 @@
     }
 
     // create row if no row exists
-    if (!$('.minicomposer-row').length) {
+    if (!$('.active-composer .minicomposer-row').length) {
       addRow();
     }
 
@@ -203,13 +203,14 @@
         '</div>');
 
 
-      $('.minicomposer-row').last().append(column);
+      // TODO: only on active
+      $('.active-composer .minicomposer-row').last().append(column);
       column.css({width: (size * window.getColumnWidth(column)) + 'px'});
 
       column.resizable(resizeArgs);
     }
 
-    window.recalcColumns($('.minicomposer-row').last());
+    window.recalcColumns($('.active-composer .minicomposer-row').last());
     updateComposer();
   }
 

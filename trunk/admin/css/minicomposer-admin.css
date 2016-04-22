@@ -380,3 +380,12 @@
 .has-contextmenu {
   outline: 2px dotted blueviolet;
 }
+
+.minicomposer-info:before {
+  content: '!';
+  display: inline-block;
+  border: 1px solid #000;
+  margin-right: 3px;
+  padding: 0 7px;
+  font-weight: bold;
+}

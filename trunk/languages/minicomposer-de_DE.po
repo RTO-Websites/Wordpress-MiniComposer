@@ -79,3 +79,6 @@ msgstr "Experten-Einstellungen"
 
 msgid "Load Foundation/Bootstrap from CDN (only use if your theme doesn't already include it)"
 msgstr "Lade Foundation/Bootstrap von CDN (nur verwenden falls dein Theme es nicht bereits einbindet)"
+
+msgid "Use <b>right-click</b> on the columns/rows for more options."
+msgstr "Benutze <b>Rechtsklick</b> auf die Spalten/Zeilen für mehr Optionen."

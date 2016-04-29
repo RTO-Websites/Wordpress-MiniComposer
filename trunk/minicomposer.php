@@ -20,7 +20,7 @@ use Inc\MinicomposerDeactivator;
  * Plugin Name:       MiniComposer
  * Plugin URI:        MiniComposer
  * Description:       Layout page builder plugin.
- * Version:           1.2.6
+ * Version:           1.2.7
  * Author:            crazypsycho
  * Author URI:        https://github.com/crazypsycho
  * License:           GPL-2.0+

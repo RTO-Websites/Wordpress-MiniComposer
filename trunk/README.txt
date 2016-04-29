@@ -36,6 +36,10 @@ Just install and activate the plugin. Then you can see MiniComposer under every 
 4. Global-settings
 
 == Changelog ==
+= 1.2.7 ==
+* Fix drop issues in chromium/webkit based browsers
+* Optimize performance
+
 = 1.2.6 ==
 * Fix issue if image in column is dragged
 * Add notice for rightclick

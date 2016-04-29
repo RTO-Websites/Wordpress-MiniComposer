@@ -1,6 +1,4 @@
-
-
-var McDragNDrop = function(args) {
+var McDragNDrop = function (args) {
   if (!$) $ = jQuery;
 
   var currentDrag,
@@ -8,23 +6,25 @@ var McDragNDrop = function(args) {
 
 
   function initEvents() {
-    $(document).on('dragstart', '.minicomposer-column, .minicomposer-row', function (e) {
-      $(e.target).addClass('dragging');
-      currentDrag = $(e.target);
-      if (!currentDrag.is('.minicomposer-column, .minicomposer-row')) {
-        currentDrag = currentDrag.closest('.minicomposer-column, .minicomposer-row');
-      }
-    });
-
-
+    $(document).on('dragstart', '.minicomposer-column, .minicomposer-row', startDrag);
     $(document).on('dragover', '.minicomposer-column:not(.minicomposer-column .minicomposer-column), .minicomposer-row', dragOver);
-    //$(document).on('dragover', '.minicomposer-row', dragOverRow);
-
-    $(document).on('drop', dropElement);
-
-    $(document).on('dragend', '.minicomposer-column, .minicomposer-row', function(e) {
-      endDrag();
+    $(document).on('dragend', '.minicomposer-column, .minicomposer-row', function (e) {
+      finishDrag();
     });
+  }
+
+  /**
+   * Start dragging
+   *
+   * @param e
+   */
+  function startDrag(e) {
+    $(e.target).addClass('dragging');
+
+    currentDrag = $(e.target);
+    if (!currentDrag.is('.minicomposer-column, .minicomposer-row')) {
+      currentDrag = currentDrag.closest('.minicomposer-column, .minicomposer-row');
+    }
   }
 
 
@@ -34,17 +34,15 @@ var McDragNDrop = function(args) {
    * @param e
    */
   function dragOver(e) {
-    if (lastDragOver+10 > Date.now()) return;
+    if (lastDragOver + 5 > Date.now()) return;
     lastDragOver = Date.now();
 
     var dropTarget = $(e.target);
 
     // dropTarget musst be a column or row
-    if (!dropTarget.hasClass('minicomposer-column') && !dropTarget.hasClass('minicomposer-row') ) {
+    if (!dropTarget.hasClass('minicomposer-column') && !dropTarget.hasClass('minicomposer-row')) {
       dropTarget = dropTarget.closest('.minicomposer-column, .minicomposer-row');
     }
-
-    //removeDragOverClasses();
 
     if (currentDrag.find(dropTarget).length || currentDrag.is(dropTarget)) {
       removeDragOverClasses();
@@ -127,6 +125,10 @@ var McDragNDrop = function(args) {
    * @param e
    */
   function dropElement(e) {
+    if (!currentDrag) {
+      return;
+    }
+
     if (currentDrag.hasClass('minicomposer-row')) {
       // drag is row
       dropRow(e);
@@ -137,7 +139,6 @@ var McDragNDrop = function(args) {
 
     recalcColumns();
     updateComposer();
-    finishDrag();
   }
 
   /**
@@ -175,7 +176,7 @@ var McDragNDrop = function(args) {
       } else {
         currentDrag.insertBefore(dropTarget);
       }
-    } catch(e) {
+    } catch (e) {
       console.info('Fatal drop error');
       currentParent.append(currentDrag);
     }
@@ -193,19 +194,12 @@ var McDragNDrop = function(args) {
    * Finish dragging
    */
   function finishDrag() {
+    dropElement(null);
     $('.dragging').removeClass('dragging');
 
     removeDragOverClasses();
     currentDrag = null;
   }
 
-  function endDrag() {
-    setTimeout(function() {
-      $('.dragging').removeClass('dragging');
-      removeDragOverClasses();
-    }, 20);
-  }
-
   initEvents();
-
 };

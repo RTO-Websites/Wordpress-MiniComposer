@@ -89,6 +89,7 @@
 
     // Open Editor
     $(document).on('dblclick', '.minicomposer-column', openEditor);
+    $(document).on('click', '.minicomposer-edit-text', openEditor);
     // Cancel&Close Editor
     $('.minicomposer-cancel-editor').on('click', cancelEditor);
     // Save&Close Editor
@@ -444,8 +445,15 @@
     }
 
     if (!target.is('.minicomposer-column')) {
+      target = $('.minicomposer-column.has-contentmenu');
+    }
+
+    if (!target.is('.minicomposer-column')) {
       return;
     }
+
+    closeContextMenu();
+
     var content = target.find('> .content').html();
 
     target.addClass('has-editor-open');
@@ -726,7 +734,7 @@
 
     cMenu.addClass('open');
     cMenu.css({
-      top: (e.offsetY + 10) + 'px',
+      top: (e.pageY + 10 - lastContextMenuTarget.offset().top) + 'px',
       left: (e.offsetX + 10) + 'px'
     });
 

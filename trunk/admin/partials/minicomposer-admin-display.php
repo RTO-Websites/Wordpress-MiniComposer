@@ -64,6 +64,8 @@
         <span class="minicomposer-style-settings"><?php _e( 'Style', $this->textdomain ); ?></span>
         <span
             class="minicomposer-responsive-settings"><?php _e( 'Responsive', $this->textdomain ); ?></span>
+        <span
+            class="minicomposer-edit-text"><?php _e( 'Edit Text', $this->textdomain ); ?></span>
         <span class="minicomposer-clone"><?php _e( 'Clone', $this->textdomain ); ?></span><br/>
         <span class="minicomposer-delete"><?php _e( 'Delete', $this->textdomain ); ?></span>
     </div>

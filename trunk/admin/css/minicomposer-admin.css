@@ -365,6 +365,10 @@
   content: "\f132 "; /** dashicons-smartphone **/
 }
 
+.minicomposer-edit-text:before {
+  content: "\f464"; /** dashicons-edit **/
+}
+
 .minicomposer-row > .global-contextmenu span {
   display: none;
 }

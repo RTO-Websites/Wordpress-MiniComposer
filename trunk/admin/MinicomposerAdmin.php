@@ -404,6 +404,10 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
         // Save form-fields
         if ( !empty( $this->optionFields ) ) {
             foreach ( $this->optionFields as $key => $postOption ) {
+                if ( !filter_has_var( INPUT_POST, $key ) ) {
+                    continue;
+                }
+
                 if ( isset( $_POST[ $key ] ) && is_array( $_POST[ $key ] ) ) {
                     // multiselect
                     $value = array();
@@ -438,6 +442,10 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
     }
 
     public function saveColumnsAjax() {
+        if ( !filter_has_var( INPUT_POST, 'minicomposerColumns' ) ) {
+            return;
+        }
+
         $value = filter_input( INPUT_POST, 'minicomposerColumns' );
 
         if ( empty( $value ) ) {

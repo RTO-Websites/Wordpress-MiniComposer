@@ -233,6 +233,8 @@
     var clonedElement = element.clone();
 
     clonedElement.insertAfter(element);
+
+    updateComposer();
   }
 
   /**
@@ -394,19 +396,12 @@
    */
   function deleteColumnRow(e) {
     var target = $(e.target),
-      column = target.closest('.minicomposer-column'),
-      row = target.closest('.minicomposer-row')
+      columnRow = target.closest('.minicomposer-column, .minicomposer-row');
 
     // move contextmenu-element
     $('#minicomposer .inside').append($('.global-contextmenu'));
 
-    if (column.length) {
-      // delete column
-      column.remove();
-    } else {
-      // delete row
-      row.remove();
-    }
+    columnRow.remove();
 
     updateComposer();
   }
@@ -724,6 +719,7 @@
   function openContextMenu(e) {
     e.preventDefault();
     $('.has-contextmenu').removeClass('has-contextmenu');
+    $('.is-contextmenu-parent').removeClass('is-contextmenu-parent');
 
     var cMenu = $('.global-contextmenu');
 
@@ -731,6 +727,8 @@
 
     lastContextMenuTarget.append(cMenu);
     lastContextMenuTarget.addClass('has-contextmenu');
+
+    lastContextMenuTarget.parents('.minicomposer-column, .minicomposer-row').addClass('is-contextmenu-parent');
 
     cMenu.addClass('open');
     cMenu.css({
@@ -744,6 +742,7 @@
   function closeContextMenu() {
     var cMenu = $('.global-contextmenu');
     $('.has-contextmenu').removeClass('has-contextmenu');
+    $('.is-contextmenu-parent').removeClass('is-contextmenu-parent');
     cMenu.removeClass('open');
   }
 

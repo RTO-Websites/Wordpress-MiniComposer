@@ -385,6 +385,7 @@
 .has-editor-open,
 .has-contextmenu {
   outline: 2px dotted blueviolet;
+  z-index: 120 !important;
 }
 
 .minicomposer-info:before {

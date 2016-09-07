@@ -398,5 +398,5 @@
 
 
 .is-contextmenu-parent {
-  z-index: 120;
+  z-index: 120 !important;
 }

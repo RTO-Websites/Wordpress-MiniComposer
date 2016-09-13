@@ -1,3 +1,10 @@
+/**
+ * Last edit: 13.09.2016 13:08
+ *
+ * @param args
+ * @constructor
+ */
+
 var McDragNDrop = function (args) {
   if (!$) $ = jQuery;
 
@@ -36,6 +43,10 @@ var McDragNDrop = function (args) {
   function dragOver(e) {
     if (lastDragOver + 5 > Date.now()) return;
     lastDragOver = Date.now();
+
+    if (!currentDrag) {
+      return;
+    }
 
     var dropTarget = $(e.target);
 

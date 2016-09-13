@@ -1,5 +1,5 @@
 /**
- * Last change: 13.09.2016
+ * Last change: 13.09.2016 13:40
  */
 
 (function ($) {
@@ -377,7 +377,11 @@
       resizeArgs.minWidth = columnWidth;
       resizeArgs.maxWidth = columnWidth * 12;
 
-      $(element).resizable('destroy');
+      try {
+        $(element).resizable('destroy');
+      } catch(e) {
+
+      }
       $(element).resizable(resizeArgs);
 
       $(element).css({

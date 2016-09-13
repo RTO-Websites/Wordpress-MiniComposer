@@ -1,3 +1,7 @@
+/**
+ * Last change: 13.09.2016
+ */
+
 (function ($) {
   'use strict';
 
@@ -256,12 +260,18 @@
    *
    * @param e
    */
-  function resizeColumnEnd(e) {
+  function resizeColumnEnd(e, ui) {
     // set new min-height
     var newMinHeight = $(e.target).height();
 
+    console.info('resize end', e, ui);
+
     // set only if a minheight exists and newMinheight is not default
-    if (newMinHeight !== window.columnMinHeight || $(e.target).data('minheight') && e.type == 'resizestop') {
+    // only if resize-direction is up
+    if ((ui.size.height != ui.originalSize.height) &&
+      (newMinHeight !== window.columnMinHeight || $(e.target).data('minheight') &&
+      e.type == 'resizestop')
+    ) {
       $(e.target).data('minheight', newMinHeight + 'px');
       $(e.target).css({'height': '', 'min-height': newMinHeight + 'px'});
     }
@@ -275,13 +285,14 @@
    *
    * @param e
    */
-  function resizeColumn(e) {
+  function resizeColumn(e, ui) {
     var element = $(e.target),
       size = Math.floor($(element).outerWidth() / window.getColumnWidth(element)),
       elementMinHeight = parseInt($(element).css('min-height'));
 
     // set height from min-height or element-current-height
-    if (elementMinHeight > 0) {
+    // only if resize-direction is up
+    if (elementMinHeight > 0 && ui.size.height != ui.originalSize.height) {
       var newHeight = elementMinHeight > $(element).height()
         ? elementMinHeight
         : $(element).height();

@@ -1,5 +1,5 @@
 /**
- * Last change: 13.09.2016 13:40
+ * Last change: 13.09.2016 14:03
  */
 
 (function ($) {
@@ -89,6 +89,8 @@
     $(document).on('click', '.global-contextmenu .minicomposer-delete', deleteColumnRow);
     // Event for delete-button
     $(document).on('click', '.global-style-settings .minicomposer-delete', removeBackgroundImage);
+    // Event for add-column-in-row-button
+    $(document).on('click', '.global-contextmenu .minicomposer-add-column-to-row', addColumnToRow);
 
 
     // Open Editor
@@ -188,14 +190,18 @@
   /**
    * Adds a column
    */
-  function addColumn(amount) {
+  function addColumn(amount, row) {
     if (typeof(amount) === 'undefined') {
       amount = 1;
     }
 
     // create row if no row exists
-    if (!$('.active-composer .minicomposer-row').length) {
+    if (!$('.active-composer .minicomposer-row').length && typeof(row) === 'undefined') {
       addRow();
+    }
+
+    if (typeof(row) === 'undefined') {
+      $('.active-composer .minicomposer-row').last();
     }
 
     var size = Math.round(12 / amount);
@@ -209,7 +215,7 @@
 
 
       // TODO: only on active
-      $('.active-composer .minicomposer-row').last().append(column);
+      row.append(column);
       column.css({width: (size * window.getColumnWidth(column)) + 'px'});
 
       column.resizable(resizeArgs);
@@ -217,6 +223,14 @@
 
     window.recalcColumns($('.active-composer .minicomposer-row').last());
     updateComposer();
+  }
+
+  function addColumnToRow(e) {
+    console.info('add col to row', e);
+
+    var row = jQuery(e.target).closest('.minicomposer-row');
+
+    addColumn(1, row);
   }
 
 

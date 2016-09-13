@@ -363,6 +363,7 @@
   content: "\f158 "; /** dashicons-no **/
 }
 
+.minicomposer-add-column-to-row:before,
 .minicomposer-clone:before {
   content: "\f132 "; /** dashicons-smartphone **/
 }
@@ -371,10 +372,12 @@
   content: "\f464"; /** dashicons-edit **/
 }
 
+.minicomposer-add-column-to-row,
 .minicomposer-row > .global-contextmenu span {
   display: none;
 }
 
+.minicomposer-row > .global-contextmenu .minicomposer-add-column-to-row,
 .minicomposer-row > .global-contextmenu .minicomposer-clone,
 .minicomposer-row > .global-contextmenu .minicomposer-delete {
   display: block;

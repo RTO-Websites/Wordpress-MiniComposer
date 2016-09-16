@@ -1,5 +1,5 @@
 /**
- * Last change: 13.09.2016 14:03
+ * Last change: 16.09.2016 10:23
  */
 
 (function ($) {
@@ -201,7 +201,7 @@
     }
 
     if (typeof(row) === 'undefined') {
-      $('.active-composer .minicomposer-row').last();
+      row = $('.active-composer .minicomposer-row').last();
     }
 
     var size = Math.round(12 / amount);

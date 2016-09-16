@@ -387,8 +387,21 @@
 .has-responsive-open,
 .has-editor-open,
 .has-contextmenu {
-  outline: 2px dotted blueviolet;
   z-index: 120 !important;
+}
+
+.has-style-open:before,
+.has-responsive-open:before,
+.has-editor-open:before,
+.has-contextmenu:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  outline: 2px dotted blueviolet;
+  z-index: 10 !important;
 }
 
 .minicomposer-info:before {

@@ -1,5 +1,5 @@
 /**
- * Last edit: 13.09.2016 13:08
+ * Last edit: 16.09.2016 14:45
  *
  * @param args
  * @constructor
@@ -26,6 +26,8 @@ var McDragNDrop = function (args) {
    * @param e
    */
   function startDrag(e) {
+    e.originalEvent.dataTransfer.setData('text/plain', 'dummy');
+    $('.minicomposer-column, .minicomposer-row').removeClass('dragging');
     $(e.target).addClass('dragging');
 
     currentDrag = $(e.target);

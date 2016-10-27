@@ -97,6 +97,11 @@ class MinicomposerPublicBase {
                 // generate html for column
                 $gridOutput .= '<div class="mc-column-' . $this->columnCount . ' mc-column  columns ' . $columnClasses . '" style="' . $columnStyle . '">';
                 $gridOutput .= '<div class="inner-column" style="' . $columnInnerStyle . '">';
+
+                if ( function_exists( 'apply_filters' ) ) {
+                    $gridOutput .= apply_filters('miniComposerAddColumnContent', '', $column);
+                }
+
                 // remove <p>
                 $column->content = str_replace( '</p>', '<br /><br />', $column->content );
                 $column->content = str_replace( '<p>', '', $column->content );

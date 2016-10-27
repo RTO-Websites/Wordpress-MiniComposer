@@ -1,5 +1,5 @@
 /**
- * Last change: 16.09.2016 10:23
+ * Last change: 27.10.2016 11:25
  */
 
 (function ($) {
@@ -226,8 +226,6 @@
   }
 
   function addColumnToRow(e) {
-    console.info('add col to row', e);
-
     var row = jQuery(e.target).closest('.minicomposer-row');
 
     addColumn(1, row);
@@ -277,8 +275,6 @@
   function resizeColumnEnd(e, ui) {
     // set new min-height
     var newMinHeight = $(e.target).height();
-
-    console.info('resize end', e, ui);
 
     // set only if a minheight exists and newMinheight is not default
     // only if resize-direction is up

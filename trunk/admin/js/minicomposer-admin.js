@@ -1,5 +1,5 @@
 /**
- * Last change: 27.10.2016 11:25
+ * Last change: 31.10.2016 10:31
  */
 
 (function ($) {
@@ -549,6 +549,7 @@
     $('#responsiveSmall').val(currentColumn.data('small'));
     $('#responsiveMedium').val(currentColumn.data('medium'));
     $('#responsiveLarge').val(currentColumn.data('large'));
+    $('#customAttributes').val(currentColumn.data('customattributes'));
 
   }
 
@@ -567,6 +568,7 @@
     currentColumn.data('medium', $('#responsiveMedium').val());
     currentColumn.data('large', $('#responsiveLarge').val());
     currentColumn.data('cssclass', $('#responsiveClass').val());
+    currentColumn.data('customattributes', $('#customAttributes').val());
 
     currentColumn.css({width: window.getColumnWidth(currentColumn) * $('#responsiveMedium').val() + 'px'});
 

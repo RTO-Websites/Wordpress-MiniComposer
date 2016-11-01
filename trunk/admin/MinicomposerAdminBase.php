@@ -24,6 +24,10 @@ class MinicomposerAdminBase {
             'type' => 'text',
             'label' => 'CSS-Class',
         ),
+        'customAttributes' => array(
+            'type' => 'textarea',
+            'label' => 'Custom-Attributes',
+        ),
         'responsiveSmall' => array(
             'type' => 'select',
             'label' => 'Small',
@@ -67,9 +71,9 @@ class MinicomposerAdminBase {
      */
     public function getColumnContent( $rows ) {
         $output = '';
-        
+
         if ( empty( $rows ) ) return $output;
-        
+
         // loop row
         foreach ( $rows as $rowIndex => $row ) {
             // loop columns
@@ -127,7 +131,7 @@ class MinicomposerAdminBase {
     public function getRows( $rows ) {
         foreach ( $rows as $row ): ?>
             <div class="minicomposer-row" draggable="true">
-                <?php foreach ( $row as $col ): ?>
+                <?php foreach ( $row as $col ):?>
                     <div class="minicomposer-column" draggable="true"
                         <?php
                         foreach ( $col as $key => $value ) {

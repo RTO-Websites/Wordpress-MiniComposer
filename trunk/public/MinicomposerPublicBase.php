@@ -83,6 +83,7 @@ class MinicomposerPublicBase {
                 // set classes for grid
                 $columnClasses = $this->createColumnClasses( $column );
                 $columnInnerStyle = $this->createColumnStyle( $column );
+                $bgStyle = $this->createColumnBgStyle( $column );
 
                 $columnStyle = '';
 
@@ -93,9 +94,14 @@ class MinicomposerPublicBase {
                         . ';';
                 }
 
+                $customAttributes = '';
+                if ( !empty( $column->customattributes) ) {
+                    $customAttributes = implode(' ', explode( "\n", $column->customattributes ));
+                }
 
                 // generate html for column
-                $gridOutput .= '<div class="mc-column-' . $this->columnCount . ' mc-column  columns ' . $columnClasses . '" style="' . $columnStyle . '">';
+                $gridOutput .= '<div class="mc-column-' . $this->columnCount . ' mc-column  columns '
+                    . $columnClasses . '" style="' . $columnStyle . '" '.$customAttributes.'>';
                 $gridOutput .= '<div class="inner-column" style="' . $columnInnerStyle . '">';
 
                 if ( function_exists( 'apply_filters' ) ) {
@@ -112,6 +118,11 @@ class MinicomposerPublicBase {
                 // column has inner-row -> call recursive createRows
                 if ( !empty( $column->rows ) ) {
                     $gridOutput .= $this->createRows( $column->rows );
+                }
+
+                // add column-background
+                if ( !empty( $bgStyle ) ) {
+                    $gridOutput .= '<div class="mc-background" style="' . $bgStyle . '"></div>';
                 }
 
                 $gridOutput .= '</div>';
@@ -150,6 +161,10 @@ class MinicomposerPublicBase {
         echo 'clear: left;';
         echo '}';
 
+        echo '.mc-column .mc-background {';
+        echo 'position:absolute;top:0;left:0;bottom:0;right:0;z-index:-1;';
+        echo '}';
+
         // column style
         echo $this->columnStyle;
         echo '</style>';
@@ -182,15 +197,24 @@ class MinicomposerPublicBase {
 
 
     /**
-     * Create style for column (background, padding)
+     * Create background-style for column
      */
-    public function createColumnStyle( $column ) {
+    public function createColumnBgStyle( $column ) {
         $columnStyle = '';
         $columnStyle .= !empty( $column->backgroundimage ) ? 'background-image:url(' . $column->backgroundimage . ');' : '';
         $columnStyle .= !empty( $column->backgroundcolor ) ? 'background-color:' . $column->backgroundcolor . ';' : '';
         $columnStyle .= !empty( $column->backgroundposition ) ? 'background-position:' . $column->backgroundposition . ';' : '';
         $columnStyle .= !empty( $column->backgroundrepeat ) ? 'background-repeat:' . $column->backgroundrepeat . ';' : '';
         $columnStyle .= !empty( $column->backgroundsize ) ? 'background-size:' . $column->backgroundsize . ';' : '';
+
+        return $columnStyle;
+    }
+
+    /**
+     * Create style for column (background, padding)
+     */
+    public function createColumnStyle( $column ) {
+        $columnStyle = '';
 
         if ( isset( $column->padding ) && $column->padding !== '' ) {
             $columnStyle .= 'padding:' . $this->addPxToValue( $column->padding ) . ';';

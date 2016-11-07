@@ -568,12 +568,18 @@
     currentColumn.data('medium', $('#responsiveMedium').val());
     currentColumn.data('large', $('#responsiveLarge').val());
     currentColumn.data('cssclass', $('#responsiveClass').val());
-    currentColumn.data('customattributes', $('#customAttributes').val());
+    currentColumn.data('customattributes', addSlashes($('#customAttributes').val()));
 
     currentColumn.css({width: window.getColumnWidth(currentColumn) * $('#responsiveMedium').val() + 'px'});
 
     closeResponsiveFields();
     updateComposer();
+  }
+
+  function addSlashes(str) {
+    str = JSON.stringify(String(str));
+    str = str.substring(1, str.length-1);
+    return str;
   }
 
   /**

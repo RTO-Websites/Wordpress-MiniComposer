@@ -71,9 +71,9 @@ class MinicomposerAdminBase {
      */
     public function getColumnContent( $rows ) {
         $output = '';
-
+        
         if ( empty( $rows ) ) return $output;
-
+        
         // loop row
         foreach ( $rows as $rowIndex => $row ) {
             // loop columns

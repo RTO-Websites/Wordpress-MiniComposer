@@ -1,5 +1,5 @@
 /**
- * Last change: 31.10.2016 10:31
+ * Last change: 16.11.2016 16:25
  */
 
 (function ($) {
@@ -100,6 +100,8 @@
     $('.minicomposer-cancel-editor').on('click', cancelEditor);
     // Save&Close Editor
     $('.minicomposer-save-editor').on('click', saveEditor);
+    // Apply Editor
+    $('.minicomposer-apply-editor').on('click', function(e) { saveEditor(e, true) } );
 
 
     $('#publish').on('click',  saveEditor);
@@ -500,7 +502,8 @@
    *
    * @param e
    */
-  function  saveEditor(e) {
+  function  saveEditor(e, noClose) {
+    // TODO: add apply button
     if (!currentColumn) {
       cancelEditor(e);
       return;
@@ -510,7 +513,10 @@
 
     currentColumn.find('> .content').html(content);
 
-    closeEditor();
+    if (typeof(noClose) == 'undefined' || !noClose) {
+      closeEditor();
+    }
+
     updateComposer();
 
 

@@ -1,5 +1,5 @@
 /**
- * Last change: 16.11.2016 16:25
+ * Last change: 16.11.2016 17:05
  */
 
 (function ($) {
@@ -216,14 +216,22 @@
         '</div>');
 
 
-      // TODO: only on active
-      row.append(column);
+
+      var activeColumn = $('.minicomposer-column.has-contextmenu');
+      if (activeColumn.length) {
+        // after current selected column
+        column.insertAfter(activeColumn);
+        row = activeColumn.closest('.minicomposer-row');
+      } else {
+        // add in current row
+        row.append(column);
+      }
       column.css({width: (size * window.getColumnWidth(column)) + 'px'});
 
       column.resizable(resizeArgs);
     }
 
-    window.recalcColumns($('.active-composer .minicomposer-row').last());
+    window.recalcColumns(row);
     updateComposer();
   }
 

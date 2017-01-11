@@ -103,6 +103,7 @@ class MinicomposerPublicBase {
                 $gridOutput .= '<div class="mc-column-' . $this->columnCount . ' mc-column  columns '
                     . $columnClasses . '" style="' . $columnStyle . '" '.$customAttributes.'>';
                 $gridOutput .= '<div class="inner-column" style="' . $columnInnerStyle . '">';
+                $gridOutput .= '<div class="column-content">';
 
                 if ( function_exists( 'apply_filters' ) ) {
                     $gridOutput .= apply_filters('miniComposerAddColumnContent', '', $column);
@@ -119,6 +120,8 @@ class MinicomposerPublicBase {
                 if ( !empty( $column->rows ) ) {
                     $gridOutput .= $this->createRows( $column->rows );
                 }
+
+                $gridOutput .= '</div>';
 
                 // add column-background
                 if ( !empty( $bgStyle ) ) {
@@ -162,7 +165,10 @@ class MinicomposerPublicBase {
         echo '}';
 
         echo '.mc-column .mc-background {';
-        echo 'position:absolute;top:0;left:0;bottom:0;right:0;z-index:-1;transform:translateZ(0);';
+        echo 'position:absolute;top:0;left:0;bottom:0;right:0;z-index:0;transform:translateZ(0);';
+        echo '}';
+        echo '.mc-column .column-content {';
+        echo 'position: relative; z-index: 50;';
         echo '}';
 
         // column style

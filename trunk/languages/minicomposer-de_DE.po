@@ -83,6 +83,8 @@ msgstr "Lade Foundation/Bootstrap von CDN (nur verwenden falls dein Theme es nic
 msgid "Use <b>right-click</b> on the columns/rows for more options."
 msgstr "Benutze <b>Rechtsklick</b> auf die Spalten/Zeilen für mehr Optionen."
 
-msgid "Edit text"
+msgid "Edit Text"
 msgstr "Text bearbeiten"
 
+msgid "Add column"
+msgstr "Spalte hinzufügen"

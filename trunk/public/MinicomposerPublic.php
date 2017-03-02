@@ -11,7 +11,7 @@
  */
 use MagicAdminPage\MagicAdminPage;
 
-include_once('MinicomposerPublicBase.php');
+include_once( 'MinicomposerPublicBase.php' );
 
 /**
  * The public-facing functionality of the plugin.
@@ -43,6 +43,8 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
      */
     private $version;
 
+    public $pluginUrl;
+
 
     /**
      * Initialize the class and set its properties.
@@ -61,8 +63,16 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
 
         add_filter( 'the_content', array( $this, 'appendColumns' ) );
         add_action( 'wp_head', array( $this, 'addHeaderStyle' ) );
+        add_action( 'wp_footer', array( $this, 'addInlineEdit' ) );
 
         parent::__construct();
+    }
+
+
+    public function addInlineEdit() {
+        if ( \is_user_logged_in() && \current_user_can( 'edit_post' ) ) {
+            include( 'partials/inline-edit.inc.php' );
+        }
     }
 
     /**
@@ -81,7 +91,9 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
             return $content;
         }
 
+        $gridOutput .=  '<div data-postid="' . $post->ID . '" class="mc-wrapper">';
         $gridOutput .= $this->createRows( $grid );
+        $gridOutput .= '</div>';
 
         return $gridOutput;
     }
@@ -136,6 +148,16 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
 
         //wp_enqueue_script( $this->pluginName, plugin_dir_url( __FILE__ ) . 'js/minicomposer-public.js', array( 'jquery' ), $this->version, false );
 
+    }
+
+
+    public function addDataAttributes( $columnCount ) {
+        global $post;
+        if ( !\is_user_logged_in() || !\current_user_can( 'edit_post' ) ) {
+            return '';
+        }
+        return ' data-inlineedittooltip="Column: ' . ( $columnCount + 1 ) . "\n"
+            . 'Post: ' . $post->post_name . ' (' . $post->ID . ')" ';
     }
 
 }

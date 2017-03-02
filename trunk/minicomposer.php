@@ -34,6 +34,9 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+$mcPluginUrl = plugin_dir_url( __FILE__ );
+$mcPluginPath = plugin_dir_path( __FILE__ );
+
 /**
  * The class responsible for auto loading classes.
  */

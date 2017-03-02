@@ -1,5 +1,5 @@
 <script>
-    window.columnMinHeight = '<?php echo intval( $this->options[ 'globalMinHeight' ] ); ?>';
+  window.columnMinHeight = '<?php echo intval( $this->options[ 'globalMinHeight' ] ); ?>';
 </script>
 <style>
     .minicomposer-column {
@@ -18,9 +18,9 @@
 </style>
 
 <?php
-    if ( !empty( $this->options[ 'columnAdminFont' ] ) ) {
-        echo $this->options[ 'columnAdminFont' ];
-    }
+if ( !empty( $this->options[ 'columnAdminFont' ] ) ) {
+    echo $this->options[ 'columnAdminFont' ];
+}
 ?>
 <datalist id="datalist-bg-size">
     <option>cover</option>

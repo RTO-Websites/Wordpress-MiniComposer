@@ -22,20 +22,20 @@ class MinicomposerPublicBase {
      * Add pixel to numeric values
      */
     public function addPxToGlobalOptions() {
-        if ( isset( $this->options['globalGutter'] ) ) {
-            $this->options['globalGutter'] = $this->addPxToValue( $this->options['globalGutter'] );
+        if ( isset( $this->options[ 'globalGutter' ] ) ) {
+            $this->options[ 'globalGutter' ] = $this->addPxToValue( $this->options[ 'globalGutter' ] );
         }
-        if ( isset( $this->options['globalPadding'] ) ) {
-            $this->options['globalPadding'] = $this->addPxToValue( $this->options['globalPadding'] );
+        if ( isset( $this->options[ 'globalPadding' ] ) ) {
+            $this->options[ 'globalPadding' ] = $this->addPxToValue( $this->options[ 'globalPadding' ] );
         }
-        if ( isset( $this->options['globalMinHeight'] ) ) {
-            $this->options['globalMinHeight'] = $this->addPxToValue( $this->options['globalMinHeight'] );
+        if ( isset( $this->options[ 'globalMinHeight' ] ) ) {
+            $this->options[ 'globalMinHeight' ] = $this->addPxToValue( $this->options[ 'globalMinHeight' ] );
         }
-        if ( isset( $this->options['globalColumnMargin'] ) ) {
-            $this->options['globalColumnMargin'] = $this->addPxToValue( $this->options['globalColumnMargin'] );
+        if ( isset( $this->options[ 'globalColumnMargin' ] ) ) {
+            $this->options[ 'globalColumnMargin' ] = $this->addPxToValue( $this->options[ 'globalColumnMargin' ] );
         }
-        if ( isset( $this->options['globalRowMargin'] ) ) {
-            $this->options['globalRowMargin'] = $this->addPxToValue( $this->options['globalRowMargin'] );
+        if ( isset( $this->options[ 'globalRowMargin' ] ) ) {
+            $this->options[ 'globalRowMargin' ] = $this->addPxToValue( $this->options[ 'globalRowMargin' ] );
         }
     }
 
@@ -53,7 +53,7 @@ class MinicomposerPublicBase {
             if ( count( $split ) > 1 ) {
                 foreach ( $split as $key => $part ) {
                     if ( is_numeric( $part ) ) {
-                        $split[$key] = $part . 'px';
+                        $split[ $key ] = $part . 'px';
                     }
                 }
 
@@ -95,18 +95,22 @@ class MinicomposerPublicBase {
                 }
 
                 $customAttributes = '';
-                if ( !empty( $column->customattributes) ) {
-                    $customAttributes = implode(' ', explode( "\n", $column->customattributes ));
+                if ( !empty( $column->customattributes ) ) {
+                    $customAttributes = implode( ' ', explode( "\n", $column->customattributes ) );
+                }
+                if ( method_exists( $this, 'addDataAttributes' ) ) {
+                    $customAttributes .= $this->addDataAttributes( $this->columnCount - 1 );
                 }
 
                 // generate html for column
-                $gridOutput .= '<div class="mc-column-' . $this->columnCount . ' mc-column  columns '
-                    . $columnClasses . '" style="' . $columnStyle . '" '.$customAttributes.'>';
+                $gridOutput .= '<div class="mc-column-' . ( $this->columnCount ) . ' mc-column  columns '
+                    . $columnClasses . '" style="' . $columnStyle . '" ' . $customAttributes
+                    . ' data-columnkey="' . ( $this->columnCount - 1 ) . '">';
                 $gridOutput .= '<div class="inner-column" style="' . $columnInnerStyle . '">';
                 $gridOutput .= '<div class="column-content">';
 
                 if ( function_exists( 'apply_filters' ) ) {
-                    $gridOutput .= apply_filters('miniComposerAddColumnContent', '', $column);
+                    $gridOutput .= apply_filters( 'miniComposerAddColumnContent', '', $column );
                 }
 
                 // remove <p>
@@ -145,19 +149,19 @@ class MinicomposerPublicBase {
         // global style
         echo '.row .inner-column{';
         echo 'position:relative;';
-        if ( isset( $this->options['globalPadding'] ) ) {
-            echo 'padding:' . $this->options['globalPadding'] . ';';
+        if ( isset( $this->options[ 'globalPadding' ] ) ) {
+            echo 'padding:' . $this->options[ 'globalPadding' ] . ';';
         }
-        echo isset( $this->options['globalMinHeight'] ) ? 'min-height:' . $this->options['globalMinHeight'] . ';' : '';
-        echo isset( $this->options['globalColumnMargin'] ) ? 'margin-bottom:' . $this->options['globalColumnMargin'] . ';' : '';
+        echo isset( $this->options[ 'globalMinHeight' ] ) ? 'min-height:' . $this->options[ 'globalMinHeight' ] . ';' : '';
+        echo isset( $this->options[ 'globalColumnMargin' ] ) ? 'margin-bottom:' . $this->options[ 'globalColumnMargin' ] . ';' : '';
         echo '}';
 
-        if ( isset( $this->options['globalRowMargin'] ) && $this->options['globalRowMargin'] !== '' ) {
-            echo '.mc-row{margin-bottom:' . $this->options['globalRowMargin'] . ';}';
+        if ( isset( $this->options[ 'globalRowMargin' ] ) && $this->options[ 'globalRowMargin' ] !== '' ) {
+            echo '.mc-row{margin-bottom:' . $this->options[ 'globalRowMargin' ] . ';}';
         }
 
-        if ( isset( $this->options['globalGutter'] ) && $this->options['globalGutter'] !== '' ) {
-            echo '.mc-column{padding-left:' . $this->options['globalGutter'] . ';' . ';padding-right:' . $this->options['globalGutter'] . ';}';
+        if ( isset( $this->options[ 'globalGutter' ] ) && $this->options[ 'globalGutter' ] !== '' ) {
+            echo '.mc-column{padding-left:' . $this->options[ 'globalGutter' ] . ';' . ';padding-right:' . $this->options[ 'globalGutter' ] . ';}';
         }
 
         echo '.mc-column.clear-left{';
@@ -184,7 +188,7 @@ class MinicomposerPublicBase {
      */
     public function createColumnClasses( $column ) {
         $columnClasses = '';
-        if ( empty( $this->options['useBootstrap'] ) ) {
+        if ( empty( $this->options[ 'useBootstrap' ] ) ) {
             $columnClasses .= !empty( $column->small ) ? ' small-' . $column->small : '';
             $columnClasses .= !empty( $column->medium ) ? ' medium-' . $column->medium : '';
             $columnClasses .= !empty( $column->large ) ? ' large-' . $column->large : '';

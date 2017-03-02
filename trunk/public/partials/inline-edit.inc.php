@@ -7,14 +7,14 @@
 
 if ( \is_user_logged_in() && \current_user_can( 'edit_post' ) ) {
     // is logged in
-    global $mcPluginUrl;
+    global $mcPluginUrl, $mcPost;
 
     ?>
     <div class="inline-edit-menu">
         <a class="no-ajax edit-mode-button" href="#"
                 onclick="jQuery('body').toggleClass('edit-mode');return false;">Edit
             Mode</a><br/>
-        <a href="<?php echo admin_url( 'post.php' ); ?>?post=<?php echo $postid; ?>&action=edit"
+        <a href="<?php echo admin_url( 'post.php' ); ?>?post=<?php echo $mcPost->ID; ?>&action=edit"
                 target="_blank"
                 class="no-ajax">Zur
             Admin</a>

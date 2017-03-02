@@ -82,9 +82,10 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
      * @return string
      */
     public function appendColumns( $content ) {
-        global $post;
+        global $post, $mcPost;
         $gridOutput = '';
 
+        $mcPost = $post;
         $grid = get_post_meta( $post->ID, 'minicomposerColumns', true );
 
         if ( empty( $grid ) ) {

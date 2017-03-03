@@ -78,7 +78,11 @@ var inlineEdit = function () {
     /**
      * Prevent link clicking
      */
-    jQuery(document).on('click', '.edit-mode .div-area a', function (e) {
+    jQuery(document).on('click',
+      '.edit-mode .mc-column a,' +
+      '.edit-mode .inline-edit-title a' +
+      '.edit-mode a .inline-edit-title',
+      function (e) {
       e.preventDefault();
     });
 

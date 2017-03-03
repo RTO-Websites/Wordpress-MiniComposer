@@ -140,9 +140,14 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
 
         // register ajax-tasks for inline-edit
         add_action( 'wp_ajax_getColumnContent', array( $this, 'ajaxGetColumnContent' ) );
-        add_action( 'wp_ajax_nopriv_getColumnContent', array( $this, 'ajaxGetColumnContent' ) );
+        add_action( 'wp_ajax_nopriv_getcolumncontent', array( $this, 'ajaxGetColumnContent' ) );
         add_action( 'wp_ajax_changeColumnContent', array( $this, 'ajaxChangeColumnContent' ) );
         add_action( 'wp_ajax_nopriv_changeColumnContent', array( $this, 'ajaxChangeColumnContent' ) );
+
+        add_action( 'wp_ajax_getTitleContent', array( $this, 'ajaxGetTitleContent' ) );
+        add_action( 'wp_ajax_nopriv_getTitleContent', array( $this, 'ajaxGetTitleContent' ) );
+        add_action( 'wp_ajax_changeTitleContent', array( $this, 'ajaxChangeTitleContent' ) );
+        add_action( 'wp_ajax_nopriv_changeTitleContent', array( $this, 'ajaxChangeTitleContent' ) );
     }
 
     /**
@@ -471,6 +476,75 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
 
     }
 
+
+    /**
+     * Ajax: Gets title of a post for inline-edit
+     */
+    public function ajaxGetTitleContent() {
+        header( 'Content-Type: application/json' );
+
+        $postid = filter_input( INPUT_GET, 'postid' );
+
+        $output = array(
+            'postid' => $postid,
+            'success' => false,
+        );
+
+        if ( empty( $postid ) ) {
+            die( json_encode( $output ) );
+        }
+
+        $post = get_post( $postid );
+        $output['content'] = $post->post_title;
+        $output['postslug'] = $post->post_name;
+        $output['success'] = true;
+
+        die( json_encode( $output ) );
+    }
+
+    /**
+     * Ajax: Change content of a column for inline-edit
+     */
+    public function ajaxChangeTitleContent() {
+        header( 'Content-Type: application/json' );
+
+        /*
+         * Params
+         *  newContent
+         *  postid
+         */
+
+        $postid = filter_input( INPUT_POST, 'postid' );
+        $newContent = filter_input( INPUT_POST, 'newcontent' );
+
+
+        $output = array(
+            'postid' => $postid,
+            'newContent' => $newContent,
+            'success' => false,
+        );
+
+        if ( empty( $postid ) ) {//|| !\current_user_can( 'edit_post' )  ) {
+            die( json_encode( $output ) );
+        }
+
+        $post = get_post( $postid );
+        $output['postslug'] = $post->post_name;
+
+        wp_update_post( array(
+            'ID' => $postid,
+            'post_title' => $newContent,
+        ) );;
+
+        $output['success'] = true;
+        #$output[ 'parsedContent' ] = do_shortcode( $newContent );
+
+        die( json_encode( $output ) );
+    }
+
+    /**
+     * Ajax: Gets content of a single column for inline-edit
+     */
     public function ajaxGetColumnContent() {
         header( 'Content-Type: application/json' );
         /*
@@ -513,6 +587,9 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
         die( json_encode( $output ) );
     }
 
+    /**
+     * Ajax: Change content of a column for inline-edit
+     */
     public function ajaxChangeColumnContent() {
         header( 'Content-Type: application/json' );
 

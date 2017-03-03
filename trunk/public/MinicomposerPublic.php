@@ -44,6 +44,7 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
     private $version;
 
     public $pluginUrl;
+    private $textdomain;
 
 
     /**
@@ -58,10 +59,14 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
         $this->pluginName = $pluginName;
         $this->version = $version;
         $this->options = MagicAdminPage::getOption( 'minicomposer' );
+        $this->textdomain = $pluginName;
+
+        load_plugin_textdomain( $this->textdomain, false, '/' . $this->pluginName . '/languages' );
 
         $this->addPxToGlobalOptions();
 
         add_filter( 'the_content', array( $this, 'appendColumns' ) );
+        add_filter( 'the_title', array( $this, 'wrapTitle' ) );
         add_action( 'wp_head', array( $this, 'addHeaderStyle' ) );
         add_action( 'wp_footer', array( $this, 'addInlineEdit' ) );
 
@@ -69,10 +74,36 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
     }
 
 
+    /**
+     * Add inline-edit from include
+     */
     public function addInlineEdit() {
         if ( \is_user_logged_in() && \current_user_can( 'edit_post' ) ) {
             include( 'partials/inline-edit.inc.php' );
         }
+    }
+
+    /**
+     * Wraps title for inline-editing
+     *
+     * @param $title
+     * @return string
+     */
+    public function wrapTitle( $title, $pid = null ) {
+        if ( !\is_user_logged_in() && !\current_user_can( 'edit_post' ) || \is_admin() || !in_the_loop() ) {
+            return $title;
+        }
+
+        global $post;
+        $output = '';
+        $output .= '<span class="inline-edit-title inline-edit-title-' . $post->ID . '" data-postid="' . $post->ID. '"
+            data-posttitle="' . strip_tags( $post->post_title ) . '"
+            data-inlineedittooltip="' . __( 'Title from', $this->textdomain ) . ' ' . strip_tags( $post->post_title ) .
+            ' (' . $post->ID . ')">';
+        $output .= $title;
+        $output .= '</span>';
+
+        return $output;
     }
 
     /**
@@ -92,9 +123,14 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
             return $content;
         }
 
-        $gridOutput .=  '<div data-postid="' . $post->ID . '" class="mc-wrapper">';
         $gridOutput .= $this->createRows( $grid );
-        $gridOutput .= '</div>';
+
+
+        if ( \is_user_logged_in() && \current_user_can( 'edit_post' ) ) {
+            $gridOutput = '<div data-postid="' . $post->ID . '" class="mc-wrapper">'
+                . $gridOutput
+                . '</div>';
+        }
 
         return $gridOutput;
     }

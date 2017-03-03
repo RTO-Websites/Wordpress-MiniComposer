@@ -119,6 +119,7 @@ html input[type="button"].inline-edit-save-button {
 /**
  Wysiwyg is open
  */
+.edit-mode .inline-edit-title.edit-open,
 .edit-mode .inline-edit-admin.edit-open,
 .edit-mode .inline-edit-modul.edit-open,
 .edit-mode .edit-open.div-area > .area_content,
@@ -130,6 +131,7 @@ html input[type="button"].inline-edit-save-button {
 /**
 Hover column, area, modul, admin
  */
+.edit-mode .inline-edit-title.inline-edit-hover,
 .edit-mode .inline-edit-admin.inline-edit-hover,
 .edit-mode .inline-edit-modul.inline-edit-hover,
 .edit-mode .div-area.inline-edit-hover > .area_content,
@@ -149,6 +151,7 @@ Make box-shadow inset for modul-content, cause psw overflow:hidden
 /*
 Tooltip on hover
  */
+.edit-mode .inline-edit-title.inline-edit-hover:after,
 .edit-mode .mc-column.inline-edit-hover:after,
 .edit-mode .inline-edit-modul.inline-edit-hover:after,
 .edit-mode .inline-edit-admin.inline-edit-hover:after,

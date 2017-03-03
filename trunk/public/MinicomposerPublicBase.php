@@ -72,7 +72,6 @@ class MinicomposerPublicBase {
      */
     protected function createRows( $rows ) {
         $gridOutput = '';
-
         // loop row
         foreach ( $rows as $rowIndex => $row ) {
             $gridOutput .= '<div class="row  mc-row">';

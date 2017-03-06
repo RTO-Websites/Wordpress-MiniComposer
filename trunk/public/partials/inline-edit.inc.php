@@ -21,7 +21,8 @@ if ( \is_user_logged_in() && \current_user_can( 'edit_post' ) ) {
     </div>
 
     <div class="inline-edit-box">
-        <textarea id="inline-edit-field"></textarea><br/>
+        <!--textarea id="inline-edit-field"></textarea><br/-->
+        <?php wp_editor('', 'composer_global_editor', array('media_buttons' => false)); ?>
         <input type="button" class="inline-edit-save-button" value="<?php _e('Save'); ?>"/>
         <input type="button" class="inline-edit-cancel-button" value="<?php _e('Cancel'); ?> "/>
         <div class="inline-edit-box-title"></div>

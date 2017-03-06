@@ -56,10 +56,13 @@ var inlineEditColumns = function () {
       if (result.success) {
         $('.inline-edit-box').removeData();
         $('.inline-edit-box').addClass('active');
-        $('.inline-edit-box textarea').val(result.content);
+        //$('.inline-edit-box textarea').val(result.content);
         $('.inline-edit-box').data(result);
         $('.inline-edit-box-title').html('Column: ' + (parseInt(result.columnid) + 1)
           + '<br />Post: ' + result.postslug + ' (' + result.postid + ')');
+
+        inlineEditInstance.resizeTinyMce();
+        inlineEditInstance.setTinyMceContent(result.content);
 
         //CKEDITOR.config.height = $('.inline-edit-box').height() - 170;
         //CKEDITOR.replace('inline-edit-field');

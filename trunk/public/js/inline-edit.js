@@ -11,14 +11,14 @@ var inlineEdit = function () {
     // private methods
     init,
     initEvents,
-    initTinyMCe,
+    initTinyMce,
     initClasses;
 
   /**
    * Construct
    */
   init = function () {
-    initTinyMCe();
+    initTinyMce();
     initClasses();
     initEvents();
   };
@@ -44,8 +44,41 @@ var inlineEdit = function () {
   /**
    * Init tinymce
    */
-  initTinyMCe = function () {
+  initTinyMce = function () {
+    self.resizeTinyMce();
+  };
 
+  self.setTinyMceContent = function (content) {
+    content = content.replace(/\<\/p\>/g, '</div><br /><br />');
+    content = content.replace(/\<p\>/g, '<div>');
+    content = content.replace(/\<p\s/g, '<div ');
+
+    switchEditors.go('composer_global_editor', 'tinymce');
+
+    composerEditor = tinyMCE.get('composer_global_editor');
+    if (!composerEditor) {
+      console.info('WP-Editor not found');
+      return;
+    }
+
+    composerEditor.setContent(content);
+  };
+
+  self.getTinyMceContent = function () {
+    switchEditors.go('composer_global_editor', 'tinymce');
+    composerEditor = tinyMCE.get('composer_global_editor');
+
+    return composerEditor.getContent();
+  };
+
+  self.resizeTinyMce = function () {
+    if (typeof(tinyMCE) == 'undefined') {
+      return false;
+    }
+    composerEditor = tinyMCE.get('composer_global_editor');
+    if (composerEditor) {
+      composerEditor.theme.resizeTo('100%', $('.inline-edit-box').height() - 170, true);
+    }
   };
 
   /**
@@ -64,7 +97,9 @@ var inlineEdit = function () {
     jQuery('.inline-edit-save-button').on('click', function (e) {
       //CKEDITOR.instances['inline-edit-field'].updateElement();
       var data = $('.inline-edit-box').data();
-      data.newContent = $('.inline-edit-box textarea').val();
+      //data.newContent = $('.inline-edit-box textarea').val();
+
+      data.newContent = self.getTinyMceContent();
 
       if (data.columnid) {
         // save column
@@ -74,7 +109,6 @@ var inlineEdit = function () {
       }
     });
 
-
     /**
      * Prevent link clicking
      */
@@ -83,8 +117,8 @@ var inlineEdit = function () {
       '.edit-mode .inline-edit-title a' +
       '.edit-mode a .inline-edit-title',
       function (e) {
-      e.preventDefault();
-    });
+        e.preventDefault();
+      });
 
     /**
      * Hover/mouseenter for editable elements
@@ -120,11 +154,9 @@ var inlineEdit = function () {
     /**
      * Resize cke on resize
      */
-    /*jQuery(window).on('resize', function() {
-     if (typeof(CKEDITOR.instances['inline-edit-field']) !== 'undefined') {
-     CKEDITOR.instances['inline-edit-field'].resize('100%', $('.inline-edit-box').height() - 170, true);
-     }
-     });*/
+    jQuery(window).on('resize', function () {
+      self.resizeTinyMce();
+    });
   };
 
   init();

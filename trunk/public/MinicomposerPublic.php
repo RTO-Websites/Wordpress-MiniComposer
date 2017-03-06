@@ -96,7 +96,7 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
 
         global $post;
         $output = '';
-        $output .= '<span class="inline-edit-title inline-edit-title-' . $post->ID . '" data-postid="' . $post->ID. '"
+        $output .= '<span class="inline-edit-title inline-edit-title-' . $post->ID . '" data-postid="' . $post->ID . '"
             data-posttitle="' . strip_tags( $post->post_title ) . '"
             data-inlineedittooltip="' . __( 'Title from', $this->textdomain ) . ' ' . strip_tags( $post->post_title ) .
             ' (' . $post->ID . ')">';
@@ -159,6 +159,10 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
             wp_enqueue_style( 'foundation', 'https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.css', array(), $this->version, 'all' );
         } else if ( !empty( $this->options['embedFromCDN'] ) ) {
             wp_enqueue_style( 'bootstrap', 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css', array(), $this->version, 'all' );
+        }
+
+        if ( \is_user_logged_in() && \current_user_can( 'edit_post' ) ) {
+            wp_enqueue_style( 'dashicons' );
         }
 
         //wp_enqueue_style( $this->pluginName, plugin_dir_url( __FILE__ ) . 'css/minicomposer-public.css', array(), $this->version, 'all' );

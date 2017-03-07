@@ -192,6 +192,10 @@ Tooltip on hover
     padding: 2px 5px;
 }
 
+body .inline-edit-title {
+    font: inherit !important;
+}
+
 
 .mce-ico {
     font-family: 'dashicons' !important;

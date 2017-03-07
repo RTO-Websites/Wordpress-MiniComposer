@@ -453,6 +453,9 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
         }
     }
 
+    /**
+     * AutoSave via ajax
+     */
     public function saveColumnsAjax() {
         if ( !filter_has_var( INPUT_POST, 'minicomposerColumns' ) ) {
             return;
@@ -465,6 +468,11 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
         }
 
         $postId = filter_input( INPUT_POST, 'postId' );
+
+        if ( empty( $postId ) || !$this->checkRights($postId)  ) {
+            die();
+        }
+
         $postContent = $this->getColumnContent( json_decode( $value ) );
 
         wp_update_post( array(
@@ -490,7 +498,7 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
             'success' => false,
         );
 
-        if ( empty( $postid ) ) {
+        if ( empty( $postid ) || !$this->checkRights($postid)  ) {
             die( json_encode( $output ) );
         }
 
@@ -524,7 +532,7 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
             'success' => false,
         );
 
-        if ( empty( $postid ) ) {//|| !\current_user_can( 'edit_post' )  ) {
+        if ( empty( $postid )  || !$this->checkRights($postid) ) {
             die( json_encode( $output ) );
         }
 
@@ -562,7 +570,7 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
             'success' => false,
         );
 
-        if ( empty( $postid ) || !isset( $columnid ) ) {
+        if ( empty( $postid ) || !isset( $columnid ) || !$this->checkRights($postid) ) {
             die( json_encode( $output ) );
         }
 
@@ -612,7 +620,7 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
             'success' => false,
         );
 
-        if ( empty( $postid ) || !isset( $columnid ) ) {//|| !\current_user_can( 'edit_post' )  ) {
+        if ( empty( $postid ) || !isset( $columnid ) || !$this->checkRights($postid)  ) {
             die( json_encode( $output ) );
         }
 
@@ -640,5 +648,29 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
         #$output[ 'parsedContent' ] = do_shortcode( $newContent );
 
         die( json_encode( $output ) );
+    }
+
+    /**
+     * Checks if user can edit_page/edit_post
+     *
+     * @int/object $post
+     * @return bool
+     */
+    public function checkRights( $post ) {
+        if ( is_numeric( $post ) ) {
+            $post = get_post( $post );
+        }
+
+        if ( $post->post_type == 'page' ) {
+            if ( current_user_can( 'edit_page', $post->ID ) ) {
+                return true;
+            }
+        } else {
+            if ( current_user_can( 'edit_post', $post->ID ) ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

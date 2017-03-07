@@ -70,6 +70,8 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
         add_action( 'wp_head', array( $this, 'addHeaderStyle' ) );
         add_action( 'wp_footer', array( $this, 'addInlineEdit' ) );
 
+        add_shortcode( 'post', array( $this, 'postShortcode' ) );
+
         parent::__construct();
     }
 
@@ -124,10 +126,20 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
         }
 
         $gridOutput .= $this->createRows( $grid );
+        $gridOutput = $this->wrapColumnsForInlineEdit( $gridOutput, $post->ID );
 
+        return $gridOutput;
+    }
 
+    /**
+     * Add wrapper around column-html for inline-edit
+     * @param $gridOutput
+     * @param $postid
+     * @return string
+     */
+    public function wrapColumnsForInlineEdit( $gridOutput, $postid ) {
         if ( \is_user_logged_in() && \current_user_can( 'edit_post' ) ) {
-            $gridOutput = '<div data-postid="' . $post->ID . '" class="mc-wrapper">'
+            $gridOutput = '<div data-postid="' . $postid . '" class="mc-wrapper">'
                 . $gridOutput
                 . '</div>';
         }
@@ -199,6 +211,46 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
         }
         return ' data-inlineedittooltip="Column: ' . ( $columnCount + 1 ) . "\n"
             . 'Post: ' . $post->post_name . ' (' . $post->ID . ')" ';
+    }
+
+    /**
+     * Shortcode to embed column-content from other posts/pages
+     *
+     * @param $args
+     * @param string $content
+     * @return string
+     */
+    public function postShortcode( $args, $content = '' ) {
+        global $post;
+        if ( empty( $args ) ) {
+            return '<!--Post-Shortcode: Args empty -->';
+        }
+
+        if ( is_numeric( $args[0] ) ) {
+            // get by id
+            $incPost = get_post( $args[0] );
+        } else {
+            // get post by slug
+            $incPost = get_posts( array( 'name' => $args[0], 'post_type' => get_post_types() ) );
+            $incPost = !empty( $incPost ) ? $incPost[0] : null;
+        }
+
+        if ( empty( $incPost ) ) {
+            return '<!--Post-Shortcode: No post found for ' . $args[0] . ' -->';
+        }
+        $orgPost = $post;
+        $post = $incPost;
+        $orgColumnCount = $this->columnCount;
+        $this->columnCount = 0;
+
+        $grid = get_post_meta( $incPost->ID, 'minicomposerColumns', true );
+        $gridOutput = $this->createRows( $grid );
+        $gridOutput = $this->wrapColumnsForInlineEdit( $gridOutput, $incPost->ID );
+
+        $post = $orgPost;
+        $this->columnCount = $orgColumnCount;
+
+        return '<!--postshortcode-->' . $gridOutput;
     }
 
 }

@@ -35,9 +35,6 @@ var inlineEditTitle = function () {
      CKEDITOR.instances['inline-edit-field'].destroy();
      }*/
 
-
-    titleElement.addClass('edit-open');
-
     // get column-content via ajax
     jQuery.ajax({
       url: adminAjax,
@@ -51,6 +48,7 @@ var inlineEditTitle = function () {
       },
     }).done(function (result) {
       if (result.success) {
+        titleElement.addClass('edit-open');
         $('.inline-edit-box').removeData();
         $('.inline-edit-box').addClass('active');
         //$('.inline-edit-box textarea').val(result.content);

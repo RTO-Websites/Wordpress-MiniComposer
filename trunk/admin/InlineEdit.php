@@ -1,11 +1,10 @@
 <?php
+
 /**
  * @since 1.0.0
  * @author shennemann
  * @licence MIT
  */
-
-
 class InlineEdit {
     /**
      * Instance of McAdmin
@@ -40,7 +39,7 @@ class InlineEdit {
             'success' => false,
         );
 
-        if ( empty( $postid ) || !$this->checkRights($postid)  ) {
+        if ( empty( $postid ) || !$this->checkRights( $postid ) ) {
             die( json_encode( $output ) );
         }
 
@@ -74,7 +73,7 @@ class InlineEdit {
             'success' => false,
         );
 
-        if ( empty( $postid )  || !$this->checkRights($postid) ) {
+        if ( empty( $postid ) || !$this->checkRights( $postid ) ) {
             die( json_encode( $output ) );
         }
 
@@ -112,7 +111,7 @@ class InlineEdit {
             'success' => false,
         );
 
-        if ( empty( $postid ) || !isset( $columnid ) || !$this->checkRights($postid) ) {
+        if ( empty( $postid ) || !isset( $columnid ) || !$this->checkRights( $postid ) ) {
             die( json_encode( $output ) );
         }
 
@@ -141,7 +140,7 @@ class InlineEdit {
      * Ajax: Change content of a column for inline-edit
      */
     public function ajaxChangeColumnContent() {
-        ini_set('display_errors', true);
+        ini_set( 'display_errors', true );
         header( 'Content-Type: application/json' );
 
         /*
@@ -163,7 +162,7 @@ class InlineEdit {
             'success' => false,
         );
 
-        if ( empty( $postid ) || !isset( $columnid ) || !$this->checkRights($postid)  ) {
+        if ( empty( $postid ) || !isset( $columnid ) || !$this->checkRights( $postid ) ) {
             die( json_encode( $output ) );
         }
 
@@ -176,19 +175,21 @@ class InlineEdit {
 
         // change content of column
         $rows = \Admin\MinicomposerAdmin::changeColumnContent( $rows, $columnid, $newContent );
+        $newRows = json_decode( json_encode( $rows )); // need copy, cause getColumnContent removes shortcodes
         $output['newRows'] = $rows;
 
+        remove_action( 'save_post', array( $this, 'savePostMeta' ) );
         $postContent = $this->mcAdmin->getColumnContent( $rows );
 
         wp_update_post( array(
             'ID' => $postid,
             'post_content' => $postContent,
-        ) );;
+        ) );
+        add_action( 'save_post', array( $this, 'savePostMeta' ), 10, 2 );
 
-        update_post_meta( $postid, 'minicomposerColumns', $rows );
+        $update = update_post_meta( $postid, 'minicomposerColumns',  $newRows );
 
-        $output['success'] = true;
-        #$output[ 'parsedContent' ] = do_shortcode( $newContent );
+        $output['success'] = $update;
 
         die( json_encode( $output ) );
     }

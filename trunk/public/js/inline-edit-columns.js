@@ -102,7 +102,7 @@ var inlineEditColumns = function () {
   self.saveInlineEditSuccess = function (columnid, postid) {
     window.columnSelector = '.mc-wrapper[data-postid=' + postid + '] .mc-column-'
       + (parseInt(columnid) + 1) + ' > .inner-column > .column-content';
-    window.currentColumn = $(window.columnSelector);
+    window.currentColumn = $($(window.columnSelector)[0]);
 
     // load page with new content
     jQuery.get(window.location.href, {}, function (result) {

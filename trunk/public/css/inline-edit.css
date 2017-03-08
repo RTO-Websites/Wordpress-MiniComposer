@@ -33,6 +33,7 @@
     letter-spacing: 0 !important;
     text-shadow: none !important;
     text-decoration: none !important;
+    text-transform: none !important;
 }
 
 .edit-mode .edit-mode-button {
@@ -168,6 +169,7 @@ Tooltip on hover
     white-space: pre !important;
     line-height: 1em !important;
     letter-spacing: 1px !important;
+    text-transform: none !important;
     z-index: 5000;
 }
 

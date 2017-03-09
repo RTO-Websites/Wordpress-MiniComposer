@@ -72,6 +72,7 @@ class MinicomposerPublicBase {
      */
     protected function createRows( $rows ) {
         $gridOutput = '';
+
         // loop row
         foreach ( $rows as $rowIndex => $row ) {
             $gridOutput .= '<div class="row  mc-row">';
@@ -102,14 +103,15 @@ class MinicomposerPublicBase {
                 }
 
                 // generate html for column
-                $gridOutput .= '<div class="mc-column-' . ( $this->columnCount ) . ' mc-column  columns '
+                $columnOutput = '';
+                $columnOutput .= '<div class="mc-column-' . ( $this->columnCount ) . ' mc-column  columns '
                     . $columnClasses . '" style="' . $columnStyle . '" ' . $customAttributes
                     . ' data-columnkey="' . ( $this->columnCount - 1 ) . '">';
-                $gridOutput .= '<div class="inner-column" style="' . $columnInnerStyle . '">';
-                $gridOutput .= '<div class="column-content">';
+                $columnOutput .= '<div class="inner-column" style="' . $columnInnerStyle . '">';
+                $columnOutput .= '<div class="column-content">';
 
                 if ( function_exists( 'apply_filters' ) ) {
-                    $gridOutput .= apply_filters( 'miniComposerAddColumnContent', '', $column );
+                    $columnOutput .= apply_filters( 'miniComposerAddColumnContent', '', $column );
                 }
 
                 // remove <p>
@@ -117,22 +119,31 @@ class MinicomposerPublicBase {
                 $column->content = str_replace( '<p>', '', $column->content );
                 // replace &nbsp;
                 $column->content = str_replace( '&nbsp;', ' ', $column->content );
-                $gridOutput .= trim( $column->content );
+                $columnOutput .= trim( $column->content );
 
                 // column has inner-row -> call recursive createRows
                 if ( !empty( $column->rows ) ) {
-                    $gridOutput .= $this->createRows( $column->rows );
+                    $columnOutput .= $this->createRows( $column->rows );
                 }
 
-                $gridOutput .= '</div>';
+                $columnOutput .= '</div>';
 
                 // add column-background
                 if ( !empty( $bgStyle ) ) {
-                    $gridOutput .= '<div class="mc-background" style="' . $bgStyle . '"></div>';
+                    $columnOutput .= '<div class="mc-background" style="' . $bgStyle . '"></div>';
                 }
 
-                $gridOutput .= '</div>';
-                $gridOutput .= '</div>';
+                $columnOutput .= '</div>';
+                $columnOutput .= '</div>';
+
+                if ( method_exists( $this, 'filterColumn' ) ) {
+                    $columnOutput =  $this->filterColumn( $columnOutput );
+                }
+                if ( function_exists( 'apply_filters' ) ) {
+                    $columnOutput = apply_filters( 'miniComposerFilterColumn', '', $columnOutput );
+                }
+
+                $gridOutput .= $columnOutput;
             }
             $gridOutput .= '</div>';
         }

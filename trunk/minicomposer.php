@@ -20,7 +20,7 @@ use Inc\MinicomposerDeactivator;
  * Plugin Name:       MiniComposer
  * Plugin URI:        MiniComposer
  * Description:       Layout page builder plugin.
- * Version:           1.2.11
+ * Version:           1.3.0
  * Author:            crazypsycho
  * Author URI:        https://github.com/crazypsycho
  * License:           GPL-2.0+
@@ -33,6 +33,9 @@ use Inc\MinicomposerDeactivator;
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
+
+$mcPluginUrl = plugin_dir_url( __FILE__ );
+$mcPluginPath = plugin_dir_path( __FILE__ );
 
 /**
  * The class responsible for auto loading classes.

@@ -8,10 +8,10 @@
 class MinicomposerAdminBase {
     protected $optionFields = array(
         'minicomposerColumns' => array(
-            'type' => 'textarea',
-            'label' => '',
+            'type'    => 'textarea',
+            'label'   => '',
             'trClass' => 'hidden',
-            'isJson' => true,
+            'isJson'  => true,
         ),
     );
 
@@ -20,46 +20,48 @@ class MinicomposerAdminBase {
     protected $oneToTwelve = array( '', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 );
 
     protected $responsiveFields = array(
-        'responsiveClass' => array(
-            'type' => 'text',
+        'responsiveClass'  => array(
+            'type'  => 'text',
             'label' => 'CSS-Class',
         ),
         'customAttributes' => array(
-            'type' => 'textarea',
+            'type'  => 'textarea',
             'label' => 'Custom-Attributes',
         ),
-        'responsiveSmall' => array(
-            'type' => 'select',
+        'responsiveSmall'  => array(
+            'type'  => 'select',
             'label' => 'Small',
         ),
         'responsiveMedium' => array(
-            'type' => 'select',
+            'type'  => 'select',
             'label' => 'Medium',
         ),
-        'responsiveLarge' => array(
-            'type' => 'select',
+        'responsiveLarge'  => array(
+            'type'  => 'select',
             'label' => 'Large',
         ),
     );
 
     protected $styleFields = array(
-        'columnPadding' => array(
-            'type' => 'text',
+        'columnPadding'    => array(
+            'type'  => 'text',
             'label' => 'Padding',
         ),
-        'columnGutter' => array(
-            'type' => 'text',
+        'columnGutter'     => array(
+            'type'  => 'text',
             'label' => 'Gutter',
         ),
         'columnBackground' => array(
-            'type' => 'background',
+            'type'  => 'background',
             'label' => 'Background',
         ),
-        'minHeight' => array(
-            'type' => 'input',
+        'minHeight'        => array(
+            'type'  => 'input',
             'label' => 'min-height',
         ),
     );
+
+    private $columnKey = 0;
 
     public function __construct() {
         $this->addOptionsToResponsiveFields();
@@ -71,9 +73,10 @@ class MinicomposerAdminBase {
      */
     public function getColumnContent( $rows ) {
         $output = '';
-        
-        if ( empty( $rows ) ) return $output;
-        
+
+        if ( empty( $rows ) )
+            return $output;
+
         // loop row
         foreach ( $rows as $rowIndex => $row ) {
             // loop columns
@@ -109,7 +112,7 @@ class MinicomposerAdminBase {
             $composerRows = array(
                 array(
                     array(
-                        'medium' => 12,
+                        'medium'  => 12,
                         'content' => $emptyContent,
                     ),
                 ),
@@ -131,9 +134,12 @@ class MinicomposerAdminBase {
     public function getRows( $rows ) {
         foreach ( $rows as $row ): ?>
             <div class="minicomposer-row" draggable="true">
-                <?php foreach ( $row as $col ):?>
+                <?php foreach ( $row as $col ): ?>
                     <div class="minicomposer-column" draggable="true"
                         <?php
+                        echo ' data-columnkey="' . $this->columnKey . '"';
+                        $this->columnKey += 1;
+
                         foreach ( $col as $key => $value ) {
                             if ( $key == 'content' )
                                 continue;
@@ -166,9 +172,49 @@ class MinicomposerAdminBase {
 
     public function addOptionsToResponsiveFields() {
         foreach ( $this->responsiveFields as $key => $value ) {
-            if ( $value['type'] == 'select' ) {
-                $this->responsiveFields[$key]['options'] = $this->oneToTwelve;
+            if ( $value[ 'type' ] == 'select' ) {
+                $this->responsiveFields[ $key ][ 'options' ] = $this->oneToTwelve;
             }
         }
+    }
+
+    /**
+     * Returns content of all columns in a list
+     */
+    public static function getColumnContentList( $rows, $returnArray = array() ) {
+        foreach ( $rows as $row ) {
+            foreach ( $row as $col ) {
+                $returnArray[] = $col->content;
+
+                if ( !empty( $col->rows ) ) {
+                    $returnArray = MinicomposerAdminBase::getColumnContentList( $col->rows, $returnArray );
+                }
+            }
+
+        }
+
+        return $returnArray;
+    }
+
+    /**
+     * Change content of a spezific column
+     */
+    public static function changeColumnContent( $rows, $columnId, $newContent, &$count = 0 ) {
+        foreach ( $rows as $rowKey => $row ) {
+            foreach ( $row as $colKey => $col ) {
+                if ( $count == $columnId ) {
+                    // column match -> change content
+                    $rows[ $rowKey ][ $colKey ]->content = $newContent;
+                }
+                $count += 1;
+
+                // has sub rows -> call recursive
+                if ( !empty( $col->rows ) ) {
+                    MinicomposerAdminBase::changeColumnContent( $col->rows, $columnId, $newContent, $count );
+                }
+            }
+        }
+
+        return $rows;
     }
 }

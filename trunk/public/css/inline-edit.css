@@ -1,0 +1,205 @@
+/**
+ * Created by shennemann on 22.02.2017.
+ *
+ * not in gulp, cause it is only needed for internal cases
+ */
+
+.inline-edit-menu {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    font-size: 12px;
+    padding: 7px 10px;
+    line-height: 1em !important;
+
+    text-align: center;
+
+    border-left: 1px solid #66eee2;
+    border-top: 1px solid #66eee2;
+
+    z-index: 99999999;
+}
+
+.inline-edit-menu a {
+    display: inline-block !important;
+    color: #fff !important;
+    display: inline-block !important;
+    font-family: Arial, sans-serif !important;
+    font-size: 12px !important;
+    padding: 2px 5px !important;
+    letter-spacing: 0 !important;
+    text-shadow: none !important;
+    text-decoration: none !important;
+    text-transform: none !important;
+}
+
+.edit-mode .edit-mode-button {
+    background-color: #66eee2 !important;
+    color: #000 !important;
+}
+
+.inline-edit-box {
+    display: none;
+    position: fixed;
+    top: 15vh;
+    left: 50%;
+    margin-left: -430px;
+    height: 70vh;
+    width: 860px;
+    padding: 15px;
+    border: 1px solid #555;
+    background-color: #fff;
+    overflow: auto;
+    z-index: 999999999;
+}
+
+.inline-edit-box.active {
+    display: block;
+}
+
+.inline-edit-box textarea {
+    all: initial;
+    width: 100%;
+    min-height: 285px;
+    border: 1px solid black;
+    color: black;
+    resize: horizontal;
+    height: calc(100% - 45px);
+    white-space: pre;
+}
+
+html input[type="button"].inline-edit-save-button,
+html input[type="button"].inline-edit-cancel-button {
+    all: initial;
+    width: auto !important;
+    margin: 10px;
+    margin-left: 0;
+
+    border: none;
+    display: inline-block;
+    outline: 0;
+    padding: 6px 16px;
+    vertical-align: middle;
+    overflow: hidden;
+    text-decoration: none;
+    color: #fff;
+    background-color: #000;
+    text-align: center;
+    cursor: pointer;
+    white-space: nowrap;
+
+    transition: box-shadow .15s;
+}
+
+html input[type="button"].inline-edit-save-button:hover,
+html input[type="button"].inline-edit-cancel-button:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+html input[type="button"].inline-edit-cancel-button {
+    background-color: #f44336 !important;
+    color: white !important;
+}
+
+html input[type="button"].inline-edit-save-button {
+    background-color: #4CAF50 !important;
+    color: white !important;
+}
+
+.inline-edit-box .close-button {
+    top: -8px !important;
+    right: 0 !important;
+    color: #000 !important;
+    font-size: 24px !important;
+    text-shadow: none !important;
+}
+
+/**
+ Wysiwyg is open
+ */
+.edit-mode .inline-edit-title.edit-open,
+.edit-mode .inline-edit-admin.edit-open,
+.edit-mode .inline-edit-modul.edit-open,
+.edit-mode .edit-open.div-area > .area_content,
+.edit-mode .edit-open > .inner-column > .column-content {
+    background-color: rgba(128, 128, 128, 0.2);
+    box-shadow: 0 0 0 1px #66eee2;
+}
+
+/**
+Hover column, area, modul, admin
+ */
+.edit-mode .inline-edit-title.inline-edit-hover,
+.edit-mode .inline-edit-admin.inline-edit-hover,
+.edit-mode .inline-edit-modul.inline-edit-hover,
+.edit-mode .div-area.inline-edit-hover > .area_content,
+.edit-mode .inline-edit-hover > .inner-column > .column-content {
+    background-color: rgba(128, 128, 128, 0.2);
+    box-shadow: 0 0 0 1px #66eee2;
+}
+
+/**
+Make box-shadow inset for modul-content, cause psw overflow:hidden
+ */
+.edit-mode .inline-edit-modul.edit-open,
+.edit-mode .inline-edit-modul.inline-edit-hover {
+    box-shadow: inset 0 0 0 1px #66eee2;
+}
+
+/*
+Tooltip on hover
+ */
+.edit-mode .inline-edit-title.inline-edit-hover:after,
+.edit-mode .mc-column.inline-edit-hover:after,
+.edit-mode .inline-edit-modul.inline-edit-hover:after,
+.edit-mode .inline-edit-admin.inline-edit-hover:after,
+.edit-mode .div-area.inline-edit-hover:after {
+    content: attr(data-inlineedittooltip);
+    position: absolute !important;
+    top: 0 !important;
+    right: 0 !important;
+    font-size: 10px !important;
+    font-family: Arial, sans-serif !important;
+    color: white !important;
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    padding: 2px 5px !important;
+    white-space: pre !important;
+    line-height: 1em !important;
+    letter-spacing: 1px !important;
+    text-transform: none !important;
+    z-index: 5000;
+}
+
+.edit-mode .mc-column.inline-edit-hover::after,
+.edit-mode .inline-edit-modul.inline-edit-hover:after {
+    top: 5px !important;
+    right: 5px !important;
+}
+
+.edit-mode .div-area .owl-slider *,
+.edit-mode .div-area a {
+    pointer-events: none !important;
+}
+
+.inline-edit-box-title {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: #555;
+    color: white;
+    font-size: 11px;
+    padding: 2px 5px;
+}
+
+body .inline-edit-title {
+    font: inherit !important;
+}
+
+
+.mce-ico {
+    font-family: 'dashicons' !important;
+}
+

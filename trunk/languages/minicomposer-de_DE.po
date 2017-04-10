@@ -88,3 +88,10 @@ msgstr "Text bearbeiten"
 
 msgid "Add column"
 msgstr "Spalte hinzufügen"
+
+msgid "To admin"
+msgstr "Zur Admin"
+
+msgid "Title from"
+msgstr "Titel von"
+

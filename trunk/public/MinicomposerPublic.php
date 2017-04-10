@@ -11,7 +11,7 @@
  */
 use MagicAdminPage\MagicAdminPage;
 
-include_once('MinicomposerPublicBase.php');
+include_once( 'MinicomposerPublicBase.php' );
 
 /**
  * The public-facing functionality of the plugin.
@@ -43,6 +43,9 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
      */
     private $version;
 
+    public $pluginUrl;
+    private $textdomain;
+
 
     /**
      * Initialize the class and set its properties.
@@ -56,13 +59,53 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
         $this->pluginName = $pluginName;
         $this->version = $version;
         $this->options = MagicAdminPage::getOption( 'minicomposer' );
+        $this->textdomain = $pluginName;
+
+        load_plugin_textdomain( $this->textdomain, false, '/' . $this->pluginName . '/languages' );
 
         $this->addPxToGlobalOptions();
 
         add_filter( 'the_content', array( $this, 'appendColumns' ) );
+        add_filter( 'the_title', array( $this, 'wrapTitle' ) );
         add_action( 'wp_head', array( $this, 'addHeaderStyle' ) );
+        add_action( 'wp_footer', array( $this, 'addInlineEdit' ) );
+
+        add_shortcode( 'post', array( $this, 'postShortcode' ) );
 
         parent::__construct();
+    }
+
+
+    /**
+     * Add inline-edit from include
+     */
+    public function addInlineEdit() {
+        if ( \is_user_logged_in() && \current_user_can( 'edit_post' ) ) {
+            include( 'partials/inline-edit.inc.php' );
+        }
+    }
+
+    /**
+     * Wraps title for inline-editing
+     *
+     * @param $title
+     * @return string
+     */
+    public function wrapTitle( $title, $pid = null ) {
+        if ( !\is_user_logged_in() && !\current_user_can( 'edit_post' ) || \is_admin() || !in_the_loop() ) {
+            return $title;
+        }
+
+        global $post;
+        $output = '';
+        $output .= '<span class="inline-edit-title inline-edit-title-' . $post->ID . '" data-postid="' . $post->ID . '"
+            data-posttitle="' . strip_tags( $post->post_title ) . '"
+            data-inlineedittooltip="' . __( 'Title from', $this->textdomain ) . ' ' . strip_tags( $post->post_title ) .
+            ' (' . $post->ID . ')">';
+        $output .= $title;
+        $output .= '</span>';
+
+        return $output;
     }
 
     /**
@@ -72,9 +115,10 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
      * @return string
      */
     public function appendColumns( $content ) {
-        global $post;
+        global $post, $mcPost;
         $gridOutput = '';
 
+        $mcPost = $post;
         $grid = get_post_meta( $post->ID, 'minicomposerColumns', true );
 
         if ( empty( $grid ) ) {
@@ -82,6 +126,23 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
         }
 
         $gridOutput .= $this->createRows( $grid );
+        $gridOutput = $this->wrapColumnsForInlineEdit( $gridOutput, $post->ID );
+
+        return $gridOutput;
+    }
+
+    /**
+     * Add wrapper around column-html for inline-edit
+     * @param $gridOutput
+     * @param $postid
+     * @return string
+     */
+    public function wrapColumnsForInlineEdit( $gridOutput, $postid ) {
+        if ( \is_user_logged_in() && \current_user_can( 'edit_post' ) ) {
+            $gridOutput = '<div data-postid="' . $postid . '" class="mc-wrapper">'
+                . $gridOutput
+                . '</div>';
+        }
 
         return $gridOutput;
     }
@@ -112,6 +173,10 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
             wp_enqueue_style( 'bootstrap', 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css', array(), $this->version, 'all' );
         }
 
+        if ( \is_user_logged_in() && \current_user_can( 'edit_post' ) ) {
+            wp_enqueue_style( 'dashicons' );
+        }
+
         //wp_enqueue_style( $this->pluginName, plugin_dir_url( __FILE__ ) . 'css/minicomposer-public.css', array(), $this->version, 'all' );
     }
 
@@ -136,6 +201,56 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
 
         //wp_enqueue_script( $this->pluginName, plugin_dir_url( __FILE__ ) . 'js/minicomposer-public.js', array( 'jquery' ), $this->version, false );
 
+    }
+
+
+    public function addDataAttributes( $columnCount ) {
+        global $post;
+        if ( !\is_user_logged_in() || !\current_user_can( 'edit_post' ) ) {
+            return '';
+        }
+        return ' data-inlineedittooltip="Column: ' . ( $columnCount + 1 ) . "\n"
+            . 'Post: ' . $post->post_name . ' (' . $post->ID . ')" ';
+    }
+
+    /**
+     * Shortcode to embed column-content from other posts/pages
+     *
+     * @param $args
+     * @param string $content
+     * @return string
+     */
+    public function postShortcode( $args, $content = '' ) {
+        global $post;
+        if ( empty( $args ) ) {
+            return '<!--Post-Shortcode: Args empty -->';
+        }
+
+        if ( is_numeric( $args[0] ) ) {
+            // get by id
+            $incPost = get_post( $args[0] );
+        } else {
+            // get post by slug
+            $incPost = get_posts( array( 'name' => $args[0], 'post_type' => get_post_types() ) );
+            $incPost = !empty( $incPost ) ? $incPost[0] : null;
+        }
+
+        if ( empty( $incPost ) ) {
+            return '<!--Post-Shortcode: No post found for ' . $args[0] . ' -->';
+        }
+        $orgPost = $post;
+        $post = $incPost;
+        $orgColumnCount = $this->columnCount;
+        $this->columnCount = 0;
+
+        $grid = get_post_meta( $incPost->ID, 'minicomposerColumns', true );
+        $gridOutput = $this->createRows( $grid );
+        $gridOutput = $this->wrapColumnsForInlineEdit( $gridOutput, $incPost->ID );
+
+        $post = $orgPost;
+        $this->columnCount = $orgColumnCount;
+
+        return '<!--postshortcode-->' . $gridOutput;
     }
 
 }

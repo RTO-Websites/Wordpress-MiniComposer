@@ -121,6 +121,7 @@ class MinicomposerPublicBase {
                 $column->content = str_replace( '&nbsp;', ' ', $column->content );
                 $columnOutput .= trim( $column->content );
 
+
                 // column has inner-row -> call recursive createRows
                 if ( !empty( $column->rows ) ) {
                     $columnOutput .= $this->createRows( $column->rows );
@@ -140,7 +141,7 @@ class MinicomposerPublicBase {
                     $columnOutput =  $this->filterColumn( $columnOutput );
                 }
                 if ( function_exists( 'apply_filters' ) ) {
-                    $columnOutput = apply_filters( 'miniComposerFilterColumn', '', $columnOutput );
+                    $columnOutput = apply_filters( 'miniComposerFilterColumn', $columnOutput );
                 }
 
                 $gridOutput .= $columnOutput;

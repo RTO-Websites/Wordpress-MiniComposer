@@ -9,7 +9,6 @@
  * @package    Minicomposer
  * @subpackage Minicomposer/admin
  */
-use MagicAdminPage\MagicAdminPage;
 
 include_once( 'MinicomposerAdminBase.php' );
 include_once( 'MiniComposerThemeCustomizer.php' );

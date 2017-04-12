@@ -9,7 +9,6 @@
  * @package    Minicomposer
  * @subpackage Minicomposer/public
  */
-use MagicAdminPage\MagicAdminPage;
 
 include_once( 'MinicomposerPublicBase.php' );
 

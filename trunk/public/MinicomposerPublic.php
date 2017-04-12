@@ -58,7 +58,19 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
 
         $this->pluginName = $pluginName;
         $this->version = $version;
-        $this->options = MagicAdminPage::getOption( 'minicomposer' );
+        //$this->options = MagicAdminPage::getOption( 'minicomposer' );
+
+        $this->options = array(
+            'globalPadding' => get_theme_mod('globalPadding'),
+            'globalGutter' => get_theme_mod('globalGutter'),
+            'globalMinHeight' => get_theme_mod('globalMinHeight'),
+            'globalColumnMargin' => get_theme_mod('globalColumnMargin'),
+            'globalRowMargin' => get_theme_mod('globalRowMargin'),
+
+            'useBootstrap' => get_theme_mod('useBootstrap'),
+            'embedFromCDN' => get_theme_mod('embedFromCDN'),
+        );
+
         $this->textdomain = $pluginName;
 
         load_plugin_textdomain( $this->textdomain, false, '/' . $this->pluginName . '/languages' );

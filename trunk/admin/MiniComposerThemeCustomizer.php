@@ -24,6 +24,7 @@ class MiniComposerThemeCustomizer {
                     array(
                         'id' => 'globalPadding',
                         'label' => 'Column-Padding',
+                        'transport' => 'refresh',
                     ),
                     array(
                         'id' => 'globalGutter',
@@ -102,6 +103,7 @@ class MiniComposerThemeCustomizer {
 
                 $wp_customize->add_setting( $settingId, array(
                     'default' => !empty( $field['default'] ) ? $field['default'] : '',
+                    'transport' => !empty( $field['transport'] ) ? $field['transport'] : 'refresh',
                 ) );
 
                 $wp_customize->add_control( $controlId, array(

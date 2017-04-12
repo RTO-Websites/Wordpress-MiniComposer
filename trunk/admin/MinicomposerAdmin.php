@@ -62,7 +62,22 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
         $this->version = $version;
 
         $defaultMinHeight = '40';
-        $this->options = MagicAdminPage::getOption( 'minicomposer' );
+        //$this->options = MagicAdminPage::getOption( 'minicomposer' );
+
+        $this->options = array(
+            'globalPadding' => get_theme_mod('globalPadding'),
+            'globalGutter' => get_theme_mod('globalGutter'),
+            'globalMinHeight' => get_theme_mod('globalMinHeight'),
+            'globalColumnMargin' => get_theme_mod('globalColumnMargin'),
+            'globalRowMargin' => get_theme_mod('globalRowMargin'),
+
+            'useBootstrap' => get_theme_mod('useBootstrap'),
+            'embedFromCDN' => get_theme_mod('embedFromCDN'),
+
+            'columnAdminStyle' => get_theme_mod('columnAdminStyle'),
+            'columnAdminFont' => get_theme_mod('columnAdminFont'),
+        );
+
         if ( empty( $this->options['globalMinHeight'] ) ) {
             $this->options['globalMinHeight'] = $defaultMinHeight;
         }
@@ -75,7 +90,7 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
 
         $this->translateFields();
 
-        $composerPage = new MagicAdminPage(
+        /*$composerPage = new MagicAdminPage(
             'minicomposer',
             'MiniComposer',
             'MiniComposer',
@@ -132,7 +147,7 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
                 'title' => __( 'Column-Font for admin', $this->textdomain ),
                 'description' => __( 'Only for admin-view', $this->textdomain ),
             ),
-        ) );
+        ) );*/
 
         add_action( 'add_meta_boxes', array( $this, 'registerPostSettings' ), 1 );
         add_action( 'save_post', array( $this, 'savePostMeta' ), 10, 2 );

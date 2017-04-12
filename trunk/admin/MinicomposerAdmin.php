@@ -12,6 +12,7 @@
 use MagicAdminPage\MagicAdminPage;
 
 include_once( 'MinicomposerAdminBase.php' );
+include_once( 'MiniComposerThemeCustomizer.php' );
 include_once( 'InlineEdit.php' );
 
 /**
@@ -68,6 +69,7 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
 
         load_plugin_textdomain( $this->textdomain, false, '/' . $this->pluginName . '/languages' );
 
+        add_action( 'customize_register', array( new \MiniComposerThemeCustomizer(), 'actionCustomizeRegister' ) );
 
         $inlineEdit = new \InlineEdit( $this );
 

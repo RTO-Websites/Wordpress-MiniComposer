@@ -93,13 +93,13 @@ class MiniComposerThemeCustomizer {
 
         foreach ( $this->fields as $sectionId => $section ) {
             $wp_customize->add_section( $sectionId, array(
-                'title' => __( $section['title'] ),
+                'title' => __( $section['title'], $this->textdomain ),
                 'panel' => 'minicomposer-panel',
             ) );
 
-            foreach ( $section['fields'] as $field ) {
-                $settingId = $field['id'];
-                $controlId = $field['id'] . '-control';
+            foreach ( $section['fields'] as $fieldId => $field ) {
+                $settingId = !is_numeric($fieldId) ? $fieldId : $field['id'];
+                $controlId = $settingId . '-control';
 
                 $wp_customize->add_setting( $settingId, array(
                     'default' => !empty( $field['default'] ) ? $field['default'] : '',
@@ -112,6 +112,7 @@ class MiniComposerThemeCustomizer {
                     'type' => !empty( $field['type'] ) ? $field['type'] : 'text',
                     'settings' => $settingId,
                     'description' => !empty( $field['description'] ) ? __( $field['description'], $this->textdomain ) : '',
+                    'choices' => !empty( $field['choices'] ) ? $field['choices'] : null,
                 ) );
             }
         }

@@ -64,17 +64,17 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
         //$this->options = MagicAdminPage::getOption( 'minicomposer' );
 
         $this->options = array(
-            'globalPadding' => get_theme_mod('globalPadding'),
-            'globalGutter' => get_theme_mod('globalGutter'),
-            'globalMinHeight' => get_theme_mod('globalMinHeight'),
-            'globalColumnMargin' => get_theme_mod('globalColumnMargin'),
-            'globalRowMargin' => get_theme_mod('globalRowMargin'),
+            'globalPadding' => get_theme_mod('minicomposer_globalPadding'),
+            'globalGutter' => get_theme_mod('minicomposer_globalGutter'),
+            'globalMinHeight' => get_theme_mod('minicomposer_globalMinHeight'),
+            'globalColumnMargin' => get_theme_mod('minicomposer_globalColumnMargin'),
+            'globalRowMargin' => get_theme_mod('minicomposer_globalRowMargin'),
 
-            'useBootstrap' => get_theme_mod('useBootstrap'),
-            'embedFromCDN' => get_theme_mod('embedFromCDN'),
+            'useBootstrap' => get_theme_mod('minicomposer_useBootstrap'),
+            'embedFromCDN' => get_theme_mod('minicomposer_embedFromCDN'),
 
-            'columnAdminStyle' => get_theme_mod('columnAdminStyle'),
-            'columnAdminFont' => get_theme_mod('columnAdminFont'),
+            'columnAdminStyle' => get_theme_mod('minicomposer_columnAdminStyle'),
+            'columnAdminFont' => get_theme_mod('minicomposer_columnAdminFont'),
         );
 
         if ( empty( $this->options['globalMinHeight'] ) ) {

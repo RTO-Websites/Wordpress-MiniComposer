@@ -60,14 +60,14 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
         //$this->options = MagicAdminPage::getOption( 'minicomposer' );
 
         $this->options = array(
-            'globalPadding' => get_theme_mod('globalPadding'),
-            'globalGutter' => get_theme_mod('globalGutter'),
-            'globalMinHeight' => get_theme_mod('globalMinHeight'),
-            'globalColumnMargin' => get_theme_mod('globalColumnMargin'),
-            'globalRowMargin' => get_theme_mod('globalRowMargin'),
+            'globalPadding' => get_theme_mod('minicomposer_globalPadding'),
+            'globalGutter' => get_theme_mod('minicomposer_globalGutter'),
+            'globalMinHeight' => get_theme_mod('minicomposer_globalMinHeight'),
+            'globalColumnMargin' => get_theme_mod('minicomposer_globalColumnMargin'),
+            'globalRowMargin' => get_theme_mod('minicomposer_globalRowMargin'),
 
-            'useBootstrap' => get_theme_mod('useBootstrap'),
-            'embedFromCDN' => get_theme_mod('embedFromCDN'),
+            'useBootstrap' => get_theme_mod('minicomposer_useBootstrap'),
+            'embedFromCDN' => get_theme_mod('minicomposer_embedFromCDN'),
         );
 
         $this->textdomain = $pluginName;

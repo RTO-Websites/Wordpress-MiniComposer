@@ -83,70 +83,26 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
 
         load_plugin_textdomain( $this->textdomain, false, '/' . $this->pluginName . '/languages' );
 
+        // add options to customizer
         add_action( 'customize_register', array( new \MiniComposerThemeCustomizer(), 'actionCustomizeRegister' ) );
+
+
+        // add menu page to link to customizer
+        add_action('admin_menu' , function() {
+            \add_menu_page(
+                'MiniComposer',
+                'MiniComposer',
+                'edit_theme_options',
+                'customize.php?return=/wp-admin/&autofocus[panel]=minicomposer-panel',
+                null,
+                'dashicons-editor-table'
+            );
+        });
 
         $inlineEdit = new \InlineEdit( $this );
 
         $this->translateFields();
 
-        /*$composerPage = new MagicAdminPage(
-            'minicomposer',
-            'MiniComposer',
-            'MiniComposer',
-            null,
-            'dashicons-editor-table'
-        );
-
-        $composerPage->addFields( array(
-            'globalPadding' => array(
-                'type' => 'text',
-                'title' => __( 'Column-Padding', $this->textdomain ),
-            ),
-            'globalGutter' => array(
-                'type' => 'text',
-                'title' => __( 'Column-Gutter', $this->textdomain ),
-            ),
-            'globalMinHeight' => array(
-                'type' => 'text',
-                'title' => __( 'Column-Min-Height', $this->textdomain ),
-            ),
-            'globalColumnMargin' => array(
-                'type' => 'text',
-                'title' => __( 'Column-Margin-Bottom', $this->textdomain ),
-            ),
-            'globalRowMargin' => array(
-                'type' => 'text',
-                'title' => __( 'Row-Margin-Bottom', $this->textdomain ),
-            ),
-
-            'headlineExpert' => array(
-                'type' => 'headline',
-                'title' => __( 'Expert-Settings', $this->textdomain ),
-            ),
-            'useBootstrap' => array(
-                'type' => 'checkbox',
-                'title' => __( 'Use bootstrap instead of foundation', $this->textdomain ),
-            ),
-            'embedFromCDN' => array(
-                'type' => 'checkbox',
-                'title' => __( 'Load Foundation/Bootstrap from CDN (only use if your theme doesn\'t already include it)', $this->textdomain ),
-            ),
-
-            'headlineAdmin' => array(
-                'type' => 'headline',
-                'title' => __( 'Admin-Style', $this->textdomain ),
-            ),
-            'columnAdminStyle' => array(
-                'type' => 'textarea',
-                'title' => __( 'Column-Style for admin', $this->textdomain ),
-                'description' => __( 'Only for admin-view', $this->textdomain ),
-            ),
-            'columnAdminFont' => array(
-                'type' => 'textarea',
-                'title' => __( 'Column-Font for admin', $this->textdomain ),
-                'description' => __( 'Only for admin-view', $this->textdomain ),
-            ),
-        ) );*/
 
         add_action( 'add_meta_boxes', array( $this, 'registerPostSettings' ), 1 );
         add_action( 'save_post', array( $this, 'savePostMeta' ), 10, 2 );

@@ -9,7 +9,6 @@
  * @package    Minicomposer
  * @subpackage Minicomposer/public
  */
-use MagicAdminPage\MagicAdminPage;
 
 include_once( 'MinicomposerPublicBase.php' );
 
@@ -58,7 +57,19 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
 
         $this->pluginName = $pluginName;
         $this->version = $version;
-        $this->options = MagicAdminPage::getOption( 'minicomposer' );
+        //$this->options = MagicAdminPage::getOption( 'minicomposer' );
+
+        $this->options = array(
+            'globalPadding' => get_theme_mod('globalPadding'),
+            'globalGutter' => get_theme_mod('globalGutter'),
+            'globalMinHeight' => get_theme_mod('globalMinHeight'),
+            'globalColumnMargin' => get_theme_mod('globalColumnMargin'),
+            'globalRowMargin' => get_theme_mod('globalRowMargin'),
+
+            'useBootstrap' => get_theme_mod('useBootstrap'),
+            'embedFromCDN' => get_theme_mod('embedFromCDN'),
+        );
+
         $this->textdomain = $pluginName;
 
         load_plugin_textdomain( $this->textdomain, false, '/' . $this->pluginName . '/languages' );
@@ -80,7 +91,8 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
      * Add inline-edit from include
      */
     public function addInlineEdit() {
-        if ( \is_user_logged_in() && \current_user_can( 'edit_post' ) ) {
+        global $post;
+        if ( \is_user_logged_in() && \current_user_can( 'edit_post', $post->ID ) ) {
             include( 'partials/inline-edit.inc.php' );
         }
     }
@@ -92,11 +104,12 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
      * @return string
      */
     public function wrapTitle( $title, $pid = null ) {
-        if ( !\is_user_logged_in() && !\current_user_can( 'edit_post' ) || \is_admin() || !in_the_loop() ) {
+        global $post;
+
+        if ( !\is_user_logged_in() && !\current_user_can( 'edit_post', $post->ID ) || \is_admin() || !in_the_loop() ) {
             return $title;
         }
 
-        global $post;
         $output = '';
         $output .= '<span class="inline-edit-title inline-edit-title-' . $post->ID . '" data-postid="' . $post->ID . '"
             data-posttitle="' . strip_tags( $post->post_title ) . '"
@@ -138,7 +151,7 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
      * @return string
      */
     public function wrapColumnsForInlineEdit( $gridOutput, $postid ) {
-        if ( \is_user_logged_in() && \current_user_can( 'edit_post' ) ) {
+        if ( \is_user_logged_in() && \current_user_can( 'edit_post', $postid ) ) {
             $gridOutput = '<div data-postid="' . $postid . '" class="mc-wrapper">'
                 . $gridOutput
                 . '</div>';
@@ -153,6 +166,7 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
      * @since    1.0.0
      */
     public function enqueueStyles() {
+        global $post;
 
         /**
          * This function is provided for demonstration purposes only.
@@ -173,7 +187,7 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
             wp_enqueue_style( 'bootstrap', 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css', array(), $this->version, 'all' );
         }
 
-        if ( \is_user_logged_in() && \current_user_can( 'edit_post' ) ) {
+        if ( \is_user_logged_in() && \current_user_can( 'edit_post', $post->ID ) ) {
             wp_enqueue_style( 'dashicons' );
         }
 
@@ -206,7 +220,7 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
 
     public function addDataAttributes( $columnCount ) {
         global $post;
-        if ( !\is_user_logged_in() || !\current_user_can( 'edit_post' ) ) {
+        if ( !\is_user_logged_in() || !\current_user_can( 'edit_post', $post->ID ) ) {
             return '';
         }
         return ' data-inlineedittooltip="Column: ' . ( $columnCount + 1 ) . "\n"

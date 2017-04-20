@@ -64,17 +64,17 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
         //$this->options = MagicAdminPage::getOption( 'minicomposer' );
 
         $this->options = array(
-            'globalPadding' => get_theme_mod('minicomposer_globalPadding'),
-            'globalGutter' => get_theme_mod('minicomposer_globalGutter'),
-            'globalMinHeight' => get_theme_mod('minicomposer_globalMinHeight'),
-            'globalColumnMargin' => get_theme_mod('minicomposer_globalColumnMargin'),
-            'globalRowMargin' => get_theme_mod('minicomposer_globalRowMargin'),
+            'globalPadding' => get_theme_mod( 'minicomposer_globalPadding' ),
+            'globalGutter' => get_theme_mod( 'minicomposer_globalGutter' ),
+            'globalMinHeight' => get_theme_mod( 'minicomposer_globalMinHeight' ),
+            'globalColumnMargin' => get_theme_mod( 'minicomposer_globalColumnMargin' ),
+            'globalRowMargin' => get_theme_mod( 'minicomposer_globalRowMargin' ),
 
-            'useBootstrap' => get_theme_mod('minicomposer_useBootstrap'),
-            'embedFromCDN' => get_theme_mod('minicomposer_embedFromCDN'),
+            'useBootstrap' => get_theme_mod( 'minicomposer_useBootstrap' ),
+            'embedFromCDN' => get_theme_mod( 'minicomposer_embedFromCDN' ),
 
-            'columnAdminStyle' => get_theme_mod('minicomposer_columnAdminStyle'),
-            'columnAdminFont' => get_theme_mod('minicomposer_columnAdminFont'),
+            'columnAdminStyle' => get_theme_mod( 'minicomposer_columnAdminStyle' ),
+            'columnAdminFont' => get_theme_mod( 'minicomposer_columnAdminFont' ),
         );
 
         if ( empty( $this->options['globalMinHeight'] ) ) {
@@ -88,16 +88,17 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
 
 
         // add menu page to link to customizer
-        add_action('admin_menu' , function() {
+        add_action( 'admin_menu', function () {
+            $returnUrl = urlencode( $_SERVER['REQUEST_URI'] );
             \add_menu_page(
                 'MiniComposer',
                 'MiniComposer',
                 'edit_theme_options',
-                'customize.php?return=/wp-admin/&autofocus[panel]=minicomposer-panel',
+                'customize.php?return=' . $returnUrl . '&autofocus[panel]=minicomposer-panel',
                 null,
                 'dashicons-editor-table'
             );
-        });
+        } );
 
         $inlineEdit = new \InlineEdit( $this );
 

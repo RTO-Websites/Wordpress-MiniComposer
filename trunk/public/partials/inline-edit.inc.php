@@ -5,7 +5,7 @@
  * @licence MIT
  */
 
-if ( \is_user_logged_in() && \current_user_can( 'edit_post' ) ) {
+if ( \is_user_logged_in() && \current_user_can( 'edit_post', $post->ID ) ) {
     // is logged in
     global $mcPluginUrl, $mcPost;
 

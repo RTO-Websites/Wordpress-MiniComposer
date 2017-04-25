@@ -60,14 +60,14 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
         //$this->options = MagicAdminPage::getOption( 'minicomposer' );
 
         $this->options = array(
-            'globalPadding' => get_theme_mod('minicomposer_globalPadding'),
-            'globalGutter' => get_theme_mod('minicomposer_globalGutter'),
-            'globalMinHeight' => get_theme_mod('minicomposer_globalMinHeight'),
-            'globalColumnMargin' => get_theme_mod('minicomposer_globalColumnMargin'),
-            'globalRowMargin' => get_theme_mod('minicomposer_globalRowMargin'),
+            'globalPadding' => get_theme_mod( 'minicomposer_globalPadding' ),
+            'globalGutter' => get_theme_mod( 'minicomposer_globalGutter' ),
+            'globalMinHeight' => get_theme_mod( 'minicomposer_globalMinHeight' ),
+            'globalColumnMargin' => get_theme_mod( 'minicomposer_globalColumnMargin' ),
+            'globalRowMargin' => get_theme_mod( 'minicomposer_globalRowMargin' ),
 
-            'useBootstrap' => get_theme_mod('minicomposer_useBootstrap'),
-            'embedFromCDN' => get_theme_mod('minicomposer_embedFromCDN'),
+            'useBootstrap' => get_theme_mod( 'minicomposer_useBootstrap' ),
+            'embedFromCDN' => get_theme_mod( 'minicomposer_embedFromCDN' ),
         );
 
         $this->textdomain = $pluginName;
@@ -92,7 +92,7 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
      */
     public function addInlineEdit() {
         global $post;
-        if ( \is_user_logged_in() && \current_user_can( 'edit_post', $post->ID ) ) {
+        if ( !empty( $post ) && \is_user_logged_in() && \current_user_can( 'edit_post', $post->ID ) ) {
             include( 'partials/inline-edit.inc.php' );
         }
     }

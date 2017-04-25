@@ -187,7 +187,7 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
             wp_enqueue_style( 'bootstrap', 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css', array(), $this->version, 'all' );
         }
 
-        if ( \is_user_logged_in() && \current_user_can( 'edit_post', $post->ID ) ) {
+        if ( !empty( $post ) && \is_user_logged_in() && \current_user_can( 'edit_post', $post->ID ) ) {
             wp_enqueue_style( 'dashicons' );
         }
 

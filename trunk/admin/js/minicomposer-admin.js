@@ -364,23 +364,24 @@
       rowConfig[rowCount]['options'] = getDataset(row);
       rowConfig[rowCount]['columns'] = [];
 
-      $(row).find('> .minicomposer-column').each(function (index, element) {
-        rowConfig[rowCount]['columns'][colCount] = getDataset(element);
-        rowConfig[rowCount]['columns'][colCount].content = $(element).find('> .content').html();
+      $(row).find('> .minicomposer-column').each(function (index, column) {
+        rowConfig[rowCount]['columns'][colCount] = getDataset(column);
+        rowConfig[rowCount]['columns'][colCount].content = $(column).find('> .content').html();
 
         // must be Math.round for working calculation in zoom
-        rowConfig[rowCount]['columns'][colCount].medium = Math.round($(element).outerWidth() / window.getColumnWidth(element));
+        rowConfig[rowCount]['columns'][colCount].medium = Math.round($(column).outerWidth() / window.getColumnWidth(column));
 
-        rowConfig[rowCount]['columns'][colCount].rows = getRowArray(element)
+        rowConfig[rowCount]['columns'][colCount].rows = getRowArray(column);
 
-        $(element).find('> .column-count').html(rowConfig[rowCount]['columns'][colCount].medium);
+        $(column).find('> .column-count').html(rowConfig[rowCount]['columns'][colCount].medium);
 
-        setStyle(element);
+        setStyle(column);
         colCount += 1;
       });
 
       colCount = 0;
       rowCount += 1;
+      setStyle(row);
     });
 
     return rowConfig;
@@ -701,7 +702,7 @@
    */
   function setStyle(element) {
     element = $(element);
-    var bgElement = element.find('> .column-bg');
+    var bgElement = element.find('> .column-bg, > .row-bg');
     bgElement.css({
       backgroundColor: element.data('backgroundcolor'),
       backgroundRepeat: element.data('backgroundrepeat'),

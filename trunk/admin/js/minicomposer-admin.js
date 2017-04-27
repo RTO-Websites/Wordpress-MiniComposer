@@ -34,7 +34,7 @@
    */
 
   var composerEditor = null,
-    currentColumn = null,
+    currentColumnRow = null,
     lastContextMenuTarget = null,
     resizeArgs = null,
     editor = null;
@@ -46,6 +46,8 @@
     // make columns resizeable
     initResizeable();
     initEvents();
+
+    jQuery('.composer-overlay').draggable();
 
     editor = new McEditor();
 
@@ -358,18 +360,20 @@
       rowCount = 0;
 
     $(container).find('> .minicomposer-row').each(function (rowIndex, row) {
-      rowConfig[rowCount] = [];
+      rowConfig[rowCount] = {};
+      rowConfig[rowCount]['options'] = getDataset(row);
+      rowConfig[rowCount]['columns'] = [];
 
       $(row).find('> .minicomposer-column').each(function (index, element) {
-        rowConfig[rowCount][colCount] = getDataset(element);
-        rowConfig[rowCount][colCount].content = $(element).find('> .content').html();
+        rowConfig[rowCount]['columns'][colCount] = getDataset(element);
+        rowConfig[rowCount]['columns'][colCount].content = $(element).find('> .content').html();
 
         // must be Math.round for working calculation in zoom
-        rowConfig[rowCount][colCount].medium = Math.round($(element).outerWidth() / window.getColumnWidth(element));
+        rowConfig[rowCount]['columns'][colCount].medium = Math.round($(element).outerWidth() / window.getColumnWidth(element));
 
-        rowConfig[rowCount][colCount].rows = getRowArray(element)
+        rowConfig[rowCount]['columns'][colCount].rows = getRowArray(element)
 
-        $(element).find('> .column-count').html(rowConfig[rowCount][colCount].medium);
+        $(element).find('> .column-count').html(rowConfig[rowCount]['columns'][colCount].medium);
 
         setStyle(element);
         colCount += 1;
@@ -487,7 +491,7 @@
     var content = target.find('> .content').html();
 
     target.addClass('has-editor-open');
-    currentColumn = target;
+    currentColumnRow = target;
 
     editor.open(content);
 
@@ -501,7 +505,7 @@
    */
   function cancelEditor(e) {
     editor.cancel();
-    currentColumn = null;
+    currentColumnRow = null;
     closeEditor();
   }
 
@@ -512,14 +516,14 @@
    */
   function  saveEditor(e, noClose) {
     // TODO: add apply button
-    if (!currentColumn) {
+    if (!currentColumnRow) {
       cancelEditor(e);
       return;
     }
 
     var content = editor.save();
 
-    currentColumn.find('> .content').html(content);
+    currentColumnRow.find('> .content').html(content);
 
     if (typeof(noClose) == 'undefined' || !noClose) {
       closeEditor();
@@ -538,7 +542,7 @@
    */
   function closeEditor() {
     $('.has-editor-open').removeClass('has-editor-open');
-    currentColumn = null;
+    currentColumnRow = null;
     $('.global-mc-editor').removeClass('visible');
   }
 
@@ -556,14 +560,13 @@
     $('.global-responsive-settings').addClass('visible');
     setOverlayPosition($(e.target), $('.global-responsive-settings'));
 
-    currentColumn = $(e.target).closest('.minicomposer-column');
-    currentColumn.addClass('has-responsive-open');
+    currentColumnRow = $(e.target).closest('.minicomposer-column, .minicomposer-row');
+    currentColumnRow.addClass('has-responsive-open');
 
-    $('#responsiveClass').val(currentColumn.data('cssclass'));
-    $('#responsiveSmall').val(currentColumn.data('small'));
-    $('#responsiveMedium').val(currentColumn.data('medium'));
-    $('#responsiveLarge').val(currentColumn.data('large'));
-    $('#customAttributes').val(currentColumn.data('customattributes'));
+    $('#responsiveSmall').val(currentColumnRow.data('small'));
+    $('#responsiveMedium').val(currentColumnRow.data('medium'));
+    $('#responsiveLarge').val(currentColumnRow.data('large'));
+    $('#customAttributes').val(currentColumnRow.data('customattributes'));
 
   }
 
@@ -572,19 +575,18 @@
    * and hide fields
    */
   function saveResponsiveFields() {
-    if (!currentColumn) {
+    if (!currentColumnRow) {
       closeResponsiveFields();
       return;
     }
 
     // set data-attributes
-    currentColumn.data('small', $('#responsiveSmall').val());
-    currentColumn.data('medium', $('#responsiveMedium').val());
-    currentColumn.data('large', $('#responsiveLarge').val());
-    currentColumn.data('cssclass', $('#responsiveClass').val());
-    currentColumn.data('customattributes', addSlashes($('#customAttributes').val()));
+    currentColumnRow.data('small', $('#responsiveSmall').val());
+    currentColumnRow.data('medium', $('#responsiveMedium').val());
+    currentColumnRow.data('large', $('#responsiveLarge').val());
+    currentColumnRow.data('customattributes', addSlashes($('#customAttributes').val()));
 
-    currentColumn.css({width: window.getColumnWidth(currentColumn) * $('#responsiveMedium').val() + 'px'});
+    currentColumnRow.css({width: window.getColumnWidth(currentColumnRow) * $('#responsiveMedium').val() + 'px'});
 
     closeResponsiveFields();
     updateComposer();
@@ -601,7 +603,7 @@
    */
   function closeResponsiveFields() {
     $('.has-responsive-open').removeClass('has-responsive-open');
-    currentColumn = null;
+    currentColumnRow = null;
     $('.global-responsive-settings').removeClass('visible');
   }
 
@@ -618,25 +620,26 @@
     $('.global-style-settings').addClass('visible');
     setOverlayPosition($(e.target), $('.global-style-settings'));
 
-    currentColumn = $(e.target).closest('.minicomposer-column');
-    currentColumn.addClass('has-style-open');
+    currentColumnRow = $(e.target).closest('.minicomposer-column, .minicomposer-row');
+    currentColumnRow.addClass('has-style-open');
 
-    var bgRepeat = typeof(currentColumn.data('backgroundrepeat')) !== 'undefined' ? currentColumn.data('backgroundrepeat') : 'no-repeat',
-      bgPosition = typeof(currentColumn.data('backgroundposition')) !== 'undefined' ? currentColumn.data('backgroundposition') : 'center',
-      bgSize = typeof(currentColumn.data('backgroundsize')) !== 'undefined' ? currentColumn.data('backgroundsize') : 'contain';
+    var bgRepeat = typeof(currentColumnRow.data('backgroundrepeat')) !== 'undefined' ? currentColumnRow.data('backgroundrepeat') : 'no-repeat',
+      bgPosition = typeof(currentColumnRow.data('backgroundposition')) !== 'undefined' ? currentColumnRow.data('backgroundposition') : 'center',
+      bgSize = typeof(currentColumnRow.data('backgroundsize')) !== 'undefined' ? currentColumnRow.data('backgroundsize') : 'contain';
 
-
-    $('#columnBackground-image').val(currentColumn.data('backgroundimage'));
-    $('#columnBackground-color').val(currentColumn.data('backgroundcolor'));
+    $('#responsiveClass').val(currentColumnRow.data('cssclass'));
+    $('#columnBackground-image').val(currentColumnRow.data('backgroundimage'));
+    $('#columnBackground-color').val(currentColumnRow.data('backgroundcolor'));
     $('#columnBackground-repeat').val(bgRepeat);
     $('#columnBackground-position').val(bgPosition);
     $('#columnBackground-size').val(bgSize);
-    $('#columnPadding').val(currentColumn.data('padding'));
-    $('#columnGutter').val(currentColumn.data('gutter'));
-    $('#minHeight').val(currentColumn.data('minheight'));
+    $('#columnPadding').val(currentColumnRow.data('padding'));
+    $('#columnGutter').val(currentColumnRow.data('gutter'));
+    $('#minHeight').val(currentColumnRow.data('minheight'));
+    $('#htmltag').val(currentColumnRow.data('htmltag'));
 
-    if (typeof(currentColumn.data('backgroundimage')) !== 'undefined') {
-      $('#columnBackground-image-img').prop('src', currentColumn.data('backgroundimage'));
+    if (typeof(currentColumnRow.data('backgroundimage')) !== 'undefined') {
+      $('#columnBackground-image-img').prop('src', currentColumnRow.data('backgroundimage'));
     } else {
       $('#columnBackground-image-img').prop('src', '');
     }
@@ -647,8 +650,8 @@
    * and hide fields
    */
   function saveStyleFields() {
-    if (!currentColumn) {
-      console.info('saveFail', currentColumn);
+    if (!currentColumnRow) {
+      console.info('saveFail', currentColumnRow);
       closeStyleFields();
       return;
     }
@@ -665,14 +668,16 @@
     }
 
     // set data-attributes
-    currentColumn.data('backgroundimage', $('#columnBackground-image').val());
-    currentColumn.data('backgroundcolor', $('#columnBackground-color').val());
-    currentColumn.data('backgroundrepeat', $('#columnBackground-repeat').val());
-    currentColumn.data('backgroundposition', $('#columnBackground-position').val());
-    currentColumn.data('backgroundsize', $('#columnBackground-size').val());
-    currentColumn.data('padding', $('#columnPadding').val());
-    currentColumn.data('gutter', $('#columnGutter').val());
-    currentColumn.data('minheight', $('#minHeight').val());
+    currentColumnRow.data('cssclass', $('#responsiveClass').val());
+    currentColumnRow.data('backgroundimage', $('#columnBackground-image').val());
+    currentColumnRow.data('backgroundcolor', $('#columnBackground-color').val());
+    currentColumnRow.data('backgroundrepeat', $('#columnBackground-repeat').val());
+    currentColumnRow.data('backgroundposition', $('#columnBackground-position').val());
+    currentColumnRow.data('backgroundsize', $('#columnBackground-size').val());
+    currentColumnRow.data('padding', $('#columnPadding').val());
+    currentColumnRow.data('gutter', $('#columnGutter').val());
+    currentColumnRow.data('minheight', $('#minHeight').val());
+    currentColumnRow.data('htmltag', $('#htmltag').val());
 
     closeStyleFields();
 
@@ -685,7 +690,7 @@
    */
   function closeStyleFields() {
     $('.has-style-open').removeClass('has-style-open');
-    currentColumn = null;
+    currentColumnRow = null;
     $('.global-style-settings').removeClass('visible');
   }
 

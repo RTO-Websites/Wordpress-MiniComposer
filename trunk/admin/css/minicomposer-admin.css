@@ -377,6 +377,7 @@
   display: none;
 }
 
+.minicomposer-row > .global-contextmenu .minicomposer-style-settings,
 .minicomposer-row > .global-contextmenu .minicomposer-add-column-to-row,
 .minicomposer-row > .global-contextmenu .minicomposer-clone,
 .minicomposer-row > .global-contextmenu .minicomposer-delete {

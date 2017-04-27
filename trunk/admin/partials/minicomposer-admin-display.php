@@ -83,3 +83,4 @@ $publishText = $post->post_status == 'publish' ? __( 'Update' ) : __( 'Publish' 
 
 
 <?php include( 'minicomposer-admin-display-base.php' );
+

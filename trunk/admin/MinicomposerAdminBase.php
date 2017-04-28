@@ -54,6 +54,7 @@ class MinicomposerAdminBase {
         'columnGutter' => array(
             'type' => 'text',
             'label' => 'Gutter',
+            'trClass' => 'hide-on-row',
         ),
         'columnBackground' => array(
             'type' => 'background',

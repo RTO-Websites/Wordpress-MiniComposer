@@ -391,6 +391,10 @@
   display: block;
 }
 
+.minicomposer-row > .global-contextmenu .hide-on-row {
+  display: none !important;
+}
+
 .has-style-open,
 .has-responsive-open,
 .has-editor-open,

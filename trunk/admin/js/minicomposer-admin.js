@@ -2,7 +2,7 @@
  * Last change: 28.04.2017 16:26
  */
 
-(function ($) {
+(function($) {
   'use strict';
 
   /**
@@ -42,12 +42,20 @@
   /**
    * DOM-Ready
    */
-  $(function () {
+  $(function() {
     // make columns resizeable
     initResizeable();
     initEvents();
 
-    jQuery('.composer-overlay').draggable();
+    jQuery('.composer-overlay').each(function(index, element) {
+      if (jQuery(element).find('.drag-handle').length) {
+        jQuery(element).draggable({
+          handle: '.drag-handle'
+        });
+      } else {
+        jQuery(element).draggable();
+      }
+    });
 
     editor = new McEditor();
 
@@ -61,23 +69,23 @@
     /**
      * Add new column
      */
-    $('.minicomposer-add-column').on('click', function () {
+    $('.minicomposer-add-column').on('click', function() {
       addColumn(1);
     });
 
-    $('.minicomposer-add-column-2').on('click', function () {
+    $('.minicomposer-add-column-2').on('click', function() {
       addColumn(2);
     });
 
-    $('.minicomposer-add-column-3').on('click', function () {
+    $('.minicomposer-add-column-3').on('click', function() {
       addColumn(3);
     });
 
-    $('.minicomposer-add-column-4').on('click', function () {
+    $('.minicomposer-add-column-4').on('click', function() {
       addColumn(4);
     });
 
-    $('.minicomposer-autopublish').on('click', function () {
+    $('.minicomposer-autopublish').on('click', function() {
       $('.minicomposer-autopublish').toggleClass('active');
     });
 
@@ -103,10 +111,12 @@
     // Save&Close Editor
     $('.minicomposer-save-editor').on('click', saveEditor);
     // Apply Editor
-    $('.minicomposer-apply-editor').on('click', function(e) { saveEditor(e, true) } );
+    $('.minicomposer-apply-editor').on('click', function(e) {
+      saveEditor(e, true)
+    });
 
 
-    $('#publish').on('click',  saveEditor);
+    $('#publish').on('click', saveEditor);
 
 
     // Event for responsive button
@@ -143,7 +153,7 @@
 
 
     // set startSize of columns
-    $('.minicomposer-column').each(function (index, element) {
+    $('.minicomposer-column').each(function(index, element) {
       var columnWidth = window.getColumnWidth(element);
       $(element).css({
         width: (columnWidth * $(element).data('medium')) + 'px',
@@ -216,7 +226,6 @@
         '<span class="column-bg"></span>' +
         '<span class="column-count">' + size + '</span>' +
         '</div>');
-
 
 
       var activeColumn = $('.minicomposer-column.has-contextmenu');
@@ -334,7 +343,7 @@
    *
    * Runs on sortable sortupdate and resize
    */
-  window.updateComposer = function () {
+  window.updateComposer = function() {
     var input = jQuery("#minicomposerColumns"),
       rowConfig = [];
 
@@ -359,12 +368,12 @@
       colCount = 0,
       rowCount = 0;
 
-    $(container).find('> .minicomposer-row').each(function (rowIndex, row) {
+    $(container).find('> .minicomposer-row').each(function(rowIndex, row) {
       rowConfig[rowCount] = {};
       rowConfig[rowCount]['options'] = getDataset(row);
       rowConfig[rowCount]['columns'] = [];
 
-      $(row).find('> .minicomposer-column').each(function (index, column) {
+      $(row).find('> .minicomposer-column').each(function(index, column) {
         rowConfig[rowCount]['columns'][colCount] = getDataset(column);
         rowConfig[rowCount]['columns'][colCount].content = $(column).find('> .content').html();
 
@@ -391,12 +400,12 @@
   /**
    * Recalculate width of columns
    */
-  window.recalcColumns = function (row) {
+  window.recalcColumns = function(row) {
     if (typeof(row) === 'undefined') {
       row = '.minicomposer-sortable-rows';
     }
 
-    $(row).find('.minicomposer-column').each(function (index, element) {
+    $(row).find('.minicomposer-column').each(function(index, element) {
       var columnWidth = window.getColumnWidth(element);
       resizeArgs.grid = [columnWidth, 1];
       resizeArgs.minWidth = columnWidth;
@@ -422,7 +431,7 @@
    * @param column
    * @returns {number}
    */
-  window.getColumnWidth = function (column) {
+  window.getColumnWidth = function(column) {
     var row = $(column).closest('.minicomposer-row');
 
     return Math.floor(row.width() / 12);
@@ -515,7 +524,7 @@
    *
    * @param e
    */
-  function  saveEditor(e, noClose) {
+  function saveEditor(e, noClose) {
     // TODO: add apply button
     if (!currentColumnRow) {
       cancelEditor(e);
@@ -595,7 +604,7 @@
 
   function addSlashes(str) {
     str = JSON.stringify(String(str));
-    str = str.substring(1, str.length-1);
+    str = str.substring(1, str.length - 1);
     return str;
   }
 

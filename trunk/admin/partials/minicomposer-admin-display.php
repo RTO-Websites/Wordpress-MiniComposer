@@ -33,13 +33,16 @@
     </div>
 
     <div class="global-mc-editor composer-overlay">
-        <?php
-        wp_editor( '', 'composer_global_editor', array( 'wpautop' => true, 'forced_root_block' => false ) );
-        ?>
-        <div
-            class="button button-cancel button-secondary minicomposer-cancel-editor"><?php _e( 'Cancel' ); ?></div>
-        <div
-            class="button button-save button-primary minicomposer-save-editor"><?php _e( 'Save' ); ?></div>
+        <div class="drag-handle"></div>
+        <div class="mc-editor-inner">
+            <?php
+            wp_editor( '', 'composer_global_editor', array( 'wpautop' => true, 'forced_root_block' => false ) );
+            ?>
+            <div
+                class="button button-cancel button-secondary minicomposer-cancel-editor"><?php _e( 'Cancel' ); ?></div>
+            <div
+                class="button button-save button-primary minicomposer-save-editor"><?php _e( 'Save' ); ?></div>
+        </div>
     </div>
 
     <div class="global-responsive-settings composer-overlay">

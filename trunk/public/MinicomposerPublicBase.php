@@ -174,7 +174,7 @@ class MinicomposerPublicBase {
         // global style
         echo ' .row .inner-column {
                 ';
-        echo 'position:relative;';
+        echo 'position:relative;z-index:50;';
         if ( isset( $this->options['globalPadding'] ) ) {
             echo 'padding:' . $this->options['globalPadding'] . ';';
         }

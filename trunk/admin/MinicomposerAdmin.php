@@ -328,7 +328,8 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
                     case 'number':
                     case 'text':
                         // Generate text-input
-                        echo '<input class="field-input ' . $inputClass . '" type="' . $option['type'] . '" name="' . $key . '" id="' . $key . '" value=\''
+                        $datalist = !empty( $option['list'] ) ? 'list="' . $option['list'] . '"' : '';
+                        echo '<input class="field-input ' . $inputClass . '" ' . $datalist . ' type="' . $option['type'] . '" name="' . $key . '" id="' . $key . '" value=\''
                             . $value . '\' />';
                         break;
                 }

@@ -46,6 +46,7 @@ class MinicomposerAdminBase {
         'htmltag' => array(
             'type' => 'text',
             'label' => 'HTML-Tag',
+            'list' => 'datalist-htmltags',
         ),
         'columnPadding' => array(
             'type' => 'text',

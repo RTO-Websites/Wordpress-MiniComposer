@@ -42,3 +42,15 @@ if ( !empty( $this->options[ 'columnAdminFont' ] ) ) {
     <option>no-repeat</option>
 </datalist>
 
+<datalist id="datalist-htmltags">
+    <option>div</option>
+    <option>article</option>
+    <option>section</option>
+    <option>aside</option>
+    <option>header</option>
+    <option>footer</option>
+    <option>address</option>
+    <option>figure</option>
+    <option>li</option>
+    <option>ul</option>
+</datalist>

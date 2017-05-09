@@ -141,7 +141,7 @@ class MinicomposerPublicBase {
                     $columnOutput .= $this->createRows( $column->rows );
                 }
 
-                $columnOutput .= ' </div > ';
+                $columnOutput .= ' </div>';
 
                 // add column-background
                 if ( !empty( $bgStyle ) ) {
@@ -205,7 +205,7 @@ class MinicomposerPublicBase {
 
         // column style
         echo $this->columnStyle;
-        echo ' </style>';
+        echo '</style>';
     }
 
     /**

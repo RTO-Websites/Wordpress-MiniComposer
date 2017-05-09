@@ -88,7 +88,7 @@ class MinicomposerPublicBase {
             $rowClass = !empty( $rowOptions->cssclass ) ? $rowOptions->cssclass : '';
             $rowTag = !empty( $rowOptions->htmltag ) ? $rowOptions->htmltag : 'div';
 
-            $gridOutput .= '<' . $rowTag . ' class="row  mc-row ' . $rowClass . '" style="' . $rowStyle . $bgStyle . '"> ';
+            $gridOutput .= '<' . $rowTag . ' class="row  mc-row ' . $rowClass . '" style="' . $rowStyle . $bgStyle . '">';
 
             // loop columns
             foreach ( $columns as $columnIndex => $column ) {
@@ -119,20 +119,20 @@ class MinicomposerPublicBase {
                 // generate html for column
                 $columnOutput = '';
                 $columnOutput .= ' <' . $colTag . ' class="mc-column-' . ( $this->columnCount ) . ' mc-column  columns '
-                    . $columnClasses . '" style = "' . $columnStyle . '" ' . $customAttributes
-                    . ' data-columnkey = "' . ( $this->columnCount - 1 ) . '" > ';
-                $columnOutput .= '<div class="inner-column" style = "' . $columnInnerStyle . '" > ';
-                $columnOutput .= '<div class="column-content" > ';
+                    . $columnClasses . '" style="' . $columnStyle . '" ' . $customAttributes
+                    . ' data-columnkey="' . ( $this->columnCount - 1 ) . '">';
+                $columnOutput .= '<div class="inner-column" style="' . $columnInnerStyle . '">';
+                $columnOutput .= '<div class="column-content">';
 
                 if ( function_exists( 'apply_filters' ) ) {
                     $columnOutput .= apply_filters( 'miniComposerAddColumnContent', '', $column );
                 }
 
                 // remove <p>
-                $column->content = str_replace( ' </p > ', '<br /><br />', $column->content );
-                $column->content = str_replace( '<p > ', '', $column->content );
+                $column->content = str_replace( '</p>', '<br /><br />', $column->content );
+                $column->content = str_replace( '<p>', '', $column->content );
                 // replace &nbsp;
-                $column->content = str_replace( ' & nbsp;', ' ', $column->content );
+                $column->content = str_replace( ' &nbsp;', ' ', $column->content );
                 $columnOutput .= trim( $column->content );
 
 
@@ -145,11 +145,11 @@ class MinicomposerPublicBase {
 
                 // add column-background
                 if ( !empty( $bgStyle ) ) {
-                    $columnOutput .= '<div class="mc-background" style="' . $bgStyle . '" ></div > ';
+                    $columnOutput .= '<div class="mc-background" style="' . $bgStyle . '"></div>';
                 }
 
-                $columnOutput .= '</div > ';
-                $columnOutput .= '</' . $colTag . '> ';
+                $columnOutput .= '</div>';
+                $columnOutput .= '</' . $colTag . '>';
 
                 if ( method_exists( $this, 'filterColumn' ) ) {
                     $columnOutput = $this->filterColumn( $columnOutput );
@@ -160,7 +160,7 @@ class MinicomposerPublicBase {
 
                 $gridOutput .= $columnOutput;
             }
-            $gridOutput .= ' </' . $rowTag . '> ';
+            $gridOutput .= ' </' . $rowTag . '>';
         }
 
         return $gridOutput;
@@ -170,9 +170,9 @@ class MinicomposerPublicBase {
      * Adds global style for grid on header
      */
     public function addHeaderStyle() {
-        echo '<style class="mc-style" > ';
+        echo '<style class="mc-style">';
         // global style
-        echo ' .row .inner-column {
+        echo '.row .inner-column {
                 ';
         echo 'position:relative;z-index:50;';
         if ( isset( $this->options['globalPadding'] ) ) {
@@ -183,7 +183,7 @@ class MinicomposerPublicBase {
         echo '}';
 
         if ( isset( $this->options['globalRowMargin'] ) && $this->options['globalRowMargin'] !== '' ) {
-            echo ' .mc-row{
+            echo '.mc-row{
                 margin-bottom:' . $this->options['globalRowMargin'] . ';}';
         }
 
@@ -205,7 +205,7 @@ class MinicomposerPublicBase {
 
         // column style
         echo $this->columnStyle;
-        echo ' </style > ';
+        echo ' </style>';
     }
 
     /**

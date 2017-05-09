@@ -160,7 +160,7 @@ class MinicomposerPublicBase {
 
                 $gridOutput .= $columnOutput;
             }
-            $gridOutput .= ' </' . $rowTag . '>';
+            $gridOutput .= '</' . $rowTag . '>';
         }
 
         return $gridOutput;

@@ -239,7 +239,7 @@ class MinicomposerPublicBase {
      */
     public function createColumnRowBgStyle( $element ) {
         $style = '';
-        $style .= !empty( $element->backgroundimage ) ? 'background-image:url( ' . $element->backgroundimage . ' );' : '';
+        $style .= !empty( $element->backgroundimage ) ? 'background-image:url(' . $element->backgroundimage . ');' : '';
         $style .= !empty( $element->backgroundcolor ) ? 'background-color:' . $element->backgroundcolor . ';' : '';
         $style .= !empty( $element->backgroundposition ) ? 'background-position:' . $element->backgroundposition . ';' : '';
         $style .= !empty( $element->backgroundrepeat ) ? 'background-repeat:' . $element->backgroundrepeat . ';' : '';

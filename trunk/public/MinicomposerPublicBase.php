@@ -132,7 +132,7 @@ class MinicomposerPublicBase {
                 $column->content = str_replace( '</p>', '<br /><br />', $column->content );
                 $column->content = str_replace( '<p>', '', $column->content );
                 // replace &nbsp;
-                $column->content = str_replace( ' &nbsp;', ' ', $column->content );
+                $column->content = str_replace( '&nbsp;', ' ', $column->content );
                 $columnOutput .= trim( $column->content );
 
 

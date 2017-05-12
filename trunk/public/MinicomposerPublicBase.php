@@ -118,7 +118,7 @@ class MinicomposerPublicBase {
 
                 // generate html for column
                 $columnOutput = '';
-                $columnOutput .= ' <' . $colTag . ' class="mc-column-' . ( $this->columnCount ) . ' mc-column  columns '
+                $columnOutput .= '<' . $colTag . ' class="mc-column-' . ( $this->columnCount ) . ' mc-column  columns '
                     . $columnClasses . '" style="' . $columnStyle . '" ' . $customAttributes
                     . ' data-columnkey="' . ( $this->columnCount - 1 ) . '">';
                 $columnOutput .= '<div class="inner-column" style="' . $columnInnerStyle . '">';
@@ -141,7 +141,7 @@ class MinicomposerPublicBase {
                     $columnOutput .= $this->createRows( $column->rows );
                 }
 
-                $columnOutput .= ' </div>';
+                $columnOutput .= '</div>';
 
                 // add column-background
                 if ( !empty( $bgStyle ) ) {

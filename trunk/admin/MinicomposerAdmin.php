@@ -112,6 +112,10 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
 
         add_action( 'wp_ajax_save_minicomposer', array( $this, 'saveColumnsAjax' ) );
         add_action( 'wp_ajax_nopriv_save_minicomposer', array( $this, 'saveColumnsAjax' ) );
+
+        // add tinymce button for linebreaks
+        add_action( 'admin_head', array( $this, 'addTinyMceButton' ) );
+        add_filter( 'tiny_mce_version', array( $this, 'refreshMce' ) );
     }
 
     /**
@@ -174,9 +178,9 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
      */
     public function switchTinymceEnterMode( $settings ) {
         $settings['forced_root_block'] = false;
-        $settings["force_br_newlines"] = true;
-        $settings["force_p_newlines"] = false;
-        $settings["convert_newlines_to_brs"] = true;
+        //$settings["force_br_newlines"] = true;
+        $settings["force_p_newlines"] = true;
+        //$settings["convert_newlines_to_brs"] = true;
         return $settings;
     }
 
@@ -351,6 +355,57 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
             }
         }
     }
+
+
+    /**
+     * Adds the button
+     */
+    public function addTinyMceButton() {
+        if ( !current_user_can( 'edit_posts' ) && !current_user_can( 'edit_pages' ) ) {
+            return;
+        }
+
+        if ( get_user_option( 'rich_editing' ) ) {
+            add_filter( 'mce_external_plugins', array( $this, 'addTinyMcePlugins' ) );
+            add_filter( 'mce_buttons', array( $this, 'registerTinyMceButtons' ) );
+        }
+    }
+
+    /**
+     * Register the button
+     *
+     * @param $buttons
+     * @return mixed
+     */
+    public function registerTinyMceButtons( $buttons ) {
+        array_push( $buttons, '|', 'linebreak' );
+
+        return $buttons;
+    }
+
+    /**
+     * Adds the js-plugin
+     *
+     * @param $pluginArray
+     * @return mixed
+     */
+    public function addTinyMcePlugins( $pluginArray ) {
+        global $mcPluginUrl;
+        $pluginArray['linebreak'] = $mcPluginUrl . '/admin/js/editor-plugin.js';
+        return $pluginArray;
+    }
+
+    /**
+     * Refresh tinymce to show button
+     *
+     * @param $ver
+     * @return int
+     */
+    public function refreshMce( $ver ) {
+        $ver += 3;
+        return $ver;
+    }
+
 
 
     /**

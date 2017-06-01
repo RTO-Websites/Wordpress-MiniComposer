@@ -66,9 +66,9 @@ var McEditor = function(args) {
     // hotfix for fucking <p>
     //content = content.replace(/\<\/p\>/g, '<br /><br />');
     //content = content.replace(/\<p\>/g, '');
-    content = content.replace(/\<\/p\>/g, '</div><br /><br />');
+    /*content = content.replace(/\<\/p\>/g, '</div><br /><br />');
     content = content.replace(/\<p\>/g, '<div>');
-    content = content.replace(/\<p\s/g, '<div ');
+    content = content.replace(/\<p\s/g, '<div ');*/
 
     switchEditors.go('composer_global_editor', 'tinymce');
 

@@ -3,8 +3,8 @@ Contributors: crazypsycho
 Donate link: MiniComposer
 Tags: grid, responsive, composer, page builder, visual
 Requires at least: 3.4.0
-Tested up to: 4.8
-Stable tag: 4.3
+Tested up to: 4.9
+Stable tag: 4.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,6 +36,9 @@ Just install and activate the plugin. Then you can see MiniComposer under every 
 4. Global-settings
 
 == Changelog ==
+= 1.4.4 ==
+* EnterMode in TinyMCE is now <p>, cause replacing with <br> dont work anymore.
+
 = 1.2.8 ==
 * Some little usability-improvements
 * Fix position of context-menu

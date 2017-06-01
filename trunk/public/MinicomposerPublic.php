@@ -82,10 +82,15 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
         add_action( 'wp_footer', array( $this, 'addInlineEdit' ) );
 
         add_shortcode( 'post', array( $this, 'postShortcode' ) );
+        add_shortcode( 'br', array( $this, 'brShortcode' ) );
 
         parent::__construct();
     }
 
+
+    public function brShortcode( $args = array(), $content = '' ) {
+        return '<br />';
+    }
 
     /**
      * Add inline-edit from include
@@ -265,6 +270,23 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
         $this->columnCount = $orgColumnCount;
 
         return '<!--postshortcode-->' . $gridOutput;
+    }
+
+    /**
+     * Remove <p> around shortcodes
+     *
+     * @param $columnContent
+     * @return mixed
+     */
+    public function filterColumnContent( $columnContent ) {
+        $replace = array(
+            '<p>[' => '[',
+            ']</p>' => ']',
+            ']<br />' => ']',
+        );
+
+        $columnContent = strtr( $columnContent, $replace );
+        return parent::filterColumnContent( $columnContent );
     }
 
 }

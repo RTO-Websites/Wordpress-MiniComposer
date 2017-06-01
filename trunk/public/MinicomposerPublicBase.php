@@ -128,9 +128,8 @@ class MinicomposerPublicBase {
                     $columnOutput .= apply_filters( 'miniComposerAddColumnContent', '', $column );
                 }
 
-                // remove <p>
-                $column->content = str_replace( '</p>', '<br /><br />', $column->content );
-                $column->content = str_replace( '<p>', '', $column->content );
+                // filter column content
+                $column->content = $this->filterColumnContent( $column->content );
                 // replace &nbsp;
                 $column->content = str_replace( '&nbsp;', ' ', $column->content );
                 $columnOutput .= trim( $column->content );
@@ -262,5 +261,9 @@ class MinicomposerPublicBase {
             ? 'min-height:' . $this->addPxToValue( $element->minheight ) . ';' : '';
 
         return $style;
+    }
+
+    public function filterColumnContent( $columnContent ) {
+        return $columnContent;
     }
 }

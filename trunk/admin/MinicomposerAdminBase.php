@@ -75,7 +75,7 @@ class MinicomposerAdminBase {
 
 
     /**
-     * Returns content of columns (recursive)
+     * Returns content without divs of columns (recursive)
      */
     public function getColumnContent( $rows ) {
         $output = '';
@@ -88,8 +88,8 @@ class MinicomposerAdminBase {
             $columns = isset( $row->columns ) ? $row->columns : $row;
             // loop columns
             foreach ( $columns as $columnIndex => $column ) {
-                $column->content = str_replace( '</p>', '<br /><br />', $column->content );
-                $column->content = str_replace( '<p>', '', $column->content );
+                //$column->content = str_replace( '</p>', '<br /><br />', $column->content );
+                //$column->content = str_replace( '<p>', '', $column->content );
 
                 // remove shortcodes
                 $column->content = preg_replace( "/\[[^\]]*\]/", "", $column->content );

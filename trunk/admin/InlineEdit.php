@@ -171,11 +171,11 @@ class InlineEdit {
 
         $composerRows = get_post_meta( $postid, 'minicomposerColumns', true );
         // get row-array
-        $rows = ( $composerRows );
+        $rows = $composerRows;
 
         // change content of column
         $rows = \Admin\MinicomposerAdmin::changeColumnContent( $rows, $columnid, $newContent );
-        $newRows = json_decode( json_encode( $rows )); // need copy, cause getColumnContent removes shortcodes
+        $newRows = json_decode( json_encode( $rows ) ); // need copy, cause getColumnContent removes shortcodes
         $output['newRows'] = $rows;
 
         remove_action( 'save_post', array( $this, 'savePostMeta' ) );
@@ -187,7 +187,7 @@ class InlineEdit {
         ) );
         add_action( 'save_post', array( $this, 'savePostMeta' ), 10, 2 );
 
-        $update = update_post_meta( $postid, 'minicomposerColumns',  $newRows );
+        $update = update_post_meta( $postid, 'minicomposerColumns', $newRows );
 
         $output['success'] = $update;
 

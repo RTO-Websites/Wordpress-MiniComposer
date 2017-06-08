@@ -199,14 +199,14 @@ class MinicomposerAdminBase {
      */
     public static function getColumnContentList( $rows, $returnArray = array() ) {
         foreach ( $rows as $row ) {
-            foreach ( $row as $col ) {
-                $returnArray[] = $col->content;
+            $columns = !empty( $row->columns ) ? $row->columns : $row;
+            foreach ( $columns as $col ) {
+                $returnArray[] = !empty( $col->content ) ? $col->content : '';
 
                 if ( !empty( $col->rows ) ) {
                     $returnArray = MinicomposerAdminBase::getColumnContentList( $col->rows, $returnArray );
                 }
             }
-
         }
 
         return $returnArray;
@@ -217,10 +217,15 @@ class MinicomposerAdminBase {
      */
     public static function changeColumnContent( $rows, $columnId, $newContent, &$count = 0 ) {
         foreach ( $rows as $rowKey => $row ) {
-            foreach ( $row as $colKey => $col ) {
+            $columns = !empty( $row->columns ) ? $row->columns : $row;
+            foreach ( $columns as $colKey => $col ) {
                 if ( $count == $columnId ) {
                     // column match -> change content
-                    $rows[$rowKey][$colKey]->content = $newContent;
+                    if ( is_object($rows[$rowKey])) {
+                        $rows[$rowKey]->columns[$colKey]->content = $newContent;
+                    } else {
+                        $rows[$rowKey][$colKey]->content = $newContent;
+                    }
                 }
                 $count += 1;
 

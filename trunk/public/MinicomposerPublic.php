@@ -138,10 +138,11 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
 
         $mcPost = $post;
         $grid = get_post_meta( $post->ID, 'minicomposerColumns', true );
-
         if ( empty( $grid ) ) {
             return $content;
         }
+
+        $this->columnCount = 0;
 
         $gridOutput .= $this->createRows( $grid );
         $gridOutput = $this->wrapColumnsForInlineEdit( $gridOutput, $post->ID );

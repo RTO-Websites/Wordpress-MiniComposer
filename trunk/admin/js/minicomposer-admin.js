@@ -1,5 +1,5 @@
 /**
- * Last change: 28.04.2017 16:26
+ * Last change: 27.06.2017 13:04
  */
 
 (function($) {
@@ -37,6 +37,7 @@
     currentColumnRow = null,
     lastContextMenuTarget = null,
     resizeArgs = null,
+    currentSize = 'medium',
     editor = null;
 
   /**
@@ -140,10 +141,27 @@
 
     $(document).on('click', closeContextMenu);
 
+    $(document).on('click', '.minicomposer-change-size-button', changeMcColumnSize);
 
     // contextmenu
     $(document).on('contextmenu', '.minicomposer-column, .minicomposer-row', openContextMenu);
   });
+
+  window.changeMcColumnSize = function() {
+    switch (currentSize) {
+      case 'medium':
+        $('#minicomposer').addClass('small-size');
+        currentSize = 'small';
+        break;
+      case 'small':
+        $('#minicomposer').removeClass('small-size');
+        currentSize = 'medium';
+        break;
+    }
+
+    recalcColumns();
+    updateComposer();
+  };
 
   function initEvents() {
     // make resizable
@@ -156,7 +174,7 @@
     $('.minicomposer-column').each(function(index, element) {
       var columnWidth = window.getColumnWidth(element);
       $(element).css({
-        width: (columnWidth * $(element).data('medium')) + 'px',
+        width: (columnWidth * $(element).data(currentSize)) + 'px',
         maxWidth: (columnWidth * 12) + 'px'
       });
 
@@ -334,7 +352,7 @@
 
     // set column-size
     $(element).find('> .column-count').html(size);
-    $(element).data('medium', Math.floor($(element).outerWidth() / window.getColumnWidth(element)));
+    $(element).data(currentSize, Math.floor($(element).outerWidth() / window.getColumnWidth(element)));
     window.recalcColumns(element);
   }
 
@@ -378,11 +396,11 @@
         rowConfig[rowCount]['columns'][colCount].content = $(column).find('> .content').html();
 
         // must be Math.round for working calculation in zoom
-        rowConfig[rowCount]['columns'][colCount].medium = Math.round($(column).outerWidth() / window.getColumnWidth(column));
+        rowConfig[rowCount]['columns'][colCount][currentSize] = Math.round($(column).outerWidth() / window.getColumnWidth(column));
 
         rowConfig[rowCount]['columns'][colCount].rows = getRowArray(column);
 
-        $(column).find('> .column-count').html(rowConfig[rowCount]['columns'][colCount].medium);
+        $(column).find('> .column-count').html(rowConfig[rowCount]['columns'][colCount][currentSize]);
 
         setStyle(column);
         colCount += 1;
@@ -419,7 +437,7 @@
       $(element).resizable(resizeArgs);
 
       $(element).css({
-        width: (columnWidth * $(element).data('medium')) + 'px',
+        width: (columnWidth * $(element).data(currentSize)) + 'px',
         maxWidth: (columnWidth * 12) + 'px'
       });
     });

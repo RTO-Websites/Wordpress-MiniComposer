@@ -12,10 +12,10 @@
  */
 ?>
 
-<div class="minicomposer-info">
-    <?php _e('Use <b>right-click</b> on the columns/rows for more options.', $this->textdomain); ?><br />
-    <br />
-</div>
+    <div class="minicomposer-info">
+        <?php _e('Use <b>right-click</b> on the columns/rows for more options.', $this->textdomain); ?><br />
+        <br />
+    </div>
 
     <div class="minicomposer-add-column button">+ <?php _e( 'Column', $this->textdomain ); ?></div>
     <div class="minicomposer-add-row button">+ <?php _e( 'Row', $this->textdomain ); ?></div>
@@ -27,6 +27,7 @@
     <div class="minicomposer-add-column-4 button">+
         4 <?php _e( 'Columns', $this->textdomain ); ?></div>
     <div class="minicomposer-autopublish button">Auto <?php _e( 'Publish' ); ?></div>
+    <div class="minicomposer-change-size-button button"></div>
 
     <div class="minicomposer-sortable-rows active-composer">
         <?php $this->getRows( $composerRows ); ?>
@@ -39,9 +40,9 @@
             wp_editor( '', 'composer_global_editor', array( 'wpautop' => true, 'forced_root_block' => false ) );
             ?>
             <div
-                class="button button-cancel button-secondary minicomposer-cancel-editor"><?php _e( 'Cancel' ); ?></div>
+                    class="button button-cancel button-secondary minicomposer-cancel-editor"><?php _e( 'Cancel' ); ?></div>
             <div
-                class="button button-save button-primary minicomposer-save-editor"><?php _e( 'Save' ); ?></div>
+                    class="button button-save button-primary minicomposer-save-editor"><?php _e( 'Save' ); ?></div>
         </div>
     </div>
 
@@ -49,9 +50,9 @@
         <div class="headline">Responsive</div>
         <?php $this->createFields( $post, $this->responsiveFields ); ?>
         <div
-            class="button button-cancel minicomposer-cancel-responsive"><?php _e( 'Cancel' ); ?></div>
+                class="button button-cancel minicomposer-cancel-responsive"><?php _e( 'Cancel' ); ?></div>
         <div
-            class="button button-save button-primary minicomposer-save-responsive"><?php _e( 'Save' ); ?></div>
+                class="button button-save button-primary minicomposer-save-responsive"><?php _e( 'Save' ); ?></div>
     </div>
 
 
@@ -60,17 +61,17 @@
         <?php $this->createFields( $post, $this->styleFields ); ?>
         <div class="button button-cancel minicomposer-cancel-style"><?php _e( 'Cancel' ); ?></div>
         <div
-            class="button button-save button-primary minicomposer-save-style"><?php _e( 'Save' ); ?></div>
+                class="button button-save button-primary minicomposer-save-style"><?php _e( 'Save' ); ?></div>
     </div>
 
     <div class="global-contextmenu">
         <span class="minicomposer-style-settings"><?php _e( 'Style', $this->textdomain ); ?></span>
         <span
-            class="minicomposer-responsive-settings"><?php _e( 'Responsive', $this->textdomain ); ?></span>
+                class="minicomposer-responsive-settings"><?php _e( 'Responsive', $this->textdomain ); ?></span>
         <span
-            class="minicomposer-edit-text"><?php _e( 'Edit Text', $this->textdomain ); ?></span>
+                class="minicomposer-edit-text"><?php _e( 'Edit Text', $this->textdomain ); ?></span>
         <span
-            class="minicomposer-add-column-to-row"><?php _e( 'Add column', $this->textdomain ); ?></span>
+                class="minicomposer-add-column-to-row"><?php _e( 'Add column', $this->textdomain ); ?></span>
         <span class="minicomposer-clone"><?php _e( 'Clone', $this->textdomain ); ?></span><br/>
         <span class="minicomposer-delete"><?php _e( 'Delete', $this->textdomain ); ?></span>
     </div>
@@ -79,10 +80,10 @@
 $publishText = $post->post_status == 'publish' ? __( 'Update' ) : __( 'Publish' );
 ?>
     <input name="save"
-        type="submit"
-        class="button button-primary button-large"
-        id="publish-2"
-        value="<?php echo $publishText; ?>"/>
+            type="submit"
+            class="button button-primary button-large"
+            id="publish-2"
+            value="<?php echo $publishText; ?>"/>
 
 
 <?php include( 'minicomposer-admin-display-base.php' );

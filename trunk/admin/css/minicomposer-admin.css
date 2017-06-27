@@ -23,6 +23,7 @@
 .minicomposer-sortable-rows {
   position: relative;
   margin: 1em 0;
+
 }
 
 .minicomposer-column {
@@ -212,6 +213,31 @@
 
 #minicomposer {
   z-index: 50;
+}
+
+#minicomposer.small-size .minicomposer-sortable-rows {
+  max-width: 480px;
+}
+
+#minicomposer.small-size .minicomposer-change-size-button:before {
+  content: "\f470";
+}
+
+#minicomposer.small-size .minicomposer-change-size-button:after {
+  content: " Small";
+}
+
+.minicomposer-change-size-button:before {
+  font-family: 'Dashicons';
+  content: "\f472";
+}
+
+.minicomposer-change-size-button:after {
+  content: ' Medium';
+}
+
+#minicomposer .inside {
+  display: block !important;
 }
 
 #post-gallery-pictures {

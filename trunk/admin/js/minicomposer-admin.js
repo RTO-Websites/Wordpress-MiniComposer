@@ -1,5 +1,5 @@
 /**
- * Last change: 27.06.2017 13:04
+ * Last change: 28.07.2017 15:25
  */
 
 (function($) {
@@ -145,6 +145,8 @@
 
     // contextmenu
     $(document).on('contextmenu', '.minicomposer-column, .minicomposer-row', openContextMenu);
+
+    recalcColumns();
   });
 
   window.changeMcColumnSize = function() {
@@ -169,7 +171,6 @@
 
     new McDragNDrop();
 
-
     // set startSize of columns
     $('.minicomposer-column').each(function(index, element) {
       var columnWidth = window.getColumnWidth(element);
@@ -181,8 +182,10 @@
       window.recalcColumns(element);
     });
 
-    $(window).on('resize', recalcColumns);
-  }
+    $(window).on('resize', function() {
+      recalcColumns();
+    });
+  };
 
   /**
    * Init resizeable column
@@ -319,7 +322,7 @@
     // only if resize-direction is up
     if ((ui.size.height != ui.originalSize.height) &&
       (newMinHeight !== window.columnMinHeight || $(e.target).data('minheight') &&
-      e.type == 'resizestop')
+        e.type == 'resizestop')
     ) {
       $(e.target).data('minheight', newMinHeight + 'px');
       $(e.target).css({'height': '', 'min-height': newMinHeight + 'px'});

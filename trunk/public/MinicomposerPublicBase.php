@@ -92,6 +92,9 @@ class MinicomposerPublicBase {
 
             // loop columns
             foreach ( $columns as $columnIndex => $column ) {
+                if ( empty( $column ) ) {
+                    continue;
+                }
                 $colTag = !empty( $column->htmltag ) ? $column->htmltag : 'div';
                 $this->columnCount += 1;
                 // set classes for grid

@@ -1,5 +1,5 @@
 /**
- * Last change: 28.07.2017 15:25
+ * Last change: 28.07.2017 16:28
  */
 
 (function($) {
@@ -439,8 +439,13 @@
       }
       $(element).resizable(resizeArgs);
 
+      var columnSize = $(element).data(currentSize);
+      if (!columnSize) {
+        columnSize = 12;
+      }
+
       $(element).css({
-        width: (columnWidth * $(element).data(currentSize)) + 'px',
+        width: (columnWidth * columnSize) + 'px',
         maxWidth: (columnWidth * 12) + 'px'
       });
     });

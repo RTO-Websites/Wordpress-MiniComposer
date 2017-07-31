@@ -1,5 +1,5 @@
 /**
- * Last change: 28.07.2017 16:28
+ * Last change: 31.07.2017 16:23
  */
 
 (function($) {
@@ -182,7 +182,10 @@
       window.recalcColumns(element);
     });
 
-    $(window).on('resize', function() {
+    $(window).on('resize', function(e) {
+      if (e.target != window) {
+        return;
+      }
       recalcColumns();
     });
   };

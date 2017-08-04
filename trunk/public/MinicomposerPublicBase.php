@@ -88,7 +88,10 @@ class MinicomposerPublicBase {
             $rowClass = !empty( $rowOptions->cssclass ) ? $rowOptions->cssclass : '';
             $rowTag = !empty( $rowOptions->htmltag ) ? $rowOptions->htmltag : 'div';
 
-            $gridOutput .= '<' . $rowTag . ' class="row  mc-row ' . $rowClass . '" style="' . $rowStyle . $bgStyle . '">';
+            $gridOutput .= '<' . $rowTag . ' class="row  mc-row ' . $rowClass . '" style="' . $rowStyle . '">';
+            if ( !empty( $bgStyle ) ) {
+                $gridOutput .= '<div class="mc-background" style="' . $bgStyle . '"></div>';
+            }
 
             // loop columns
             foreach ( $columns as $columnIndex => $column ) {
@@ -186,6 +189,7 @@ class MinicomposerPublicBase {
 
         if ( isset( $this->options['globalRowMargin'] ) && $this->options['globalRowMargin'] !== '' ) {
             echo '.mc-row{
+                position: relative;
                 margin-bottom:' . $this->options['globalRowMargin'] . ';}';
         }
 
@@ -198,7 +202,7 @@ class MinicomposerPublicBase {
         echo 'clear: left;';
         echo '}';
 
-        echo '.mc-column .mc-background { ';
+        echo '.mc-row .mc-background, .mc-column .mc-background { ';
         echo 'position:absolute;top:0;left:0;bottom:0;right:0;z-index:0;transform:translateZ( 0 );';
         echo '}';
         echo '.mc-column .column-content {';

@@ -226,10 +226,31 @@ class MinicomposerPublicBase {
             $columnClasses .= !empty( $column->small ) ? ' small-' . $column->small : '';
             $columnClasses .= !empty( $column->medium ) ? ' medium-' . $column->medium : '';
             $columnClasses .= !empty( $column->large ) ? ' large-' . $column->large : '';
+
+            if ( $column->small == 13) {
+                $columnClasses .= ' hide-for-small-only';
+            }
+            if ( $column->medium == 13) {
+                $columnClasses .= ' hide-for-medium-only';
+            }
+            if ( $column->large == 13) {
+                $columnClasses .= ' hide-for-large';
+            }
+
         } else {
             $columnClasses .= !empty( $column->small ) ? ' col-xs-' . $column->small : '';
             $columnClasses .= !empty( $column->medium ) ? ' col-md-' . $column->medium : '';
             $columnClasses .= !empty( $column->large ) ? ' col-lg-' . $column->large : '';
+
+            if ( $column->small == 13) {
+                $columnClasses .= ' hidden-xs hidden-sm';
+            }
+            if ( $column->medium == 13) {
+                $columnClasses .= ' hidden-md';
+            }
+            if ( $column->large == 13) {
+                $columnClasses .= ' hidden-lg';
+            }
         }
 
         if ( !empty( $column->cssclass ) ) {

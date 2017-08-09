@@ -17,7 +17,7 @@ class MinicomposerAdminBase {
 
     protected $options;
 
-    protected $oneToTwelve = array( '', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 );
+    protected $oneToTwelve = array( '', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 'hide' );
 
     protected $responsiveFields = array(
         'customAttributes' => array(

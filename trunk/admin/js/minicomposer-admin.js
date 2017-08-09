@@ -47,6 +47,7 @@
     // make columns resizeable
     initResizeable();
     initEvents();
+    $('#minicomposer').addClass('medium-size');
 
     jQuery('.composer-overlay').each(function(index, element) {
       if (jQuery(element).find('.drag-handle').length) {
@@ -141,7 +142,13 @@
 
     $(document).on('click', closeContextMenu);
 
-    $(document).on('click', '.minicomposer-change-size-button', changeMcColumnSize);
+    $(document).on('click', '.minicomposer-change-size-button', function(e) {
+      changeMcColumnSize(e);
+    });
+
+    $(document).on('click', '.minicomposer-hide-column', function(e) {
+      hideColumn(e);
+    });
 
     // contextmenu
     $(document).on('contextmenu', '.minicomposer-column, .minicomposer-row', openContextMenu);
@@ -149,15 +156,26 @@
     recalcColumns();
   });
 
-  window.changeMcColumnSize = function() {
-    switch (currentSize) {
+  window.changeMcColumnSize = function(e) {
+    $('.minicomposer-change-size-button').removeClass('active');
+    var button = $(e.target);
+    button.addClass('active');
+
+    switch (button.data('size')) {
       case 'medium':
-        $('#minicomposer').addClass('small-size');
-        currentSize = 'small';
+        $('#minicomposer').addClass('medium-size');
+        $('#minicomposer').removeClass('small-size large-size');
+        currentSize = 'medium';
         break;
       case 'small':
-        $('#minicomposer').removeClass('small-size');
-        currentSize = 'medium';
+        $('#minicomposer').addClass('small-size');
+        $('#minicomposer').removeClass('large-size medium-size');
+        currentSize = 'small';
+        break;
+      case 'large':
+        $('#minicomposer').addClass('large-size');
+        $('#minicomposer').removeClass('small-size medium-size');
+        currentSize = 'large';
         break;
     }
 
@@ -359,8 +377,9 @@
     // set column-size
     $(element).find('> .column-count').html(size);
     $(element).data(currentSize, Math.floor($(element).outerWidth() / window.getColumnWidth(element)));
+    $(element).attr('data-' + currentSize, $(element).data(currentSize));
     window.recalcColumns(element);
-  }
+  };
 
   /**
    * Update the composer input field
@@ -402,11 +421,15 @@
         rowConfig[rowCount]['columns'][colCount].content = $(column).find('> .content').html();
 
         // must be Math.round for working calculation in zoom
-        rowConfig[rowCount]['columns'][colCount][currentSize] = Math.round($(column).outerWidth() / window.getColumnWidth(column));
-
+        //rowConfig[rowCount]['columns'][colCount][currentSize] = Math.round($(column).outerWidth() / window.getColumnWidth(column));
+        rowConfig[rowCount]['columns'][colCount][currentSize] = $(column).data(currentSize);
         rowConfig[rowCount]['columns'][colCount].rows = getRowArray(column);
 
-        $(column).find('> .column-count').html(rowConfig[rowCount]['columns'][colCount][currentSize]);
+        if (rowConfig[rowCount]['columns'][colCount][currentSize] == 13) {
+          $(column).find('> .column-count').html('Hidden');
+        } else {
+          $(column).find('> .column-count').html(rowConfig[rowCount]['columns'][colCount][currentSize]);
+        }
 
         setStyle(column);
         colCount += 1;
@@ -443,7 +466,13 @@
       $(element).resizable(resizeArgs);
 
       var columnSize = $(element).data(currentSize);
-      if (!columnSize) {
+
+      if (currentSize == 'large' && !columnSize) {
+        // if is large and no large-size is set, get from medium
+        columnSize = $(element).data('medium');
+      }
+
+      if (!columnSize || columnSize == 13 ) {
         columnSize = 12;
       }
 
@@ -623,9 +652,23 @@
     currentColumnRow.data('small', $('#responsiveSmall').val());
     currentColumnRow.data('medium', $('#responsiveMedium').val());
     currentColumnRow.data('large', $('#responsiveLarge').val());
+    currentColumnRow.attr('data-small', $('#responsiveSmall').val());
+    currentColumnRow.attr('data-medium', $('#responsiveMedium').val());
+    currentColumnRow.attr('data-large', $('#responsiveLarge').val());
     currentColumnRow.data('customattributes', addSlashes($('#customAttributes').val()));
 
-    currentColumnRow.css({width: window.getColumnWidth(currentColumnRow) * $('#responsiveMedium').val() + 'px'});
+    switch (currentSize) {
+      case 'medium':
+        currentColumnRow.css({width: window.getColumnWidth(currentColumnRow) * $('#responsiveMedium').val() + 'px'});
+        break;
+      case 'small':
+        currentColumnRow.css({width: window.getColumnWidth(currentColumnRow) * $('#responsiveSmall').val() + 'px'});
+        break;
+      case 'large':
+        currentColumnRow.css({width: window.getColumnWidth(currentColumnRow) * $('#responsiveLarge').val() + 'px'});
+        break;
+    }
+
 
     closeResponsiveFields();
     updateComposer();
@@ -719,6 +762,15 @@
     currentColumnRow.data('htmltag', $('#htmltag').val());
 
     closeStyleFields();
+
+    updateComposer();
+  }
+
+  function hideColumn(e) {
+    var column = $(e.target).closest('.minicomposer-column');
+
+    column.data(currentSize, 13);
+    column.attr('data-' + currentSize, 13);
 
     updateComposer();
   }

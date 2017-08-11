@@ -227,13 +227,16 @@ class MinicomposerPublicBase {
             $columnClasses .= !empty( $column->medium ) ? ' medium-' . $column->medium : '';
             $columnClasses .= !empty( $column->large ) ? ' large-' . $column->large : '';
 
-            if ( !empty( $column->small ) && $column->small == 13) {
+            if ( !empty( $column->small ) && $column->small == 13 ) {
                 $columnClasses .= ' hide-for-small-only';
             }
-            if ( !empty( $column->medium ) && $column->medium == 13) {
+            if ( !empty( $column->medium ) && $column->medium == 13 ) {
                 $columnClasses .= ' hide-for-medium-only';
             }
-            if ( !empty( $column->large ) && $column->large == 13) {
+            if ( !empty( $column->large ) && $column->large == 13 ) {
+                $columnClasses .= ' hide-for-large';
+            }
+            if ( empty( $column->large ) && ( !empty( $column->medium ) && $column->medium == 13 ) ) {
                 $columnClasses .= ' hide-for-large';
             }
 
@@ -242,13 +245,16 @@ class MinicomposerPublicBase {
             $columnClasses .= !empty( $column->medium ) ? ' col-md-' . $column->medium : '';
             $columnClasses .= !empty( $column->large ) ? ' col-lg-' . $column->large : '';
 
-            if ( !empty( $column->small ) && $column->small == 13) {
+            if ( !empty( $column->small ) && $column->small == 13 ) {
                 $columnClasses .= ' hidden-xs hidden-sm';
             }
-            if ( !empty( $column->medium ) && $column->medium == 13) {
+            if ( !empty( $column->medium ) && $column->medium == 13 ) {
                 $columnClasses .= ' hidden-md';
             }
-            if ( !empty( $column->large ) && $column->large == 13) {
+            if ( !empty( $column->large ) && $column->large == 13 ) {
+                $columnClasses .= ' hidden-lg';
+            }
+            if ( empty( $column->large ) && ( !empty( $column->medium ) && $column->medium == 13 ) ) {
                 $columnClasses .= ' hidden-lg';
             }
         }

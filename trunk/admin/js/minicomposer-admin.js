@@ -1,5 +1,5 @@
 /**
- * Last change: 31.07.2017 16:23
+ * Last change: 10.08.2017 16:59
  */
 
 (function($) {
@@ -161,7 +161,7 @@
     var button = $(e.target);
     button.addClass('active');
 
-    switch (button.data('size')) {
+    switch(button.data('size')) {
       case 'medium':
         $('#minicomposer').addClass('medium-size');
         $('#minicomposer').removeClass('small-size large-size');
@@ -425,11 +425,7 @@
         rowConfig[rowCount]['columns'][colCount][currentSize] = $(column).data(currentSize);
         rowConfig[rowCount]['columns'][colCount].rows = getRowArray(column);
 
-        if (rowConfig[rowCount]['columns'][colCount][currentSize] == 13) {
-          $(column).find('> .column-count').html('Hidden');
-        } else {
-          $(column).find('> .column-count').html(rowConfig[rowCount]['columns'][colCount][currentSize]);
-        }
+        setColumnSizeInfo(column);
 
         setStyle(column);
         colCount += 1;
@@ -443,6 +439,26 @@
     return rowConfig;
   }
 
+  /**
+   * Sets the info over the columns
+   *
+   * @param column
+   */
+  function setColumnSizeInfo(column) {
+    var columnSize = $(column).data(currentSize),
+      columnSizeMedium = $(column).data('medium');
+
+    if ((typeof(columnSize) == 'undefined' || !columnSize) && currentSize == 'large' && columnSizeMedium) {
+      // if on large an size is empty, use medium-size
+      $(column).find('> .column-count').html(columnSizeMedium);
+    } else if (!columnSize) {
+      $(column).find('> .column-count').html('12');
+    } else if (columnSize == 13) {
+      $(column).find('> .column-count').html('Hidden');
+    } else {
+      $(column).find('> .column-count').html(columnSize);
+    }
+  };
 
   /**
    * Recalculate width of columns
@@ -472,7 +488,7 @@
         columnSize = $(element).data('medium');
       }
 
-      if (!columnSize || columnSize == 13 ) {
+      if (!columnSize || columnSize == 13) {
         columnSize = 12;
       }
 
@@ -657,7 +673,7 @@
     currentColumnRow.attr('data-large', $('#responsiveLarge').val());
     currentColumnRow.data('customattributes', addSlashes($('#customAttributes').val()));
 
-    switch (currentSize) {
+    switch(currentSize) {
       case 'medium':
         currentColumnRow.css({width: window.getColumnWidth(currentColumnRow) * $('#responsiveMedium').val() + 'px'});
         break;

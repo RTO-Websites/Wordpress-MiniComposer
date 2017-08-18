@@ -263,6 +263,12 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
                         echo '</select>';
                         break;
 
+                    case 'checkbox':
+                        // Generate checkbox
+                        $checked = !empty( $value ) ? ' checked="checked"' : '';
+                        echo '<input class="field-input ' . $inputClass . '" type="checkbox" name="' . $key . '" id="' . $key . '" value="1" ' . $checked . '/>';
+                        break;
+
                     case 'input':
                         // Generate text-input
                         echo '<input class="field-input ' . $inputClass . '" type="text" name="' . $key . '" id="' . $key . '" value="'
@@ -405,7 +411,6 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
         $ver += 3;
         return $ver;
     }
-
 
 
     /**

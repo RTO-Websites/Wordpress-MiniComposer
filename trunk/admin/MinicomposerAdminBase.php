@@ -57,9 +57,18 @@ class MinicomposerAdminBase {
             'label'   => 'Gutter',
             'trClass' => 'hide-on-row',
         ),
+        'static'    => array(
+            'type'  => 'checkbox',
+            'label' => 'Position static',
+        ),
         'columnBackground' => array(
             'type'  => 'background',
             'label' => 'Background',
+        ),
+        'fullwidthbg'    => array(
+            'type'  => 'checkbox',
+            'label' => 'Full width background',
+            'trClass' => 'hide-on-column',
         ),
         'minHeight'        => array(
             'type'  => 'input',

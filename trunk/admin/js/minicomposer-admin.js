@@ -642,10 +642,16 @@
     $('.has-responsive-open').removeClass('has-responsive-open');
 
     $('.global-responsive-settings').addClass('visible');
+    $('.global-responsive-settings').removeClass('ref-column ref-row');
     setOverlayPosition($(e.target), $('.global-responsive-settings'));
 
     currentColumnRow = $(e.target).closest('.minicomposer-column, .minicomposer-row');
     currentColumnRow.addClass('has-responsive-open');
+    if (currentColumnRow.is('.minicomposer-row')) {
+      $('.global-responsive-settings').addClass('ref-row');
+    } else {
+      $('.global-responsive-settings').addClass('ref-column');
+    }
 
     $('#responsiveSmall').val(currentColumnRow.data('small'));
     $('#responsiveMedium').val(currentColumnRow.data('medium'));
@@ -716,10 +722,17 @@
     closeEditor();
 
     $('.global-style-settings').addClass('visible');
+    $('.global-style-settings').removeClass('ref-column ref-row');
     setOverlayPosition($(e.target), $('.global-style-settings'));
 
     currentColumnRow = $(e.target).closest('.minicomposer-column, .minicomposer-row');
     currentColumnRow.addClass('has-style-open');
+
+    if (currentColumnRow.is('.minicomposer-row')) {
+      $('.global-style-settings').addClass('ref-row');
+    } else {
+      $('.global-style-settings').addClass('ref-column');
+    }
 
     var bgRepeat = typeof(currentColumnRow.data('backgroundrepeat')) !== 'undefined' ? currentColumnRow.data('backgroundrepeat') : 'no-repeat',
       bgPosition = typeof(currentColumnRow.data('backgroundposition')) !== 'undefined' ? currentColumnRow.data('backgroundposition') : 'center',
@@ -735,6 +748,9 @@
     $('#columnGutter').val(currentColumnRow.data('gutter'));
     $('#minHeight').val(currentColumnRow.data('minheight'));
     $('#htmltag').val(currentColumnRow.data('htmltag'));
+
+    $('#static').prop('checked', currentColumnRow.data('static'));
+    $('#fullwidthbg').prop('checked', currentColumnRow.data('fullwidthbg'));
 
     if (typeof(currentColumnRow.data('backgroundimage')) !== 'undefined') {
       $('#columnBackground-image-img').prop('src', currentColumnRow.data('backgroundimage'));
@@ -776,6 +792,8 @@
     currentColumnRow.data('gutter', $('#columnGutter').val());
     currentColumnRow.data('minheight', $('#minHeight').val());
     currentColumnRow.data('htmltag', $('#htmltag').val());
+    currentColumnRow.data('static', $('#static').is(':checked'));
+    currentColumnRow.data('fullwidthbg', $('#fullwidthbg').is(':checked'));
 
     closeStyleFields();
 
@@ -848,7 +866,7 @@
    * @returns {{}}
    */
   function getDataset(element) {
-    var allowedTypes = ['string', 'number'],
+    var allowedTypes = ['string', 'number', 'boolean'],
       data = $(element).data(),
       filteredData = {};
 

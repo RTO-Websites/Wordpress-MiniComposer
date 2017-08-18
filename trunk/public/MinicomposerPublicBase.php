@@ -87,6 +87,7 @@ class MinicomposerPublicBase {
             $bgStyle = $this->createColumnRowBgStyle( $rowOptions );
             $rowClass = !empty( $rowOptions->cssclass ) ? $rowOptions->cssclass : '';
             $rowTag = !empty( $rowOptions->htmltag ) ? $rowOptions->htmltag : 'div';
+            $rowClass .= $this->addRowClasses($rowOptions);
 
             $gridOutput .= '<' . $rowTag . ' class="row  mc-row ' . $rowClass . '" style="' . $rowStyle . '">';
             if ( !empty( $bgStyle ) ) {
@@ -205,6 +206,16 @@ class MinicomposerPublicBase {
         echo '.mc-row .mc-background, .mc-column .mc-background { ';
         echo 'position:absolute;top:0;left:0;bottom:0;right:0;z-index:0;transform:translateZ( 0 );';
         echo '}';
+
+
+        echo '.mc-row.full-width-bg > .mc-background { ';
+        echo 'width: 100vw;left:50%;margin-left:-50vw;right:auto;';
+        echo '}';
+
+        echo '.mc-row.static, mc-column.static { ';
+        echo 'position:static;';
+        echo '}';
+
         echo '.mc-column .column-content {';
         echo 'position: relative; z-index: 50;';
         echo '}';
@@ -263,9 +274,24 @@ class MinicomposerPublicBase {
             $columnClasses .= ' ' . $column->cssclass;
         }
 
+        if ( !empty( $column->static ) ) {
+            $columnClasses .= ' static';
+        }
+
         return $columnClasses;
     }
 
+
+    public function addRowClasses($rowOptions) {
+        $output = '';
+        if ( !empty( $rowOptions->static ) ) {
+            $output .= ' static';
+        }
+        if ( !empty( $rowOptions->fullwidthbg ) ) {
+            $output .= ' full-width-bg';
+        }
+        return $output;
+    }
 
     /**
      * Create background-style for column

@@ -428,7 +428,10 @@
   display: block;
 }
 
-.minicomposer-row > .global-contextmenu .hide-on-row {
+.ref-row .hide-on-row {
+  display: none !important;
+}
+.ref-column .hide-on-column {
   display: none !important;
 }
 

@@ -1,5 +1,5 @@
 /**
- * Last change: 10.08.2017 16:59
+ * Last change: 09.10.2017 09:32
  */
 
 (function($) {
@@ -52,10 +52,11 @@
     jQuery('.composer-overlay').each(function(index, element) {
       if (jQuery(element).find('.drag-handle').length) {
         jQuery(element).draggable({
-          handle: '.drag-handle'
+          handle: '.drag-handle',
+          containment: '.content_right',
         });
       } else {
-        jQuery(element).draggable();
+        jQuery(element).draggable({containment: '.content_right'});
       }
     });
 
@@ -206,7 +207,7 @@
       }
       recalcColumns();
     });
-  };
+  }
 
   /**
    * Init resizeable column
@@ -379,7 +380,7 @@
     $(element).data(currentSize, Math.floor($(element).outerWidth() / window.getColumnWidth(element)));
     $(element).attr('data-' + currentSize, $(element).data(currentSize));
     window.recalcColumns(element);
-  };
+  }
 
   /**
    * Update the composer input field

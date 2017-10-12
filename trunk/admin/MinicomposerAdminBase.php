@@ -8,10 +8,10 @@
 class MinicomposerAdminBase {
     protected $optionFields = array(
         'minicomposerColumns' => array(
-            'type'    => 'textarea',
-            'label'   => '',
+            'type' => 'textarea',
+            'label' => '',
             'trClass' => 'hidden',
-            'isJson'  => true,
+            'isJson' => true,
         ),
     );
 
@@ -21,57 +21,57 @@ class MinicomposerAdminBase {
 
     protected $responsiveFields = array(
         'customAttributes' => array(
-            'type'  => 'textarea',
+            'type' => 'textarea',
             'label' => 'Custom-Attributes',
         ),
-        'responsiveSmall'  => array(
-            'type'  => 'select',
+        'responsiveSmall' => array(
+            'type' => 'select',
             'label' => 'Small',
         ),
         'responsiveMedium' => array(
-            'type'  => 'select',
+            'type' => 'select',
             'label' => 'Medium',
         ),
-        'responsiveLarge'  => array(
-            'type'  => 'select',
+        'responsiveLarge' => array(
+            'type' => 'select',
             'label' => 'Large',
         ),
     );
 
     protected $styleFields = array(
-        'responsiveClass'  => array(
-            'type'  => 'text',
+        'responsiveClass' => array(
+            'type' => 'text',
             'label' => 'CSS-Class',
         ),
-        'htmltag'          => array(
-            'type'  => 'text',
+        'htmltag' => array(
+            'type' => 'text',
             'label' => 'HTML-Tag',
-            'list'  => 'datalist-htmltags',
+            'list' => 'datalist-htmltags',
         ),
-        'columnPadding'    => array(
-            'type'  => 'text',
+        'columnPadding' => array(
+            'type' => 'text',
             'label' => 'Padding',
         ),
-        'columnGutter'     => array(
-            'type'    => 'text',
-            'label'   => 'Gutter',
+        'columnGutter' => array(
+            'type' => 'text',
+            'label' => 'Gutter',
             'trClass' => 'hide-on-row',
         ),
-        'static'    => array(
-            'type'  => 'checkbox',
+        'static' => array(
+            'type' => 'checkbox',
             'label' => 'Position static',
         ),
         'columnBackground' => array(
-            'type'  => 'background',
+            'type' => 'background',
             'label' => 'Background',
         ),
-        'fullwidthbg'    => array(
-            'type'  => 'checkbox',
+        'fullwidthbg' => array(
+            'type' => 'checkbox',
             'label' => 'Full width background',
             'trClass' => 'hide-on-column',
         ),
-        'minHeight'        => array(
-            'type'  => 'input',
+        'minHeight' => array(
+            'type' => 'input',
             'label' => 'min-height',
         ),
     );
@@ -128,7 +128,7 @@ class MinicomposerAdminBase {
             $composerRows = array(
                 array(
                     array(
-                        'medium'  => 12,
+                        'medium' => 12,
                         'content' => $emptyContent,
                     ),
                 ),
@@ -181,7 +181,7 @@ class MinicomposerAdminBase {
                     >
                         <span class="content"><?php echo( !empty( $col->content ) ? $col->content : '' ); ?></span>
                         <span class="column-bg"></span>
-                        <span class="column-count"><?php echo $col->medium; ?></span>
+                        <span class="column-count"><?php echo( !empty( $col->medium ) ? $col->medium : '12' ); ?></span>
                         <?php
                         if ( !empty( $col->rows ) ) {
                             $this->getRows( $col->rows );
@@ -199,8 +199,8 @@ class MinicomposerAdminBase {
 
     public function addOptionsToResponsiveFields() {
         foreach ( $this->responsiveFields as $key => $value ) {
-            if ( $value[ 'type' ] == 'select' ) {
-                $this->responsiveFields[ $key ][ 'options' ] = $this->oneToTwelve;
+            if ( $value['type'] == 'select' ) {
+                $this->responsiveFields[$key]['options'] = $this->oneToTwelve;
             }
         }
     }
@@ -232,10 +232,10 @@ class MinicomposerAdminBase {
             foreach ( $columns as $colKey => $col ) {
                 if ( $count == $columnId ) {
                     // column match -> change content
-                    if ( is_object( $rows[ $rowKey ] ) ) {
-                        $rows[ $rowKey ]->columns[ $colKey ]->content = $newContent;
+                    if ( is_object( $rows[$rowKey] ) ) {
+                        $rows[$rowKey]->columns[$colKey]->content = $newContent;
                     } else {
-                        $rows[ $rowKey ][ $colKey ]->content = $newContent;
+                        $rows[$rowKey][$colKey]->content = $newContent;
                     }
                 }
                 $count += 1;

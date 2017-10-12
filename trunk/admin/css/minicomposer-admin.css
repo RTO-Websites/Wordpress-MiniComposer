@@ -525,3 +525,13 @@
 #minicomposer.large-size  .minicomposer-column[data-medium="13"]:not([data-large]) .minicomposer-hide-column {
   display: none;
 }
+
+.composer-overlay .drag-handle {
+  cursor: move;
+}
+
+.minicomposer-column .content iframe,
+.minicomposer-column .content video {
+  pointer-events: none;
+  background-color: #ccc;
+}

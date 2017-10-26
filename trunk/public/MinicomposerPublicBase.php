@@ -212,7 +212,7 @@ class MinicomposerPublicBase {
         echo 'width: 100vw;left:50%;margin-left:-50vw;right:auto;';
         echo '}';
 
-        echo '.mc-row.static, mc-column.static { ';
+        echo '.mc-row.static, .mc-column.static { ';
         echo 'position:static;';
         echo '}';
 

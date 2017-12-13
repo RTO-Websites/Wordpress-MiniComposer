@@ -1,7 +1,7 @@
 === Plugin Name ===
-Contributors: crazypsycho
+Contributors: rtowebsites
 Donate link: MiniComposer
-Tags: grid, responsive, composer, page builder, visual
+Tags: grid, responsive, composer, page builder, visual, rto, rto.de
 Requires at least: 3.4.0
 Tested up to: 4.9
 Stable tag: 4.7
@@ -22,7 +22,7 @@ Works with every theme which uses bootstrap or foundation.
 
 
 You can help to develop on
-https://github.com/crazypsycho/Wordpress-MiniComposer
+https://github.com/RTO-Websites/Wordpress-MiniComposer
 
 == Installation ==
 

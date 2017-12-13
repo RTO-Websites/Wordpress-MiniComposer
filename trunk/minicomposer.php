@@ -22,7 +22,7 @@ use Inc\MinicomposerDeactivator;
  * Description:       Layout page builder plugin.
  * Version:           1.5.1
  * Author:            crazypsycho
- * Author URI:        https://github.com/crazypsycho
+ * Author URI:        https://www.rto.de
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       minicomposer

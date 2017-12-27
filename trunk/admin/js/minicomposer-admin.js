@@ -1,5 +1,5 @@
 /**
- * Last change: 09.10.2017 09:32
+ * Last change: 27.12.2017 14:34
  */
 
 (function($) {
@@ -130,6 +130,8 @@
     $('.minicomposer-cancel-responsive').on('click', closeResponsiveFields);
 
     $(document).on('click', '.minicomposer-clone', cloneColumnRow);
+    $(document).on('click', '.minicomposer-copy', copyColumnRow);
+    $(document).on('click', '.minicomposer-insert', insertColumnRow);
 
     // Event for style button
     $(document).on('click', '.minicomposer-style-settings', openStyleFields);
@@ -314,6 +316,67 @@
 
     clonedElement.insertAfter(element);
 
+    recalcColumns();
+    updateComposer();
+  }
+
+  /**
+   * Copy a column/row to localStorage
+   *
+   * @param e
+   */
+  function copyColumnRow(e) {
+    var element = $(e.target).closest('.minicomposer-column, .minicomposer-row');
+
+    if (!element.length) {
+      return;
+    }
+
+    // move contextmenu-element
+    $('#minicomposer .inside').append($('.global-contextmenu'));
+
+    localStorage.mcColumnRow = element.prop('outerHTML');
+  }
+
+  /**
+   * Insert a column/row from localStorage
+   *
+   * @param e
+   */
+  function insertColumnRow(e) {
+    var element = $(e.target).closest('.minicomposer-column, .minicomposer-row');
+
+    if (!element.length) {
+      return;
+    }
+
+    if (!localStorage.mcColumnRow) {
+      return;
+    }
+
+    var columnRow = $(localStorage.mcColumnRow); // get column/row from storage
+
+    if (columnRow.is('.minicomposer-column')) {
+      // storage element is column
+      if (element.is('.minicomposer-row')) {
+        // clicked element is row
+        columnRow.appendTo(element);
+      } else {
+        // clicked element is column
+        columnRow.insertAfter(element);
+      }
+    } else {
+      // storage element is row
+      if (element.is('.minicomposer-row')) {
+        // clicked element is row
+        columnRow.insertAfter(element);
+      } else {
+        // clicked element is column
+        columnRow.appendTo(element);
+      }
+    }
+
+    recalcColumns();
     updateComposer();
   }
 

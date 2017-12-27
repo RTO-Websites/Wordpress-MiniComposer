@@ -36,6 +36,9 @@ Just install and activate the plugin. Then you can see MiniComposer under every 
 4. Global-settings
 
 == Changelog ==
+= 1.5.2 ==
+* You can now copy and paste Columns/Rows
+
 = 1.4.4 ==
 * EnterMode in TinyMCE is now <p>, cause replacing with <br> dont work anymore.
 

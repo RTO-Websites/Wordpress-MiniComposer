@@ -380,40 +380,10 @@
 .global-contextmenu span {
   display: block;
   position: relative;
-  font-family: dashicons;
   font-size: 14px;
   cursor: pointer;
   white-space: nowrap;
   padding: 4px 0;
-}
-
-.global-contextmenu span:before {
-  display: inline-block;
-  position: relative;
-  top: 3px;
-  margin-right: 5px;
-}
-
-.minicomposer-style-settings:before {
-  content: "\f100 "; /** dashicons-admin-appearance **/
-}
-
-.minicomposer-responsive-settings:before {
-  content: "\f470 "; /** dashicons-smartphone **/
-}
-
-.minicomposer-delete:before {
-  /**content: "\f335";  dashicons-no-alt **/
-  content: "\f158 "; /** dashicons-no **/
-}
-
-.minicomposer-add-column-to-row:before,
-.minicomposer-clone:before {
-  content: "\f132 "; /** dashicons-plus **/
-}
-
-.minicomposer-edit-text:before {
-  content: "\f464"; /** dashicons-edit **/
 }
 
 .minicomposer-add-column-to-row,
@@ -424,6 +394,8 @@
 .minicomposer-row > .global-contextmenu .minicomposer-style-settings,
 .minicomposer-row > .global-contextmenu .minicomposer-add-column-to-row,
 .minicomposer-row > .global-contextmenu .minicomposer-clone,
+.minicomposer-row > .global-contextmenu .minicomposer-copy,
+.minicomposer-row > .global-contextmenu .minicomposer-insert,
 .minicomposer-row > .global-contextmenu .minicomposer-delete {
   display: block;
 }
@@ -534,4 +506,15 @@
 .minicomposer-column .content video {
   pointer-events: none;
   background-color: #ccc;
+}
+
+.mc-icon-label::before {
+  content: "";
+  margin-right: 0 !important;
+  display: none;
+}
+
+.mc-icon-label .fa {
+  width: 20px;
+  text-align: left;
 }

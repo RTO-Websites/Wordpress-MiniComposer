@@ -13,8 +13,8 @@
 ?>
 
     <div class="minicomposer-info">
-        <?php _e('Use <b>right-click</b> on the columns/rows for more options.', $this->textdomain); ?><br />
-        <br />
+        <?php _e( 'Use <b>right-click</b> on the columns/rows for more options.', $this->textdomain ); ?><br/>
+        <br/>
     </div>
 
     <div class="minicomposer-add-column button">+ <?php _e( 'Column', $this->textdomain ); ?></div>
@@ -67,18 +67,26 @@
     </div>
 
     <div class="global-contextmenu">
-        <span class="minicomposer-style-settings"><?php _e( 'Style', $this->textdomain ); ?></span>
+        <span class="minicomposer-style-settings mc-icon-label"><i class="fa fa-paint-brush"
+                    aria-hidden="true"></i><?php _e( 'Style', $this->textdomain ); ?></span>
         <span
-                class="minicomposer-responsive-settings"><?php _e( 'Responsive', $this->textdomain ); ?></span>
+                class="minicomposer-responsive-settings mc-icon-label"><i class="fa fa-mobile"
+                    aria-hidden="true"></i><?php _e( 'Responsive', $this->textdomain ); ?></span>
         <span
-                class="minicomposer-edit-text"><?php _e( 'Edit Text', $this->textdomain ); ?></span>
+                class="minicomposer-edit-text mc-icon-label"><i class="fa fa-pencil-square-o"
+                    aria-hidden="true"></i><?php _e( 'Edit Text', $this->textdomain ); ?></span>
         <span
-                class="minicomposer-add-column-to-row"><?php _e( 'Add column', $this->textdomain ); ?></span>
-        <span class="minicomposer-clone"><?php _e( 'Clone', $this->textdomain ); ?></span>
+                class="minicomposer-add-column-to-row mc-icon-label"><i class="fa fa-plus"
+                    aria-hidden="true"></i><?php _e( 'Add column', $this->textdomain ); ?></span>
+        <span class="minicomposer-clone mc-icon-label"><i class="fa fa-clone"
+                aria-hidden="true"></i><?php _e( 'Clone', $this->textdomain ); ?></span>
 
-        <span class="minicomposer-hide-column dashicons dashicons-hidden"><?php _e( 'Hide'); ?></span>
+        <span class="minicomposer-copy mc-icon-label"><i class="fa fa-files-o" aria-hidden="true"></i><?php _e( 'Copy', $this->textdomain ); ?></span>
+        <span class="minicomposer-insert mc-icon-label"><i class="fa fa-clipboard" aria-hidden="true"></i><?php _e( 'Insert', $this->textdomain ); ?></span>
+
+        <span class="minicomposer-hide-column mc-icon-label"><i class="fa fa-eye-slash" aria-hidden="true"></i><?php _e( 'Hide' ); ?></span>
         <br/>
-        <span class="minicomposer-delete"><?php _e( 'Delete', $this->textdomain ); ?></span>
+        <span class="minicomposer-delete mc-icon-label"><i class="fa fa-trash" aria-hidden="true"></i><?php _e( 'Delete', $this->textdomain ); ?></span>
     </div>
 
 <?php

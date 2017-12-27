@@ -20,7 +20,7 @@ use Inc\MinicomposerDeactivator;
  * Plugin Name:       MiniComposer
  * Plugin URI:        MiniComposer
  * Description:       Layout page builder plugin.
- * Version:           1.5.1
+ * Version:           1.5.2
  * Author:            RTO GmbH
  * Author URI:        https://www.rto.de
  * License:           GPL-2.0+

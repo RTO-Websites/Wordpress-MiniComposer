@@ -111,7 +111,9 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
     public function wrapTitle( $title, $pid = null ) {
         global $post;
 
-        if ( !\is_user_logged_in() && !\current_user_can( 'edit_post', $post->ID ) || \is_admin() || !in_the_loop() ) {
+        $postid = !empty( $post ) ?  $post->ID : 0;
+
+        if ( !\is_user_logged_in() && !\current_user_can( 'edit_post', $postid ) || \is_admin() || !in_the_loop() ) {
             return $title;
         }
 

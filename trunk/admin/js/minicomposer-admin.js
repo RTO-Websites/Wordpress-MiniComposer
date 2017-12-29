@@ -1,5 +1,5 @@
 /**
- * Last change: 27.12.2017 14:34
+ * Last change: 28.12.2017 08:25
  */
 
 (function($) {
@@ -858,6 +858,8 @@
     currentColumnRow.data('htmltag', $('#htmltag').val());
     currentColumnRow.data('static', $('#static').is(':checked'));
     currentColumnRow.data('fullwidthbg', $('#fullwidthbg').is(':checked'));
+
+    currentColumnRow.find('.column-class').html($('#responsiveClass').val());
 
     closeStyleFields();
 

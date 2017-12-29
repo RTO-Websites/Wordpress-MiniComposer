@@ -140,29 +140,27 @@
 }
 
 /** column options */
+.minicomposer-sortable-rows .column-class,
 .minicomposer-sortable-rows .column-count {
   position: absolute;
-  right: 5px;
   bottom: 100%;
+  left: 6px;
   margin-bottom: -5px;
   width: auto;
 
+  line-height: 8px;
   text-align: right;
 
-  line-height: 14px;
-
+  padding: 2px 4px 2px;
   background-color: #eee;
+  font-size: 10px;
 
   white-space: nowrap;
 }
 
-.minicomposer-sortable-rows .column-count {
-  font-size: 10px;
-  padding: 2px 4px 2px;
-  right: auto;
-  left: 6px;
-  line-height: 8px;
-  margin-bottom: -5px;
+.minicomposer-sortable-rows .column-class {
+  left: auto;
+  right: 6px;
 }
 
 .sublabel {

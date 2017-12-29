@@ -182,6 +182,7 @@ class MinicomposerAdminBase {
                         <span class="content"><?php echo( !empty( $col->content ) ? $col->content : '' ); ?></span>
                         <span class="column-bg"></span>
                         <span class="column-count"><?php echo( !empty( $col->medium ) ? $col->medium : '12' ); ?></span>
+                        <span class="column-class"><?php echo( !empty( $col->cssclass ) ? $col->cssclass : '' ); ?></span>
                         <?php
                         if ( !empty( $col->rows ) ) {
                             $this->getRows( $col->rows );

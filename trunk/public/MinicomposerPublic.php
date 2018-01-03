@@ -111,17 +111,17 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
     public function wrapTitle( $title, $pid = null ) {
         global $post;
 
-        $postid = !empty( $post ) ?  $post->ID : 0;
+        $postid = !empty( $post ) ? $post->ID : 0;
 
         if ( !\is_user_logged_in() && !\current_user_can( 'edit_post', $postid ) || \is_admin() || !in_the_loop() ) {
             return $title;
         }
 
         $output = '';
-        $output .= '<span class="inline-edit-title inline-edit-title-' . $post->ID . '" data-postid="' . $post->ID . '"
+        $output .= '<span class="inline-edit-title inline-edit-title-' . $postid . '" data-postid="' . $postid . '"
             data-posttitle="' . strip_tags( $post->post_title ) . '"
             data-inlineedittooltip="' . __( 'Title from', $this->textdomain ) . ' ' . strip_tags( $post->post_title ) .
-            ' (' . $post->ID . ')">';
+            ' (' . $postid . ')">';
         $output .= $title;
         $output .= '</span>';
 

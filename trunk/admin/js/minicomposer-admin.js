@@ -1,5 +1,5 @@
 /**
- * Last change: 28.12.2017 08:25
+ * Last change: 20.02.2018 15:11
  */
 
 (function($) {
@@ -457,6 +457,7 @@
     // create json
     rowConfig = getRowArray('.minicomposer-sortable-rows');
 
+
     input.val(JSON.stringify(rowConfig));
 
     if (typeof(updateComposerCallback) == 'function') {
@@ -720,7 +721,6 @@
     $('#responsiveSmall').val(currentColumnRow.data('small'));
     $('#responsiveMedium').val(currentColumnRow.data('medium'));
     $('#responsiveLarge').val(currentColumnRow.data('large'));
-    $('#customAttributes').val(currentColumnRow.data('customattributes'));
 
   }
 
@@ -741,7 +741,6 @@
     currentColumnRow.attr('data-small', $('#responsiveSmall').val());
     currentColumnRow.attr('data-medium', $('#responsiveMedium').val());
     currentColumnRow.attr('data-large', $('#responsiveLarge').val());
-    currentColumnRow.data('customattributes', addSlashes($('#customAttributes').val()));
 
     switch(currentSize) {
       case 'medium':
@@ -800,7 +799,12 @@
 
     var bgRepeat = typeof(currentColumnRow.data('backgroundrepeat')) !== 'undefined' ? currentColumnRow.data('backgroundrepeat') : 'no-repeat',
       bgPosition = typeof(currentColumnRow.data('backgroundposition')) !== 'undefined' ? currentColumnRow.data('backgroundposition') : 'center',
-      bgSize = typeof(currentColumnRow.data('backgroundsize')) !== 'undefined' ? currentColumnRow.data('backgroundsize') : 'contain';
+      bgSize = typeof(currentColumnRow.data('backgroundsize')) !== 'undefined' ? currentColumnRow.data('backgroundsize') : 'contain',
+      customAttributes = currentColumnRow.data('customattributes');
+
+    if (!customAttributes) {
+      customAttributes = '';
+    }
 
     $('#responsiveClass').val(currentColumnRow.data('cssclass'));
     $('#columnBackground-image').val(currentColumnRow.data('backgroundimage'));
@@ -812,6 +816,7 @@
     $('#columnGutter').val(currentColumnRow.data('gutter'));
     $('#minHeight').val(currentColumnRow.data('minheight'));
     $('#htmltag').val(currentColumnRow.data('htmltag'));
+    $('#customAttributes').val(customAttributes.replace(new RegExp("\\\\", "g"), ''));
 
     $('#static').prop('checked', currentColumnRow.data('static'));
     $('#fullwidthbg').prop('checked', currentColumnRow.data('fullwidthbg'));
@@ -858,6 +863,7 @@
     currentColumnRow.data('htmltag', $('#htmltag').val());
     currentColumnRow.data('static', $('#static').is(':checked'));
     currentColumnRow.data('fullwidthbg', $('#fullwidthbg').is(':checked'));
+    currentColumnRow.data('customattributes', addSlashes($('#customAttributes').val()));
 
     currentColumnRow.find('.column-class').html($('#responsiveClass').val());
 

@@ -20,10 +20,6 @@ class MinicomposerAdminBase {
     protected $oneToTwelve = array( '', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 'hide' );
 
     protected $responsiveFields = array(
-        'customAttributes' => array(
-            'type' => 'textarea',
-            'label' => 'Custom-Attributes',
-        ),
         'responsiveSmall' => array(
             'type' => 'select',
             'label' => 'Small',
@@ -73,6 +69,10 @@ class MinicomposerAdminBase {
         'minHeight' => array(
             'type' => 'input',
             'label' => 'min-height',
+        ),
+        'customAttributes' => array(
+            'type' => 'textarea',
+            'label' => 'Custom-Attributes',
         ),
     );
 

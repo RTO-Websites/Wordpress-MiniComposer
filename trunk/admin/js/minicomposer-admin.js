@@ -1,5 +1,5 @@
 /**
- * Last change: 20.02.2018 15:11
+ * Last change: 21.02.2018 09:16
  */
 
 (function($) {
@@ -314,6 +314,8 @@
 
     var clonedElement = element.clone();
 
+    clonedElement.data(element.data());
+
     clonedElement.insertAfter(element);
 
     recalcColumns();
@@ -326,7 +328,9 @@
    * @param e
    */
   function copyColumnRow(e) {
-    var element = $(e.target).closest('.minicomposer-column, .minicomposer-row');
+    var element = $(e.target).closest('.minicomposer-column, .minicomposer-row'),
+      copyElement = null,
+      copyData = {};
 
     if (!element.length) {
       return;
@@ -335,7 +339,17 @@
     // move contextmenu-element
     $('#minicomposer .inside').append($('.global-contextmenu'));
 
+    // copy data-attributes
+    for (var index in element.data()) {
+      if (typeof(element.data()[index]) == 'object') {
+        continue;
+      }
+      copyData[index] = element.data()[index];
+    }
+
+    // save in localStorage
     localStorage.mcColumnRow = element.prop('outerHTML');
+    localStorage.mcColumnRowData = JSON.stringify(copyData);
   }
 
   /**
@@ -354,7 +368,11 @@
       return;
     }
 
-    var columnRow = $(localStorage.mcColumnRow); // get column/row from storage
+    var columnRow = $(localStorage.mcColumnRow), // get column/row from storage
+      columnRowData = JSON.parse(localStorage.mcColumnRowData);
+
+    // add data-attributes from localstorage
+    columnRow.data(columnRowData);
 
     if (columnRow.is('.minicomposer-column')) {
       // storage element is column

@@ -90,7 +90,7 @@ class MinicomposerPublicBase {
             // add custom attributes
             $customAttributes = '';
             if ( !empty( $rowOptions->customattributes ) ) {
-                $customAttributes = implode( ' ', explode( "\n", $rowOptions->customattributes ) );
+                $customAttributes = implode( ' ', explode( "\n", urldecode( $rowOptions->customattributes ) ) );
             }
             if ( method_exists( $this, 'addRowDataAttributes' ) ) {
                 $customAttributes .= $this->addRowDataAttributes( $rowIndex, $row );
@@ -131,7 +131,7 @@ class MinicomposerPublicBase {
                 // add custom attributes
                 $customAttributes = '';
                 if ( !empty( $column->customattributes ) ) {
-                    $customAttributes = implode( ' ', explode( "\n", $column->customattributes ) );
+                    $customAttributes = implode( ' ', explode( "\n", urldecode( $column->customattributes ) ) );
                 }
                 if ( method_exists( $this, 'addDataAttributes' ) ) {
                     $customAttributes .= $this->addDataAttributes( $this->columnCount - 1 );

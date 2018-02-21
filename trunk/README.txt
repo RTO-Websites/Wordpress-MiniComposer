@@ -36,6 +36,9 @@ Just install and activate the plugin. Then you can see MiniComposer under every 
 4. Global-settings
 
 == Changelog ==
+= 1.5.5 ==
+* Custom attributes work now with quotes and double-quotes
+
 = 1.5.4 ==
 * Rows can now have custom attributes
 

@@ -1,5 +1,5 @@
 /**
- * Last change: 21.02.2018 09:16
+ * Last change: 21.02.2018 10:41
  */
 
 (function($) {
@@ -834,7 +834,8 @@
     $('#columnGutter').val(currentColumnRow.data('gutter'));
     $('#minHeight').val(currentColumnRow.data('minheight'));
     $('#htmltag').val(currentColumnRow.data('htmltag'));
-    $('#customAttributes').val(customAttributes.replace(new RegExp("\\\\", "g"), ''));
+    //$('#customAttributes').val(customAttributes.replace(new RegExp("\\\\", "g"), ''));
+    $('#customAttributes').val(decodeURIComponent(customAttributes));
 
     $('#static').prop('checked', currentColumnRow.data('static'));
     $('#fullwidthbg').prop('checked', currentColumnRow.data('fullwidthbg'));
@@ -881,7 +882,8 @@
     currentColumnRow.data('htmltag', $('#htmltag').val());
     currentColumnRow.data('static', $('#static').is(':checked'));
     currentColumnRow.data('fullwidthbg', $('#fullwidthbg').is(':checked'));
-    currentColumnRow.data('customattributes', addSlashes($('#customAttributes').val()));
+    //currentColumnRow.data('customattributes', addSlashes($('#customAttributes').val()));
+    currentColumnRow.data('customattributes', encodeURIComponent($('#customAttributes').val()));
 
     currentColumnRow.find('.column-class').html($('#responsiveClass').val());
 

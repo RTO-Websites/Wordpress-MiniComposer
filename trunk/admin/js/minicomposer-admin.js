@@ -1,5 +1,5 @@
 /**
- * Last change: 21.02.2018 10:41
+ * Last change: 04.04.2018 16:23
  */
 
 (function($) {
@@ -409,6 +409,10 @@
 
     $('.upload-preview-image').prop('src', imageUrl);
     $('.upload-field').val(imageUrl);
+
+
+    $('.selectable-image').removeClass('active');
+    element.addClass('active');
   }
 
 
@@ -823,6 +827,9 @@
     if (!customAttributes) {
       customAttributes = '';
     }
+
+    $('.selectable-image').removeClass('active');
+    $('.selectable-image[data-url="' + currentColumnRow.data('backgroundimage') + '"]').addClass('active');
 
     $('#responsiveClass').val(currentColumnRow.data('cssclass'));
     $('#columnBackground-image').val(currentColumnRow.data('backgroundimage'));

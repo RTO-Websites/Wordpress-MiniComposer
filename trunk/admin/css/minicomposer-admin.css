@@ -344,6 +344,13 @@
   text-overflow: ellipsis;
 }
 
+.selectable-image.active {
+  box-shadow: 0 0 0 2px darkseagreen;
+}
+.selectable-image.active::after {
+  background-color: darkseagreen;
+}
+
 .input-background-container {
   position: relative;
 }

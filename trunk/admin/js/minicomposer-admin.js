@@ -2,7 +2,7 @@
  * Last change: 04.04.2018 16:23
  */
 
-(function($) {
+(function ($) {
   'use strict';
 
   /**
@@ -43,13 +43,13 @@
   /**
    * DOM-Ready
    */
-  $(function() {
+  $(function () {
     // make columns resizeable
     initResizeable();
     initEvents();
     $('#minicomposer').addClass('medium-size');
 
-    jQuery('.composer-overlay').each(function(index, element) {
+    jQuery('.composer-overlay').each(function (index, element) {
       if (jQuery(element).find('.drag-handle').length) {
         jQuery(element).draggable({
           handle: '.drag-handle',
@@ -72,23 +72,23 @@
     /**
      * Add new column
      */
-    $('.minicomposer-add-column').on('click', function() {
+    $('.minicomposer-add-column').on('click', function () {
       addColumn(1);
     });
 
-    $('.minicomposer-add-column-2').on('click', function() {
+    $('.minicomposer-add-column-2').on('click', function () {
       addColumn(2);
     });
 
-    $('.minicomposer-add-column-3').on('click', function() {
+    $('.minicomposer-add-column-3').on('click', function () {
       addColumn(3);
     });
 
-    $('.minicomposer-add-column-4').on('click', function() {
+    $('.minicomposer-add-column-4').on('click', function () {
       addColumn(4);
     });
 
-    $('.minicomposer-autopublish').on('click', function() {
+    $('.minicomposer-autopublish').on('click', function () {
       $('.minicomposer-autopublish').toggleClass('active');
     });
 
@@ -114,7 +114,7 @@
     // Save&Close Editor
     $('.minicomposer-save-editor').on('click', saveEditor);
     // Apply Editor
-    $('.minicomposer-apply-editor').on('click', function(e) {
+    $('.minicomposer-apply-editor').on('click', function (e) {
       saveEditor(e, true)
     });
 
@@ -145,11 +145,11 @@
 
     $(document).on('click', closeContextMenu);
 
-    $(document).on('click', '.minicomposer-change-size-button', function(e) {
+    $(document).on('click', '.minicomposer-change-size-button', function (e) {
       changeMcColumnSize(e);
     });
 
-    $(document).on('click', '.minicomposer-hide-column', function(e) {
+    $(document).on('click', '.minicomposer-hide-column', function (e) {
       hideColumn(e);
     });
 
@@ -159,12 +159,12 @@
     recalcColumns();
   });
 
-  window.changeMcColumnSize = function(e) {
+  window.changeMcColumnSize = function (e) {
     $('.minicomposer-change-size-button').removeClass('active');
     var button = $(e.target);
     button.addClass('active');
 
-    switch(button.data('size')) {
+    switch (button.data('size')) {
       case 'medium':
         $('#minicomposer').addClass('medium-size');
         $('#minicomposer').removeClass('small-size large-size');
@@ -193,7 +193,7 @@
     new McDragNDrop();
 
     // set startSize of columns
-    $('.minicomposer-column').each(function(index, element) {
+    $('.minicomposer-column').each(function (index, element) {
       var columnWidth = window.getColumnWidth(element);
       $(element).css({
         width: (columnWidth * $(element).data(currentSize)) + 'px',
@@ -203,7 +203,7 @@
       window.recalcColumns(element);
     });
 
-    $(window).on('resize', function(e) {
+    $(window).on('resize', function (e) {
       if (e.target != window) {
         return;
       }
@@ -472,7 +472,7 @@
    *
    * Runs on sortable sortupdate and resize
    */
-  window.updateComposer = function() {
+  window.updateComposer = function () {
     var input = jQuery("#minicomposerColumns"),
       rowConfig = [];
 
@@ -498,12 +498,12 @@
       colCount = 0,
       rowCount = 0;
 
-    $(container).find('> .minicomposer-row').each(function(rowIndex, row) {
+    $(container).find('> .minicomposer-row').each(function (rowIndex, row) {
       rowConfig[rowCount] = {};
       rowConfig[rowCount]['options'] = getDataset(row);
       rowConfig[rowCount]['columns'] = [];
 
-      $(row).find('> .minicomposer-column').each(function(index, column) {
+      $(row).find('> .minicomposer-column').each(function (index, column) {
         rowConfig[rowCount]['columns'][colCount] = getDataset(column);
         rowConfig[rowCount]['columns'][colCount].content = $(column).find('> .content').html();
 
@@ -550,12 +550,12 @@
   /**
    * Recalculate width of columns
    */
-  window.recalcColumns = function(row) {
+  window.recalcColumns = function (row) {
     if (typeof(row) === 'undefined') {
       row = '.minicomposer-sortable-rows';
     }
 
-    $(row).find('.minicomposer-column').each(function(index, element) {
+    $(row).find('.minicomposer-column').each(function (index, element) {
       var columnWidth = window.getColumnWidth(element);
       resizeArgs.grid = [columnWidth, 1];
       resizeArgs.minWidth = columnWidth;
@@ -563,7 +563,7 @@
 
       try {
         $(element).resizable('destroy');
-      } catch(e) {
+      } catch (e) {
 
       }
       $(element).resizable(resizeArgs);
@@ -592,7 +592,7 @@
    * @param column
    * @returns {number}
    */
-  window.getColumnWidth = function(column) {
+  window.getColumnWidth = function (column) {
     var row = $(column).closest('.minicomposer-row');
 
     return Math.floor(row.width() / 12);
@@ -764,7 +764,7 @@
     currentColumnRow.attr('data-medium', $('#responsiveMedium').val());
     currentColumnRow.attr('data-large', $('#responsiveLarge').val());
 
-    switch(currentSize) {
+    switch (currentSize) {
       case 'medium':
         currentColumnRow.css({width: window.getColumnWidth(currentColumnRow) * $('#responsiveMedium').val() + 'px'});
         break;
@@ -842,7 +842,13 @@
     $('#minHeight').val(currentColumnRow.data('minheight'));
     $('#htmltag').val(currentColumnRow.data('htmltag'));
     //$('#customAttributes').val(customAttributes.replace(new RegExp("\\\\", "g"), ''));
-    $('#customAttributes').val(decodeURIComponent(customAttributes));
+
+    try {
+      customAttributes = decodeURIComponent(customAttributes)
+    } catch (e) {
+
+    }
+    $('#customAttributes').val(customAttributes);
 
     $('#static').prop('checked', currentColumnRow.data('static'));
     $('#fullwidthbg').prop('checked', currentColumnRow.data('fullwidthbg'));

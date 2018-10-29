@@ -104,6 +104,9 @@ class MinicomposerAdmin extends \MinicomposerAdminBase {
 
         $this->translateFields();
 
+        // disable gutenberg
+        add_filter('use_block_editor_for_post', '__return_false');
+        add_filter('gutenberg_can_edit_post_type', '__return_false');
 
         add_action( 'add_meta_boxes', array( $this, 'registerPostSettings' ), 1 );
         add_action( 'save_post', array( $this, 'savePostMeta' ), 10, 2 );

@@ -64,7 +64,8 @@
 
     // set container width
     $('.minicomposer-sortable-rows').css({
-      width: ($('.minicomposer-sortable-rows').width() + 'px')
+      //width: ($('.minicomposer-sortable-rows').width() + 'px')
+      width: '100%'
     });
 
     updateComposer();
@@ -156,7 +157,8 @@
     // contextmenu
     $(document).on('contextmenu', '.minicomposer-column, .minicomposer-row', openContextMenu);
 
-    recalcColumns();
+    //recalcColumns();
+    setTimeout(recalcColumns, 0);
   });
 
   window.changeMcColumnSize = function (e) {

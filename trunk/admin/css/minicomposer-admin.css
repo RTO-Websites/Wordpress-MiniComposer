@@ -23,7 +23,7 @@
 .minicomposer-sortable-rows {
   position: relative;
   margin: 1em 0;
-
+  width: 100%;
 }
 
 .minicomposer-column {

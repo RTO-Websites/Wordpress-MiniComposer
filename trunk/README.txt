@@ -3,7 +3,7 @@ Contributors: rtowebsites
 Donate link: MiniComposer
 Tags: grid, responsive, composer, page builder, visual, rto, rto.de
 Requires at least: 3.4.0
-Tested up to: 4.9
+Tested up to: 5.0
 Stable tag: 4.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -36,6 +36,9 @@ Just install and activate the plugin. Then you can see MiniComposer under every 
 4. Global-settings
 
 == Changelog ==
+= 1.6.0 ==
+* Make compatible with wordpress 5.0
+
 = 1.5.5 ==
 * Custom attributes work now with quotes and double-quotes
 

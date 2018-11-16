@@ -139,6 +139,12 @@ class MinicomposerPublic extends \MinicomposerPublicBase {
         $gridOutput = '';
 
         $mcPost = $post;
+
+        if ( defined( 'ELEMENTOR_VERSION' ) && \Elementor\Plugin::$instance->db->is_built_with_elementor( $post->ID ) ) {
+            // use elementor if active
+            return $content;
+        }
+
         $grid = get_post_meta( $post->ID, 'minicomposerColumns', true );
         if ( empty( $grid ) ) {
             return $content;
